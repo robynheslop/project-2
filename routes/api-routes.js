@@ -83,7 +83,6 @@ module.exports = function(app) {
         };
       });
     }
-    console.log(JSON.stringify(ingredientToSave));
     const newlyCreatedIngredient = await db.Ingredient.bulkCreate(
       ingredientToSave
     );
