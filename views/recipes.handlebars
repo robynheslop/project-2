@@ -1,0 +1,99 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/logout">
+                Logout
+            </a>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row center">
+        <div class="col-md-6 col-md-offset-3">
+            <h2>Welcome <span class="member-name"></span></h2>
+            <h2>Timeless Recipes</h2>
+        </div>
+    </div>
+
+
+
+    <div class="row center">
+        <h2>Let's get cooking!!</h2>
+        <h3>I want to....</h3>
+        <button id="addNewRecipeButton">
+            Add A New Recipe
+        </button>
+        <button id="viewAllRecipesButton">
+            View All My Recipes
+        </button>
+        <button id="searchForRecipeButton">
+            Search For A Recipe
+        </button>
+    </div>
+    <br><br>
+    <!-- search terms here -->
+    <div class="row center" id="searchForRecipeForm" style="display:none">
+        <span class="close">&times;</span>
+        <div class="form-group">
+            <input type="radio" id="myRecipes" name="recipesToSearch" value="My Recipes">
+            <label for="myRecipes">My Recipes</label>
+            <input type="radio" id="allRecipes" name="recipesToSearch" value="All recipes">
+            <label for="allRecipes">All Recipes</label><br>
+            <input id="search-Term" type="text" size="50">
+            <button id="add-button" type="submit">Search</button>
+        </div>
+    </div>
+
+    <div class="row" id="appendSearchItemsHere" style="display:none">
+        <span class="close">&times;</span>
+        <ul>
+            {{#each recipe}}
+            <li>
+                <h2>{{this.title}}</h2>
+                <p>Preparation Time: {{this.preparationTime}}</p>
+                <button id={{this.id}} class="viewRecipeButton" type="submit"><i class="fas fa-eye"></i></button>
+                <button id={{this.id}} class="editRecipeButton" type="submit"><i class="fas fa-edit"></i></button>
+                <button id={{this.id}} class="deleteRecipeButton" type="submit"><i class="fas fa-trash-alt"></i></button>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+
+
+    <div id="newRecipeForm" style="display:none">
+        <span class="close">&times;</span>
+        <form id="recipeForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Recipe Title.</label>
+                <input class="form-control" name="title" id="recipe-title" type="text">
+            </div>
+            <div class="form-group">
+                <label>Ingredients. Please enter each ingredient on a new line.</label>
+                <textarea class="form-control" id="recipe-ingredients" type="text" rows="9"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Instructions. Please enter each instruction on a new line.</label>
+                <textarea class="form-control" id="recipe-instructions" type="text" rows="9"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Servings.</label>
+                <input class="form-control" id="recipe-servings" type="number">
+            </div>
+            <div class="form-group">
+                <label>Preparation Time.</label>
+                <input class="form-control" id="recipe-preparation-time" type="number">
+            </div>
+            <div class="form-group">
+                <label>Notes.</label>
+                <textarea class="form-control" id="recipe-notes" type="text" rows="5"></textarea>
+            </div>
+            <div class="form-group">
+                <button id="sendRecipeButton" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/recipes.js"></script>
