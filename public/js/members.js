@@ -20,7 +20,7 @@ $(document).ready(() => {
       title: $("#recipe-title").val(),
       instructions: $("#recipe-instructions").val(),
       servings: $("#recipe-servings").val(),
-      perparationTime: $("#recipe-preparation-time").val(),
+      preparationTime: $("#recipe-preparation-time").val(),
       notes: $("#recipe-notes").val()
     };
     // ajax request to spoonacular
@@ -44,9 +44,7 @@ $(document).ready(() => {
       // add this array to formData
       formData.ingredients = separatedIngredients;
       // post formData
-      $.post("/api/addRecipe", {
-        body: formData
-      }).then(result => console.log(result));
+      $.post("/api/recipe", formData).then(result => console.log(result));
       // clear form fields
       $("#newRecipeForm").reset();
     });

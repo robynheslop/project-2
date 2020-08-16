@@ -24,6 +24,12 @@ app.use(passport.session());
 require("./routes/html-routes.js")(app);
 require("./routes/api-routes.js")(app);
 
+// creating foreign keys as a user can have many recipes
+// also a recipe has many recipeingredient and an ingredient has also many recipeIngredients
+db.User.hasMany(db.Recipe);
+db.Recipe.hasMany(db.RecipeIngredient);
+db.Ingredient.hasMany(db.RecipeIngredient);
+
 // Syncing our database and logging a message to the user upon success
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {
