@@ -3,6 +3,8 @@ const db = require("../models");
 const passport = require("../config/passport");
 // Requiring our custom middleware for checking if a user is logged in
 const isAuthenticated = require("../config/middleware/isAuthenticated");
+// require to create/get/update recipes
+const ru = require("./routesUtil");
 
 module.exports = function(app) {
   // Using the passport.authenticate middleware with our local strategy.
@@ -54,50 +56,16 @@ module.exports = function(app) {
   });
 
   app.post("/api/recipe", isAuthenticated, async (request, response) => {
-    const recipeObject = {
-      title: request.body.title,
-      instructions: request.body.instructions,
-      servings: request.body.servings,
-      preparationTime: request.body.preparationTime,
-      notes: request.body.notes,
-      UserId: request.user.id
-    };
-    const recipe = await db.Recipe.create(recipeObject);
-    let persistedIngredients = await db.Ingredient.findAll();
-    let ingredientToSave;
-    if (persistedIngredients.length) {
-      const currentIngredients = persistedIngredients.map(
-        element => element.title
-      );
-      ingredientToSave = request.body.ingredients
-        .filter(element => currentIngredients.indexOf(element.title) < 0)
-        .map(element => {
-          return {
-            title: element.title
-          };
-        });
-    } else {
-      ingredientToSave = request.body.ingredients.map(element => {
-        return {
-          title: element.title
-        };
-      });
-    }
-    const newlyCreatedIngredient = await db.Ingredient.bulkCreate(
-      ingredientToSave
-    );
-    persistedIngredients = persistedIngredients.concat(newlyCreatedIngredient);
-    const recipeIngredientsToSave = request.body.ingredients.map(element => {
-      return {
-        ingredientQuantity: element.quantity,
-        ingredQuantUnit: element.units,
-        RecipeId: recipe.id,
-        IngredientId: persistedIngredients
-          .filter(ingredient => ingredient.title === element.title)
-          .map(ingredient => ingredient.id)[0]
-      };
-    });
-    await db.RecipeIngredient.bulkCreate(recipeIngredientsToSave);
-    response.status(201).end();
+    let recipeStatus = true;
+    const recipe = await ru.createRecipe(request);
+    recipeStatus = recipe ? true : false;
+    const persistedIngredients = recipeStatus
+      ? await ru.persistAndFetchIngredients(request)
+      : undefined;
+    recipeStatus = persistedIngredients ? true : false;
+    recipeStatus = recipeStatus
+      ? await ru.persistRecipeIngredients(request, persistedIngredients, recipe)
+      : false;
+    recipeStatus ? response.status(201).end() : response.status(500).end();
   });
 };
