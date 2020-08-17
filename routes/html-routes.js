@@ -3,6 +3,8 @@
 
 // Requiring our custom middleware for checking if a user is logged in
 const isAuthenticated = require("../config/middleware/isAuthenticated");
+// require to create/get/update recipes
+const ru = require("./routesUtil");
 
 module.exports = function(app) {
   app.get("/", (req, res) => {
@@ -25,10 +27,14 @@ module.exports = function(app) {
     res.render("login");
   });
 
+  app.get("/recipes-home-page", isAuthenticated, async (request, response) => {
+    response.render("recipes");
+  });
+
   // Here we've add our isAuthenticated middleware to this route.
   // If a user who is not logged in tries to access this route they will be redirected to the signup page
-  app.get("/recipes", isAuthenticated, (req, res) => {
-    // res.sendFile(path.join(__dirname, "../public/members.html"));
-    res.render("recipes");
+  app.get("/my-recipes", isAuthenticated, async (request, response) => {
+    const recipeData = await ru.getAllRecipesForCurrentUser(request);
+    response.render("recipes", { recipe: recipeData });
   });
 };

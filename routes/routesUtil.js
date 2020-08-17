@@ -108,9 +108,36 @@ const persistRecipeIngredients = async (
     return false;
   }
 };
+/**
+ * it fetches all recipes which belongs to current user
+ * and returns an array of recipe title, id and preparationTime
+ * for each user recipe
+ * @param {request from client} request
+ */
+const getAllRecipesForCurrentUser = async request => {
+  const userId = request.user.id;
+  try {
+    const recipes = await db.Recipe.findAll({
+      where: {
+        UserId: userId
+      },
+      attributes: ["id", "title", "preparationTime"]
+    });
+    return recipes.map(recipe => {
+      return {
+        title: recipe.title,
+        preparationTime: recipe.preparationTime,
+        id: recipe.id
+      };
+    });
+  } catch (error) {
+    console.log(`Failed to retrieve recipes due to following error: ${error}`);
+  }
+};
 
 module.exports = {
   createRecipe,
   persistAndFetchIngredients,
-  persistRecipeIngredients
+  persistRecipeIngredients,
+  getAllRecipesForCurrentUser
 };
