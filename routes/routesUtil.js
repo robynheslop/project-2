@@ -1,4 +1,5 @@
 const db = require("../models");
+const { Op } = require("sequelize");
 /**
  * creates a recipe entry in recipes table
  * and returns same
@@ -135,9 +136,63 @@ const getAllRecipesForCurrentUser = async request => {
   }
 };
 
+/**
+ * fetches recipe details for a given recipe id
+ * and returns an object having all recipe details
+ * @param {request sent by client} request
+ */
+const getRecipeDetails = async request => {
+  const recipeId = request.params.id;
+  try {
+    const recipe = await db.Recipe.findOne({
+      where: {
+        id: recipeId
+      }
+    });
+    let ingredientDetails = [];
+    const recipeIngredients = await recipe.getRecipeIngredients();
+    if (recipeIngredients && recipeIngredients.length) {
+      const ingredientIds = recipeIngredients.map(
+        element => element.IngredientId
+      );
+      const ingredients = await db.Ingredient.findAll({
+        where: {
+          id: {
+            [Op.or]: ingredientIds
+          }
+        }
+      });
+      ingredientDetails = recipeIngredients.map(element => {
+        const ingredientName = ingredients
+          .filter(ingredient => ingredient.id === element.IngredientId)
+          .map(ingredient => ingredient.title);
+        return {
+          title: ingredientName[0],
+          quantity: element.ingredientQuantity,
+          unit: element.ingredQuantUnit
+        };
+      });
+    }
+    const recipeDetails = {
+      title: recipe.title,
+      instructions: recipe.instructions,
+      preparationTime: recipe.preparationTime,
+      servings: recipe.servings,
+      notes: recipe.notes,
+      ingredients: ingredientDetails
+    };
+    return recipeDetails;
+  } catch (error) {
+    console.log(
+      `Failed to retrieve recipe details due to following error: ${error}`
+    );
+  }
+};
+
 module.exports = {
   createRecipe,
   persistAndFetchIngredients,
   persistRecipeIngredients,
-  getAllRecipesForCurrentUser
+  getAllRecipesForCurrentUser,
+  getRecipeDetails
 };

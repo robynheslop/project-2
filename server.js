@@ -31,7 +31,9 @@ require("./routes/api-routes.js")(app);
 // also a recipe has many recipeingredient and an ingredient has also many recipeIngredients
 db.User.hasMany(db.Recipe);
 db.Recipe.hasMany(db.RecipeIngredient);
+db.RecipeIngredient.belongsTo(db.Recipe);
 db.Ingredient.hasMany(db.RecipeIngredient);
+db.RecipeIngredient.belongsTo(db.Ingredient);
 
 // Syncing our database and logging a message to the user upon success
 db.sequelize.sync().then(() => {

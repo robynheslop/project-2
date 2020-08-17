@@ -29,20 +29,22 @@ module.exports = function(app) {
         res.render("signup-login");
     });
 
-    app.get("/recipes-home-page", isAuthenticated, (request, response) => {
-        response.render("recipes");
-    });
 
-    // Here we've add our isAuthenticated middleware to this route.
-    // If a user who is not logged in tries to access this route they will be redirected to the signup page
-    app.get("/my-recipes", isAuthenticated, async(request, response) => {
-        const recipeData = await ru.getAllRecipesForCurrentUser(request);
-        response.render("recipes", { recipe: recipeData });
-    });
+  app.get("/recipes-home-page", isAuthenticated, (request, response) => {
+    response.render("recipes");
+  });
 
-    app.get("/recipes/:id", isAuthenticated, async(request, response) => {
-        const recipeDetails = await ru.getRecipeDetails(request);
-        console.log(recipeDetails);
-        response.render("recipes", { recipeDetails: recipeDetails });
-    });
+  // Here we've add our isAuthenticated middleware to this route.
+  // If a user who is not logged in tries to access this route they will be redirected to the signup page
+  app.get("/my-recipes", isAuthenticated, async (request, response) => {
+    const recipeData = await ru.getAllRecipesForCurrentUser(request);
+    response.render("recipes", { recipe: recipeData });
+  });
+
+  app.get("/recipes/:id", isAuthenticated, async (request, response) => {
+    const recipeDetails = await ru.getRecipeDetails(request);
+    console.log(recipeDetails);
+    response.render("recipes", { recipeDetails: recipeDetails });
+  });
 };
+
