@@ -44,7 +44,7 @@
         </div>
     </div>
 
-    <div class="row none" id="appendSearchItemsHere">
+    <div class="row" id="appendSearchItemsHere" style="display:none">
         <span class="close">&times;</span>
         <ul>
             {{#each recipe}}
@@ -57,6 +57,22 @@
             </li>
             {{/each}}
         </ul>
+    </div>
+
+    <div class="row" id="detailedRecipeViewHere" style="display:none">
+        <span class="close">&times;</span>
+            {{#each recipeDetails}}
+            <div>
+                <h3>{{this.title}}</h3>
+                <p>Ingredients: {{this.ingredients}}</p>
+                <p>Instructions: {{this.instructions}}</p>
+                <p>Preparation Time: {{this.preparationTime}}</p>
+                <p>Servings: {{this.servings}}</p>
+                <p>Notes: {{this.notes}}</p>
+                <button editId={{this.id}} class="editRecipeButton" type="submit">Edit Recipe</button>
+                <button deleteId={{this.id}} class="deleteRecipeButton" type="submit">Delete Recipe</button>
+            </div>
+            {{/each}}
     </div>
 
 
