@@ -1,15 +1,66 @@
-form.signup,
-form.login {
-  margin-top: 50px;
+.signup,
+.login,
+.vertical {
+    margin: auto;
+    margin-top: 50px;
+}
+
+.vertical {
+    border-left: 1px solid grey;
+    height: 370px;
+    position: absolute;
+    left: 50%;
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .vertical {
+        display: block;
+    }
 }
 
 .center {
-  text-align: center;
+    text-align: center;
 }
 
 .close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#timeless-recipes-logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 146px;
+    width: 532px;
+    /* width: 30%; */
+}
+
+.header-line {
+    border-bottom-style: solid;
+    border-bottom-color: black;
+    border-bottom-width: 5px;
+    display: flex;
+}
+
+hr {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.col-md-9 {
+    max-width: 100%;
+}
+
+.search-view-recipes,
+.recommended-recipes {
+    margin-top: 50px;
+}
+
+button {
+    margin-top: 10px;
 }

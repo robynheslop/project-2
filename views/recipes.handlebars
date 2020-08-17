@@ -1,115 +1,193 @@
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/logout">
-                Logout
-            </a>
-        </div>
-    </div>
-</nav>
+<header class="container header" id="timeless-recipes-header">
+  <div class="col-md-9" id="logo-header">
+    <img src="/images/timeless-recipe-logo.png" alt="timeless-recipes-logo" id="timeless-recipes-logo">
+  </div>
+  <p style="margin-left: 225px"><a href="/logout">Log out</a></p>
+  <hr>
+</header>
+
 <div class="container">
-    <div class="row center">
-        <div class="col-md-6 col-md-offset-3">
-            <h2>Welcome <span class="member-name"></span></h2>
-            <h2>Timeless Recipes</h2>
+  <div class="row center">
+    <div class="col-md-12">
+      <h2>Welcome <span class="member-name"></span></h2>
+      <h4>What do you want to cook today?</h4>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="form-group col-md-4 search-view-recipes">
+      <h4>Search for a specific dish</h4>
+      <input type="text" class="form-control" placeholder="enter dish name here" id="inputDefault">
+      <div class="form-check">
+        <label class="form-check-label">
+          <input type="radio" class="form-check-input" name="optionsRadios" id="my-recipes" value="my-recipes">
+          My Recipes
+        </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <input type="radio" class="form-check-input" name="optionsRadios" id="all-recipes" value="all-recipes">
+          All Recipes
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary disabled" id="searchForRecipeButton">Search</button>
+
+      <br>
+      <img src="/images/e-logo.png"
+        style="height: 52px; width: 216px; display: block; margin-top: 50px; margin-left: 70px;" alt="e-logo">
+      <br>
+
+      <h4>Cant decide?</h4>
+      <button type="submit" class="btn btn-primary disabled" id="viewAllRecipeButton">View all Recipes</button>
+
+    </div>
+
+    <div class="col-md-1 vertical"></div>
+
+    <div class="col-md-6 recommended-recipes">
+      <h4>Would you like to try these?</h4>
+
+      <div class="card border-light mb-3" style="width: 200px;">
+        <div class="card-header">Recipe 1</div>
+        <div class="card-body">
+          <img src="/images/pancake.png" alt="dish-of-the-day" style="height: 250px; width: 400px; display: block;">
         </div>
+      </div>
     </div>
 
 
+    {{!-- 
 
-    <div class="row center">
-        <h2>Let's get cooking!!</h2>
-        <h3>I want to....</h3>
-        <button id="addNewRecipeButton">
-            Add A New Recipe
-        </button>
-        <button id="viewAllRecipesButton">
-            View All My Recipes
-        </button>
-        <button id="searchForRecipeButton">
-            Search For A Recipe
-        </button>
-    </div>
+        <div class="card-header">Recipe 2</div>
+        <div class="card-body">
+          <img src="/images/pancake.png" alt="recommendation2" style="height: 120px; width: 200px; display: block;">
+        </div>
+      </div>
+
+      <div class="col-md-2 recommended-recipes2">
+        <div class="card border-light mb-3" style="width: 200px;">
+          <div class="card-header">Recipe 3</div>
+          <div class="card-body">
+            <img src="/images/pancake.png" alt="recommendation3" style="height: 120px; width: 200px; display: block;">
+          </div>
+
+          <div class="card-header">Recipe 4</div>
+          <div class="card-body">
+            <img src="/images/pancake.png" alt="recommendation4" style="height: 120px; width: 200px; display: block;">
+          </div>
+        </div>
+
+      </div> --}}
+  </div>
+
+
+  {{!-- <h3>I want to....</h3>
+    <button id="addNewRecipeButton">
+      Add A New Recipe
+    </button>
+    <button id="viewAllRecipesButton">
+      View All My Recipes
+    </button>
+    <button id="searchForRecipeButton">
+      Search For A Recipe
+    </button>
+  </div> --}}
+  {{!-- 
+
+
     <br><br>
     <!-- search terms here -->
     <div class="row center" id="searchForRecipeForm" style="display:none">
-        <span class="close">&times;</span>
-        <div class="form-group">
-            <input type="radio" id="myRecipes" name="recipesToSearch" value="My Recipes">
-            <label for="myRecipes">My Recipes</label>
-            <input type="radio" id="allRecipes" name="recipesToSearch" value="All recipes">
-            <label for="allRecipes">All Recipes</label><br>
-            <input id="search-Term" type="text" size="50">
-            <button id="add-button" type="submit">Search</button>
-        </div>
-    </div>
+      <span class="close">&times;</span>
+      <div class="form-group">
+        <input type="radio" id="myRecipes" name="recipesToSearch" value="My Recipes">
+        <label for="myRecipes">My Recipes</label>
+        <input type="radio" id="allRecipes" name="recipesToSearch" value="All recipes">
+        <label for="allRecipes">All Recipes</label><br>
+        <input id="search-Term" type="text" size="50">
+        <button id="add-button" type="submit">Search</button>
+      </div>
+    </div> --}}
 
-    <div class="row" id="appendSearchItemsHere" style="display:none">
-        <span class="close">&times;</span>
-        <ul>
-            {{#each recipe}}
-            <li>
-                <h2>{{this.title}}</h2>
-                <p>Preparation Time: {{this.preparationTime}}</p>
-                <button viewId={{this.id}} class="viewRecipeButton" type="submit">View Recipe</button>
-                <button editId={{this.id}} class="editRecipeButton" type="submit">Edit Recipe</button>
-                <button deleteId={{this.id}} class="deleteRecipeButton" type="submit">Delete Recipe</button>
-            </li>
-            {{/each}}
-        </ul>
-    </div>
+  <div class="row" id="appendSearchItemsHere" style="display:none">
+    <span class="close">&times;</span>
+    <ul>
+      {{#each recipe}}
+      <li>
+        <h2>{{this.title}}</h2>
+        <p>Preparation Time: {{this.preparationTime}}</p>
+        <button viewId={{this.id}} class="viewRecipeButton" type="submit">View Recipe</button>
+        <button editId={{this.id}} class="editRecipeButton" type="submit">Edit Recipe</button>
+        <button deleteId={{this.id}} class="deleteRecipeButton" type="submit">Delete Recipe</button>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
 
-    <div class="row" id="detailedRecipeViewHere" style="display:none">
-        <span class="close">&times;</span>
-            {{#each recipeDetails}}
-            <div>
-                <h3>{{this.title}}</h3>
-                <p>Ingredients: {{this.ingredients}}</p>
-                <p>Instructions: {{this.instructions}}</p>
-                <p>Preparation Time: {{this.preparationTime}}</p>
-                <p>Servings: {{this.servings}}</p>
-                <p>Notes: {{this.notes}}</p>
-                <button editId={{this.id}} class="editRecipeButton" type="submit">Edit Recipe</button>
-                <button deleteId={{this.id}} class="deleteRecipeButton" type="submit">Delete Recipe</button>
-            </div>
-            {{/each}}
+  <div class="row" id="detailedRecipeViewHere" style="display:none">
+    <span class="close">&times;</span>
+    {{#each recipeDetails}}
+    <div>
+      <h3>{{this.title}}</h3>
+      <p>Ingredients: {{this.ingredients}}</p>
+      <p>Instructions: {{this.instructions}}</p>
+      <p>Preparation Time: {{this.preparationTime}}</p>
+      <p>Servings: {{this.servings}}</p>
+      <p>Notes: {{this.notes}}</p>
+      <button editId={{this.id}} class="editRecipeButton" type="submit">Edit Recipe</button>
+      <button deleteId={{this.id}} class="deleteRecipeButton" type="submit">Delete Recipe</button>
     </div>
+    {{/each}}
+  </div>
 
 
-    <div id="newRecipeForm" style="display:none">
-        <span class="close">&times;</span>
-        <form id="recipeForm" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>Recipe Title.</label>
-                <input class="form-control" name="title" id="recipe-title" type="text" required>
-            </div>
-            <div class="form-group">
-                <label>Ingredients. Please enter each ingredient on a new line.</label>
-                <textarea class="form-control" id="recipe-ingredients" type="text" rows="9" required></textarea>
-            </div>
-            <div class="form-group">
-                <label>Instructions. Please enter each instruction on a new line.</label>
-                <textarea class="form-control" id="recipe-instructions" type="text" rows="9" required></textarea>
-            </div>
-            <div class="form-group">
-                <label>Servings.</label>
-                <input class="form-control" id="recipe-servings" type="number" required>
-            </div>
-            <div class="form-group">
-                <label>Preparation Time.</label>
-                <input class="form-control" id="recipe-preparation-time" type="number" required> 
-            </div>
-            <div class="form-group">
-                <label>Notes.</label>
-                <textarea class="form-control" id="recipe-notes" type="text" rows="5" required></textarea>
-            </div>
-            <div class="form-group">
-                <button id="sendRecipeButton" type="submit">Submit</button>
-            </div>
-        </form>
-    </div>
+  <div id="newRecipeForm" style="display:none">
+    <span class="close">&times;</span>
+    <form id="recipeForm" enctype="multipart/form-data">
+      <div class="form-group">
+        <label>Recipe Title.</label>
+        <input class="form-control" name="title" id="recipe-title" type="text" required>
+      </div>
+      <div class="form-group">
+        <label>Ingredients. Please enter each ingredient on a new line.</label>
+        <textarea class="form-control" id="recipe-ingredients" type="text" rows="9" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Instructions. Please enter each instruction on a new line.</label>
+        <textarea class="form-control" id="recipe-instructions" type="text" rows="9" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Servings.</label>
+        <input class="form-control" id="recipe-servings" type="number" required>
+      </div>
+      <div class="form-group">
+        <label>Preparation Time.</label>
+        <input class="form-control" id="recipe-preparation-time" type="number" required>
+      </div>
+      <div class="form-group">
+        <label>Notes.</label>
+        <textarea class="form-control" id="recipe-notes" type="text" rows="5" required></textarea>
+      </div>
+      <div class="form-group">
+        <button id="sendRecipeButton" type="submit">Submit</button>
+      </div>
+    </form>
+  </div>
 
 </div>
+</div>
+
+<!-- Sticky Footer -->
+<footer class="footer">
+  <div class="container-footer">
+    <img src="/images/e-logo.png" alt="e-logo" style="height: 52px; width: 216px; display: block">
+    <p class="text-muted">© Copyright 2020 All Rights Reserved | Website developed by <a class="has-text-primary"
+        target="_blank" href="https://github.com/nitinmuk">Nitin</a>, <a class="has-text-primary" target="_blank"
+        href="https://github.com/robynheslop">Robyn</a> & <a class="has-text-primary" target="_blank"
+        href="https://github.com/arjaesj">RJ</a></p>
+  </div>
+</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="js/recipes.js"></script>
