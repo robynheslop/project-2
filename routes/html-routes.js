@@ -27,9 +27,13 @@ module.exports = function(app) {
     res.render("login");
   });
 
+  app.get("/recipes-home-page", isAuthenticated, async (request, response) => {
+    response.render("recipes");
+  });
+
   // Here we've add our isAuthenticated middleware to this route.
   // If a user who is not logged in tries to access this route they will be redirected to the signup page
-  app.get("/recipes", isAuthenticated, async (request, response) => {
+  app.get("/my-recipes", isAuthenticated, async (request, response) => {
     const recipeData = await ru.getAllRecipesForCurrentUser(request);
     response.render("recipes", { recipe: recipeData });
   });
