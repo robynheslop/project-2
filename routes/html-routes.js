@@ -40,6 +40,7 @@ module.exports = function(app) {
 
   app.get("/recipes/:id", isAuthenticated, async (request, response) => {
     const recipeDetails = await ru.getRecipeDetails(request);
+    console.log(recipeDetails);
     response.render("recipes", { recipeDetails: recipeDetails });
   });
 };
