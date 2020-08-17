@@ -44,16 +44,16 @@
         </div>
     </div>
 
-    <div class="row" id="appendSearchItemsHere" style="display:none">
+    <div class="row none" id="appendSearchItemsHere">
         <span class="close">&times;</span>
         <ul>
             {{#each recipe}}
             <li>
                 <h2>{{this.title}}</h2>
                 <p>Preparation Time: {{this.preparationTime}}</p>
-                <button viewId={{this.id}} class="viewRecipeButton" type="submit"><i class="fas fa-eye"></i></button>
-                <button editId={{this.id}} class="editRecipeButton" type="submit"><i class="fas fa-edit"></i></button>
-                <button deleteId={{this.id}} class="deleteRecipeButton" type="submit"><i class="fas fa-trash-alt"></i></button>
+                <button viewId={{this.id}} class="viewRecipeButton" type="submit">View Recipe</button>
+                <button editId={{this.id}} class="editRecipeButton" type="submit">Edit Recipe</button>
+                <button deleteId={{this.id}} class="deleteRecipeButton" type="submit">Delete Recipe</button>
             </li>
             {{/each}}
         </ul>

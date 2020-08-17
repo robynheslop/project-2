@@ -2,6 +2,12 @@ $(document).ready(() => {
   let updating = false;
   let recipeID;
 
+  const idToShow = localStorage.getItem("show");
+  if (idToShow) {
+    $(`${idToShow}`).show();
+    localStorage.clear();
+  }
+
   // This file just does a GET request to figure out which user is logged in
   // and updates the HTML on the page
   $.get("/api/user_data").then(data => {
@@ -20,11 +26,6 @@ $(document).ready(() => {
 
   $("#viewAllRecipesButton").on("click", event => {
     event.preventDefault();
-    // display div where all recipes are rendered
-    $("#appendSearchItemsHere").show();
-    $("#newRecipeForm").hide();
-    $("#searchForRecipeForm").hide();
-    // ajax call to get all recipes
     getAllMyRecipes();
   });
 
@@ -54,7 +55,10 @@ $(document).ready(() => {
   };
 
   const getAllMyRecipes = () => {
-    $.get("/my-recipes").then(response => console.log(response));
+    $.get("/my-recipes").then(() => {
+      localStorage.setItem("show", "#appendSearchItemsHere");
+      window.location.replace("/my-recipes");
+    });
   };
 
   const submitNewRecipe = formData => {
