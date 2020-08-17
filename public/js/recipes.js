@@ -59,10 +59,8 @@ $(document).ready(() => {
   };
 
   const getAllMyRecipes = () => {
-    $.get("/my-recipes").then(() => {
-      localStorage.setItem("show", "#appendSearchItemsHere");
-      window.location.replace("/my-recipes");
-    });
+    localStorage.setItem("show", "#appendSearchItemsHere");
+    window.location.replace("/recipes-home-page");
   };
 
   const submitNewRecipe = formData => {
@@ -80,10 +78,8 @@ $(document).ready(() => {
   };
 
   const viewRecipeInDetail = id => {
-    $.get(`/recipes/${id}`).then(() => {
-      localStorage.setItem("show", "#detailedRecipeViewHere");
-      window.location.replace(`/recipes/${id}`);
-    });
+    localStorage.setItem("show", "#detailedRecipeViewHere");
+    window.location.replace(`/recipes/${id}`);
   };
 
   const getRecipeDetailsToUpdate = id => {
@@ -156,20 +152,20 @@ $(document).ready(() => {
   // request details of particular recipe from database
   $(".viewRecipeButton").click(event => {
     event.preventDefault();
-    viewRecipeInDetail(event.target.viewId);
+    viewRecipeInDetail($(event.target).attr("viewId"));
   });
 
   // get details of recipe ready to render on form for editing
   $(".editRecipeButton").click(event => {
     event.preventDefault();
     updating = true;
-    recipeID = event.target.editId;
+    recipeID = $(event.target).attr("editId");
     getRecipeDetailsToUpdate(recipeID);
   });
 
   // sending a delete request for a recipe id
   $(".deleteRecipeButton").click(event => {
     event.preventDefault();
-    removeRecipe(event.target.deleteId);
+    removeRecipe($(event.target).attr("deleteId"));
   });
 });

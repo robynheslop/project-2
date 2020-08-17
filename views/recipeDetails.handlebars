@@ -1,0 +1,17 @@
+<div class="row" id="detailedRecipeViewHere">
+    <span class="close">&times;</span>
+    <div>
+        <h3>{{recipeDetails.title}}</h3>
+        <p> Ingredients:
+            {{#each recipeDetails.ingredients}}
+                <p>{{this.quantity}} {{this.unit}} {{this.title}}</p>
+            {{/each}}
+        </p>
+        <p>Instructions: {{recipeDetails.instructions}}</p>
+        <p>Preparation Time: {{recipeDetails.preparationTime}}</p>
+        <p>Servings: {{recipeDetails.servings}}</p>
+        <p>Notes: {{recipeDetails.notes}}</p>
+        <button editId="{{recipeDetails.id}}" class="editRecipeButton" type="submit">Edit Recipe</button>
+        <button deleteId="{{recipeDetails.id}}" class="deleteRecipeButton" type="submit">Delete Recipe</button>
+    </div>
+</div>

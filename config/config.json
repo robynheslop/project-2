@@ -1,7 +1,7 @@
 {
     "development": {
         "username": "root",
-        "password": "M@r@131910",
+        "password": "root",
         "database": "timeless_recipe",
         "host": "127.0.0.1",
         "dialect": "mysql"
