@@ -1,4 +1,6 @@
 $(document).ready(() => {
+  var updating = false;
+
   // This file just does a GET request to figure out which user is logged in
   // and updates the HTML on the page
   $.get("/api/user_data").then(data => {
@@ -8,6 +10,8 @@ $(document).ready(() => {
   // display form to add a new recipe
   $("#addNewRecipeButton").on("click", event => {
     event.preventDefault();
+    updating = false;
+    console.log("updating: " + updating);
     $("#newRecipeForm").show();
     $("#appendSearchItemsHere").hide();
     $("#searchForRecipeForm").hide();
@@ -20,7 +24,7 @@ $(document).ready(() => {
     $("#newRecipeForm").hide();
     $("#searchForRecipeForm").hide();
     // ajax call to get all recipes
-    $.get("/api/recipes").then(response => console.log(response));
+    getAllRecipes();
   });
 
   // display form to search for a recipe
@@ -39,20 +43,39 @@ $(document).ready(() => {
     $("#searchForRecipeForm").hide();
   });
 
-  $("#sendRecipeButton").on("click", event => {
-    event.preventDefault();
-    // hide form
-    $("#newRecipeForm").hide();
-    // pull values from form and save in object for post request
-    const formData = {
-      title: $("#recipe-title").val(),
-      instructions: $("#recipe-instructions").val(),
-      servings: $("#recipe-servings").val(),
-      preparationTime: $("#recipe-preparation-time").val(),
-      notes: $("#recipe-notes").val()
-    };
-    // ajax request to spoonacular
-    $.ajax({
+  const clearFormFields = () => {
+    $("#recipe-title").val("");
+    $("#recipe-instructions").val("");
+    $("#recipe-servings").val("");
+    $("#recipe-preparation-time").val("");
+    $("#recipe-notes").val("");
+    $("#recipe-ingredients").val("");
+  };
+
+  // no API in url as server side will render response
+  const getAllRecipes = () => {
+    $.get("/recipes").then(response => console.log(response));
+  };
+
+  const submitNewRecipe = formData => {
+    $.post("/api/recipe", formData).then(response => console.log(response));
+  };
+
+  const submitUpdatedRecipe = formData => {
+    $.put("/api/recipe/" + formData.id, formData).then(response => console.log(response));
+  };
+
+  // no API in url as server side will render response
+  const findRecipesUsingCriteria = formData => {
+    $.get("/recipe/search", formData).then(response => console.log(response));
+  };
+
+  const viewRecipeInDetail = id => {
+    $.get(`/api/recipes/${id}`).then(response => console.log(response));
+  };
+
+  const parseRecipesWithSpoonacular = () => {
+    return $.ajax({
       url:
         "https://api.spoonacular.com/recipes/parseIngredients?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5",
       method: "POST",
@@ -60,28 +83,53 @@ $(document).ready(() => {
         ingredientList: $("#recipe-ingredients").val(),
         servings: $("#recipe-servings").val()
       }
-    }).then(response => {
-      // map over response and save the name, amount and serving in an object to the array separated ingredients
-      const separatedIngredients = response.map(item => {
-        return {
-          title: item.originalName,
-          quantity: item.amount,
-          units: item.unitShort
-        };
-      });
-      console.log(separatedIngredients);
-      // add this array to formData
-      formData.ingredients = separatedIngredients;
-      // post formData
-      $.post("/api/recipe", formData).then(result => console.log(result));
-      // clear form fields
-      $("#recipe-title").val("");
-      $("#recipe-instructions").val("");
-      $("#recipe-servings").val("");
-      $("#recipe-preparation-time").val("");
-      $("#recipe-notes").val("");
-      $("#recipe-ingredients").val("");
     });
+  };
+
+  const getRecipeDetailsToUpdate = () => {
+    $.get(`/api/recipes/${event.target.id}`).then(response => {
+      $("#recipe-title").val(response.title);
+      $("#recipe-ingredients").val(response.ingredients);
+      $("#recipe-instructions").val(response.instructions);
+      $("#recipe-servings").val(response.servings);
+      $("#recipe-preparation-time").val(response.preparationTime);
+      $("#recipe-notes").val(response.notes);
+    });
+  };
+
+  const removeRecipe = id => {
+    $.delete(`/api/recipes/${id}`).then(response => console.log(response));
+  };
+
+  $("#sendRecipeButton").on("click", async event => {
+    event.preventDefault();
+    $("#newRecipeForm").hide();
+    // ajax request to spoonacular
+    const ingredientResponse = await parseRecipesWithSpoonacular();
+    const separatedIngredients = await ingredientResponse.map(item => {
+      return {
+        title: item.originalName,
+        quantity: item.amount,
+        units: item.unitShort
+      };
+    });
+    const formData = {
+      title: $("#recipe-title").val(),
+      instructions: $("#recipe-instructions").val(),
+      ingredients: separatedIngredients,
+      servings: $("#recipe-servings").val(),
+      preparationTime: $("#recipe-preparation-time").val(),
+      notes: $("#recipe-notes").val()
+    };
+    if (updating) {
+      formData.id = recipeID;
+      submitUpdatedRecipe(formData);
+    } else {
+      submitNewRecipe(formData);
+    }
+    updating = false;
+    console.log("updating: " + updating);
+    clearFormFields();
   });
 
   $("#searchRecipeButton").on("click", event => {
@@ -90,44 +138,26 @@ $(document).ready(() => {
       location: $("input[name='recipesToSearch']:checked").val(),
       content: $("#searchTerm").val()
     };
-    $.get("/api/search", {
-      body: formData
-    }).then(response => console.log(response));
+    findRecipesUsingCriteria(formData);
   });
 
   // request details of particular recipe from database
   $(".viewRecipeButton").click(event => {
     event.preventDefault();
-    $.ajax({
-      url: `/api/recipes/${event.target.id}`,
-      type: "GET",
-      success: function(result) {
-        console.log(result);
-      }
-    });
+    viewRecipeInDetail(event.target.id);
   });
 
   // get details of recipe ready to render on form for editing
   $(".editRecipeButton").click(event => {
     event.preventDefault();
-    $.ajax({
-      url: `/api/recipes/${event.target.id}`,
-      type: "GET",
-      success: function(result) {
-        console.log(result);
-      }
-    });
+    updating = true;
+    console.log("updating: " + updating);
+    getRecipeDetailsToUpdate();
   });
 
   // sending a delete request for a recipe id
   $(".deleteRecipeButton").click(event => {
     event.preventDefault();
-    $.ajax({
-      url: `/api/recipes/${event.target.id}`,
-      type: "DELETE",
-      success: function(result) {
-        console.log(result);
-      }
-    });
+    removeRecipe(event.target.id);
   });
 });

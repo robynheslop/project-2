@@ -65,27 +65,27 @@
         <form id="recipeForm" enctype="multipart/form-data">
             <div class="form-group">
                 <label>Recipe Title.</label>
-                <input class="form-control" name="title" id="recipe-title" type="text">
+                <input class="form-control" name="title" id="recipe-title" type="text" required>
             </div>
             <div class="form-group">
                 <label>Ingredients. Please enter each ingredient on a new line.</label>
-                <textarea class="form-control" id="recipe-ingredients" type="text" rows="9"></textarea>
+                <textarea class="form-control" id="recipe-ingredients" type="text" rows="9" required></textarea>
             </div>
             <div class="form-group">
                 <label>Instructions. Please enter each instruction on a new line.</label>
-                <textarea class="form-control" id="recipe-instructions" type="text" rows="9"></textarea>
+                <textarea class="form-control" id="recipe-instructions" type="text" rows="9" placeholder="For example:\n 1 cup Flour.\n 1/2 cup Sugar"required></textarea>
             </div>
             <div class="form-group">
                 <label>Servings.</label>
-                <input class="form-control" id="recipe-servings" type="number">
+                <input class="form-control" id="recipe-servings" type="number" min="0" aria-label=required>
             </div>
             <div class="form-group">
                 <label>Preparation Time.</label>
-                <input class="form-control" id="recipe-preparation-time" type="number">
+                <input class="form-control" id="recipe-preparation-time" type="number" min="0" required> 
             </div>
             <div class="form-group">
                 <label>Notes.</label>
-                <textarea class="form-control" id="recipe-notes" type="text" rows="5"></textarea>
+                <textarea class="form-control" id="recipe-notes" type="text" rows="5" required></textarea>
             </div>
             <div class="form-group">
                 <button id="sendRecipeButton" type="submit">Submit</button>
