@@ -1,5 +1,5 @@
 $(document).ready(() => {
-  var updating = false;
+  let updating = false;
 
   // This file just does a GET request to figure out which user is logged in
   // and updates the HTML on the page
@@ -62,7 +62,9 @@ $(document).ready(() => {
   };
 
   const submitUpdatedRecipe = formData => {
-    $.put("/api/recipe/" + formData.id, formData).then(response => console.log(response));
+    $.put("/api/recipe/" + formData.id, formData).then(
+      console.log("submitted")
+    );
   };
 
   // no API in url as server side will render response
