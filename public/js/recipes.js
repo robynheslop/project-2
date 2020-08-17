@@ -2,6 +2,16 @@ $(document).ready(() => {
   let updating = false;
   let recipeID;
 
+  // get food fact for homepage
+  $.get(
+    "https://api.spoonacular.com/food/trivia/random?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5"
+  ).then(response => console.log(response));
+
+  // get food joke for homepage
+  $.get(
+    "https://api.spoonacular.com/food/jokes/random?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5"
+  ).then(response => console.log(response));
+
   // check for information in local storange regarding divs to show when page loads
   const idToShow = localStorage.getItem("show");
   if (idToShow) {
@@ -59,8 +69,10 @@ $(document).ready(() => {
   };
 
   const getAllMyRecipes = () => {
-    localStorage.setItem("show", "#appendSearchItemsHere");
-    window.location.replace("/recipes-home-page");
+    $.get("/my-recipes").then(() => {
+      localStorage.setItem("show", "#appendSearchItemsHere");
+      window.location.replace("/my-recipes");
+    });
   };
 
   const submitNewRecipe = formData => {
@@ -78,8 +90,10 @@ $(document).ready(() => {
   };
 
   const viewRecipeInDetail = id => {
-    localStorage.setItem("show", "#detailedRecipeViewHere");
-    window.location.replace(`/recipes/${id}`);
+    $.get(`/recipes/${id}`).then(() => {
+      localStorage.setItem("show", "#detailedRecipeViewHere");
+      window.location.replace(`/recipes/${id}`);
+    });
   };
 
   const getRecipeDetailsToUpdate = id => {
