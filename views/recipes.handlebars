@@ -1,11 +1,3 @@
-<header class="container header" id="timeless-recipes-header">
-  <div class="col-md-9" id="logo-header">
-    <img src="/images/timeless-recipe-logo.png" alt="timeless-recipes-logo" id="timeless-recipes-logo">
-  </div>
-  <p style="margin-left: 225px"><a href="/logout">Log out</a></p>
-  <hr>
-</header>
-
 <div class="container">
   <div class="row center">
     <div class="col-md-12">
@@ -14,9 +6,10 @@
     </div>
   </div>
 
+  {{!-- Specific recipe search --}}
   <div class="row">
     <div class="col-md-2"></div>
-    <div class="form-group col-md-4 search-view-recipes">
+    <div class="form-group col-md-4 search-view-recipes" id="searchForRecipeForm" style="display:show">
       <h4>Search for a specific dish</h4>
       <input type="text" class="form-control" placeholder="Enter dish name here" id="searchTerm">
       <div class="form-check">
@@ -33,6 +26,7 @@
       </div>
       <button type="submit" class="btn btn-primary disabled" id="searchRecipeButton">Search</button>
 
+      {{!-- Logo separator --}}
       <br>
       <img src="/images/e-logo.png"
         style="height: 52px; width: 216px; display: block; margin-top: 50px; margin-left: 70px;" alt="e-logo">
@@ -43,10 +37,12 @@
 
     </div>
 
+    {{!-- Vertical line element --}}
     <div class="col-md-1 vertical"></div>
 
-    <div class="col-md-6 recommended-recipes">
-      <h4>Would you like to try these?</h4>
+    {{!-- Dish of the day --}}
+    <div class="col-md-6 recommended-recipes" id="dishOftheDay" style="display:show">
+      <h4>Would you like to try this?</h4>
 
       <div class="card border-light mb-3" style="width: 200px;">
         <div class="card-header">Recipe 1</div>
@@ -56,29 +52,14 @@
       </div>
     </div>
 
+  </div>
 
-    {{!-- 
-
-        <div class="card-header">Recipe 2</div>
-        <div class="card-body">
-          <img src="/images/pancake.png" alt="recommendation2" style="height: 120px; width: 200px; display: block;">
-        </div>
-      </div>
-
-      <div class="col-md-2 recommended-recipes2">
-        <div class="card border-light mb-3" style="width: 200px;">
-          <div class="card-header">Recipe 3</div>
-          <div class="card-body">
-            <img src="/images/pancake.png" alt="recommendation3" style="height: 120px; width: 200px; display: block;">
-          </div>
-
-          <div class="card-header">Recipe 4</div>
-          <div class="card-body">
-            <img src="/images/pancake.png" alt="recommendation4" style="height: 120px; width: 200px; display: block;">
-          </div>
-        </div>
-
-      </div> --}}
+  {{!-- Create Recipe Button --}}
+  <div class="row center" id="addNewRecipe" style="display:show">
+    <div class="col-md-12">
+      <h4>Have a dish in mind?</h4>
+      <button type="submit" class="btn btn-primary disabled" id="addNewRecipeButton">Add a new Recipe</button>
+    </div>
   </div>
 
 
@@ -142,7 +123,7 @@
   </div>
 
 
-  <div id="newRecipeForm" style="display:none">
+  <div class="col-md-8" id="newRecipeForm" style="display:none">
     <span class="close">&times;</span>
     <form id="recipeForm" enctype="multipart/form-data">
       <div class="form-group">
@@ -151,26 +132,28 @@
       </div>
       <div class="form-group">
         <label>Ingredients. Please enter each ingredient on a new line.</label>
-        <textarea class="form-control" id="recipe-ingredients" type="text" rows="9" required></textarea>
+        <textarea class="form-control" id="recipe-ingredients" type="text" rows="9"
+          placeholder="250g Kobe Sirloin Steak&#13;&#10;3 tsp salt" required></textarea>
       </div>
       <div class="form-group">
         <label>Instructions. Please enter each instruction on a new line.</label>
-        <textarea class="form-control" id="recipe-instructions" type="text" rows="9" required></textarea>
+        <textarea class="form-control" id="recipe-instructions" type="text" rows="9"
+          placeholder="1. Season with salt & pepper&#13;&#10;2. Grill on a very hot pan." required></textarea>
       </div>
       <div class="form-group">
         <label>Servings.</label>
-        <input class="form-control" id="recipe-servings" type="number" required>
+        <input class="form-control" id="recipe-servings" type="number" min="0" required>
       </div>
       <div class="form-group">
         <label>Preparation Time.</label>
-        <input class="form-control" id="recipe-preparation-time" type="number" required>
+        <input class="form-control" id="recipe-preparation-time" type="number" min="0" required>
       </div>
       <div class="form-group">
         <label>Notes.</label>
         <textarea class="form-control" id="recipe-notes" type="text" rows="5" required></textarea>
       </div>
       <div class="form-group">
-        <button id="sendRecipeButton" type="submit">Submit</button>
+        <button class="btn btn-primary disabled" id="sendRecipeButton" type="submit">Submit</button>
       </div>
     </form>
   </div>
@@ -190,4 +173,4 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script type="text/javascript" src="js/recipes.js"></script>
+<script type="text/javascript" src="/js/recipes.js"></script>

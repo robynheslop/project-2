@@ -7,7 +7,7 @@
 
 .vertical {
     border-left: 1px solid grey;
-    height: 370px;
+    height: 400px;
     position: absolute;
     left: 50%;
     display: none;
@@ -46,10 +46,16 @@
     display: flex;
 }
 
+.header-links {
+    display: flex;
+    justify-content: space-around;
+}
+
 hr {
     width: 60%;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 0px;
 }
 
 .col-md-9 {
@@ -63,4 +69,10 @@ hr {
 
 button {
     margin-top: 10px;
+}
+
+#addNewRecipe,
+#newRecipeForm {
+    margin: auto;
+    margin-top: 5px;
 }
