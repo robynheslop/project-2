@@ -1,5 +1,6 @@
 $(document).ready(() => {
   let updating = false;
+  let recipeID;
 
   // This file just does a GET request to figure out which user is logged in
   // and updates the HTML on the page
@@ -24,7 +25,7 @@ $(document).ready(() => {
     $("#newRecipeForm").hide();
     $("#searchForRecipeForm").hide();
     // ajax call to get all recipes
-    getAllRecipes();
+    getAllMyRecipes();
   });
 
   // display form to search for a recipe
@@ -52,9 +53,8 @@ $(document).ready(() => {
     $("#recipe-ingredients").val("");
   };
 
-  // no API in url as server side will render response
-  const getAllRecipes = () => {
-    $.get("/recipes").then(response => console.log(response));
+  const getAllMyRecipes = () => {
+    $.get("/my-recipes").then(response => console.log(response));
   };
 
   const submitNewRecipe = formData => {
@@ -67,7 +67,6 @@ $(document).ready(() => {
     );
   };
 
-  // no API in url as server side will render response
   const findRecipesUsingCriteria = formData => {
     $.get("/recipe/search", formData).then(response => console.log(response));
   };
@@ -76,20 +75,8 @@ $(document).ready(() => {
     $.get(`/api/recipes/${id}`).then(response => console.log(response));
   };
 
-  const parseRecipesWithSpoonacular = () => {
-    return $.ajax({
-      url:
-        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5",
-      method: "POST",
-      data: {
-        ingredientList: $("#recipe-ingredients").val(),
-        servings: $("#recipe-servings").val()
-      }
-    });
-  };
-
-  const getRecipeDetailsToUpdate = () => {
-    $.get(`/api/recipes/${event.target.id}`).then(response => {
+  const getRecipeDetailsToUpdate = id => {
+    $.get(`/api/recipes/${id}`).then(response => {
       $("#recipe-title").val(response.title);
       $("#recipe-ingredients").val(response.ingredients);
       $("#recipe-instructions").val(response.instructions);
@@ -101,6 +88,19 @@ $(document).ready(() => {
 
   const removeRecipe = id => {
     $.delete(`/api/recipes/${id}`).then(response => console.log(response));
+  };
+
+
+  const parseRecipesWithSpoonacular = () => {
+    return $.ajax({
+      url:
+        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5",
+      method: "POST",
+      data: {
+        ingredientList: $("#recipe-ingredients").val(),
+        servings: $("#recipe-servings").val()
+      }
+    });
   };
 
   $("#sendRecipeButton").on("click", async event => {
@@ -130,7 +130,7 @@ $(document).ready(() => {
       submitNewRecipe(formData);
     }
     updating = false;
-    console.log("updating: " + updating);
+    recipeID = "";
     clearFormFields();
   });
 
@@ -146,20 +146,20 @@ $(document).ready(() => {
   // request details of particular recipe from database
   $(".viewRecipeButton").click(event => {
     event.preventDefault();
-    viewRecipeInDetail(event.target.id);
+    viewRecipeInDetail(event.target.viewId);
   });
 
   // get details of recipe ready to render on form for editing
   $(".editRecipeButton").click(event => {
     event.preventDefault();
     updating = true;
-    console.log("updating: " + updating);
-    getRecipeDetailsToUpdate();
+    recipeID = event.target.editId;
+    getRecipeDetailsToUpdate(recipeID);
   });
 
   // sending a delete request for a recipe id
   $(".deleteRecipeButton").click(event => {
     event.preventDefault();
-    removeRecipe(event.target.id);
+    removeRecipe(event.target.deleteId);
   });
 });
