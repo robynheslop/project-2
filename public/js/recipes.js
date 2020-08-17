@@ -80,9 +80,9 @@ $(document).ready(() => {
   };
 
   const viewRecipeInDetail = id => {
-    $.get(`/api/recipes/${id}`).then(() => {
+    $.get(`/recipes/${id}`).then(() => {
       localStorage.setItem("show", "#detailedRecipeViewHere");
-      window.location.replace(`/api/recipes/${id}`);
+      window.location.replace(`/recipes/${id}`);
     });
   };
 
