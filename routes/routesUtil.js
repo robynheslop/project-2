@@ -135,9 +135,30 @@ const getAllRecipesForCurrentUser = async request => {
   }
 };
 
+const getRecipeDetails = async request => {
+  const recipeId = request.params.id;
+  const recipe = await db.Recipe.findOne({
+    where: {
+      id: recipeId
+    }
+  });
+  const ingredients = await recipe.getRecipeIngredient();
+  console.log(JSON.stringify(ingredients));
+  const recipeDetails = {
+    title: recipe.title,
+    instructions: recipe.instructions,
+    preparationTime: recipe.preparationTime,
+    servings: recipe.servings,
+    notes: recipe.notes
+  };
+  return recipeDetails;
+
+}
+
 module.exports = {
   createRecipe,
   persistAndFetchIngredients,
   persistRecipeIngredients,
-  getAllRecipesForCurrentUser
+  getAllRecipesForCurrentUser,
+  getRecipeDetails
 };

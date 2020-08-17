@@ -39,7 +39,7 @@ module.exports = function(app) {
   });
 
   app.get("/recipes/:id", isAuthenticated, async (request, response) => {
-    const recipeDetails = await ru.getRecipeDetails(request.params.id);
-    response.render("recipes", { recipe: recipeDetails });
+    const recipeDetails = await ru.getRecipeDetails(request);
+    response.render("recipes", { recipeDetails: recipeDetails });
   });
 };
