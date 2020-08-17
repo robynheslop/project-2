@@ -6,7 +6,7 @@ $(document).ready(() => {
   const idToShow = localStorage.getItem("show");
   if (idToShow) {
     $(`${idToShow}`).show();
-    localStorage.clear();
+    localStorage.removeItem("show");
   }
 
   // This file just does a GET request to figure out which user is logged in
