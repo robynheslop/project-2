@@ -90,7 +90,6 @@ $(document).ready(() => {
     $.delete(`/api/recipes/${id}`).then(response => console.log(response));
   };
 
-
   const parseRecipesWithSpoonacular = () => {
     return $.ajax({
       url:
