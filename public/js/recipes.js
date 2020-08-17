@@ -28,7 +28,19 @@ $(document).ready(() => {
 
   $("#viewAllRecipesButton").on("click", event => {
     event.preventDefault();
+<<<<<<< HEAD
     getAllMyRecipes();
+=======
+    // display div where all recipes are rendered
+    $("#appendSearchItemsHere").show();
+    $("#newRecipeForm").hide();
+    $("#searchForRecipeForm").hide();
+    // ajax call to get all recipes
+    $.get("/my-recipes").then(() => {
+      window.location.replace("/my-recipes");
+      $("#appendSearchItemsHere").show();
+    });
+>>>>>>> fe43c8c... BR10.10_Adding Get Route For Receipe Details Based On Id
   });
 
   // display form to search for a recipe

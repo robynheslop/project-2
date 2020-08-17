@@ -27,7 +27,7 @@ module.exports = function(app) {
     res.render("login");
   });
 
-  app.get("/recipes-home-page", isAuthenticated, async (request, response) => {
+  app.get("/recipes-home-page", isAuthenticated, (request, response) => {
     response.render("recipes");
   });
 
@@ -36,5 +36,10 @@ module.exports = function(app) {
   app.get("/my-recipes", isAuthenticated, async (request, response) => {
     const recipeData = await ru.getAllRecipesForCurrentUser(request);
     response.render("recipes", { recipe: recipeData });
+  });
+
+  app.get("/recipes/:id", isAuthenticated, async (request, response) => {
+    const recipeDetails = await ru.getRecipeDetails(request.params.id);
+    response.render("recipes", { recipe: recipeDetails });
   });
 };
