@@ -23,6 +23,7 @@ $(document).ready(() => {
     $("#newRecipeForm").show();
     $("#appendSearchItemsHere").hide();
     $("#searchForRecipeForm").hide();
+    $("#detailedRecipeViewHere").hide();
   });
 
   $("#viewAllRecipesButton").on("click", event => {
@@ -36,6 +37,7 @@ $(document).ready(() => {
     $("#newRecipeForm").hide();
     $("#appendSearchItemsHere").hide();
     $("#searchForRecipeForm").show();
+    $("#detailedRecipeViewHere").show();
   });
 
   // hide all of the divs above
@@ -44,6 +46,7 @@ $(document).ready(() => {
     $("#newRecipeForm").hide();
     $("#appendSearchItemsHere").hide();
     $("#searchForRecipeForm").hide();
+    $("#detailedRecipeViewHere").hide();
   });
 
   const clearFormFields = () => {
@@ -77,7 +80,10 @@ $(document).ready(() => {
   };
 
   const viewRecipeInDetail = id => {
-    $.get(`/api/recipes/${id}`).then(response => console.log(response));
+    $.get(`/recipes/${id}`).then(() => {
+      localStorage.setItem("show", "#detailedRecipeViewHere");
+      window.location.replace(`/recipes/${id}`);
+    });
   };
 
   const getRecipeDetailsToUpdate = id => {
