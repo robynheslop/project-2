@@ -2,6 +2,7 @@ $(document).ready(() => {
   let updating = false;
   let recipeID;
 
+  // check for information in local storange regarding divs to show when page loads
   const idToShow = localStorage.getItem("show");
   if (idToShow) {
     $(`${idToShow}`).show();
