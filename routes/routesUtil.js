@@ -174,7 +174,6 @@ const getRecipeDetails = async request => {
         };
       });
     }
-    console.log(recipe);
     const recipeDetails = {
       title: recipe.title,
       instructions: recipe.instructions,

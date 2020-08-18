@@ -64,7 +64,7 @@ const submitNewRecipe = formData => {
   $.post("/api/recipe", formData).then(response => console.log(response));
 };
 
-const clearRecipeDataFieldsAfterSubmission = () => {
+const resetFormAfterSubmission = () => {
   updating = false;
   recipeID = "";
   $("#recipe-title").val("");
@@ -118,16 +118,6 @@ $(document).ready(() => {
   let recipeID;
   initiaizeFirebase();
 
-  // get food fact for homepage
-  // $.get(
-  //   "https://api.spoonacular.com/food/trivia/random?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5"
-  // ).then(response => console.log(response));
-
-  // get food joke for homepage
-  // $.get(
-  //   "https://api.spoonacular.com/food/jokes/random?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5"
-  // ).then(response => console.log(response));
-
   // check for information in local storange regarding divs to show when page loads
   const idToShow = localStorage.getItem("show");
   if (idToShow) {
@@ -174,6 +164,8 @@ $(document).ready(() => {
 
   $("#sendRecipeButton").on("click", async event => {
     event.preventDefault();
+    // disable submit button
+    $("#sendRecipeButton").prop("disabled", true);
     const ingredientResponse = await parseRecipesWithSpoonacular();
     const separatedIngredients = filterIngredientListFromSpoonacular(
       ingredientResponse
@@ -194,7 +186,7 @@ $(document).ready(() => {
     } else {
       submitNewRecipe(formData);
     }
-    clearRecipeDataFieldsAfterSubmission();
+    resetFormAfterSubmission();
   });
 
   $("#searchRecipeButton").on("click", event => {
