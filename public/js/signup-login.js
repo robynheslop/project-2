@@ -32,8 +32,8 @@ $(document).ready(() => {
         $.get("/api/user_data").then(data => {
           localStorage.setItem("userEmail", data.email);
           localStorage.setItem("userId", data.id);
-          // get food fact for homepage
         });
+        window.location.replace("/recipes-home-page");
         // If there's an error, handle it by throwing up a bootstrap alert
       })
       .catch(handleLoginErr);
