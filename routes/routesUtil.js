@@ -125,13 +125,7 @@ const getAllRecipesForCurrentUser = async request => {
       },
       attributes: ["id", "title", "preparationTime"]
     });
-    return recipes.map(recipe => {
-      return {
-        title: recipe.title,
-        preparationTime: recipe.preparationTime,
-        id: recipe.id
-      };
-    });
+    return mapRecipeHighLevelDetails(recipes, userId);
   } catch (error) {
     console.log(`Failed to retrieve recipes due to following error: ${error}`);
   }
@@ -193,10 +187,83 @@ const getRecipeDetails = async request => {
   }
 };
 
+const getRecipesByTextSearch = async request => {
+  try {
+    const userId = request.user.id;
+    const searchText = request.query.searchText.toLowerCase();
+    const relevantIngredientIds = await db.Ingredient.findAll({
+      where: {
+        title: {
+          [Op.like]: `%${searchText}%`
+        }
+      },
+      attributes: ["id"]
+    });
+    let ingredientBasedRecipeIds = [];
+    if (relevantIngredientIds && relevantIngredientIds.length) {
+      const ingredientIds = relevantIngredientIds.map(element => element.id);
+      ingredientBasedRecipeIds = await db.RecipeIngredient.findAll({
+        where: {
+          IngredientId: {
+            [Op.or]: ingredientIds
+          }
+        },
+        attributes: ["RecipeId"]
+      });
+    }
+    let searchedRecipes = await db.Recipe.findAll({
+      where: {
+        [Op.or]: [
+          {
+            title: {
+              [Op.like]: `%${searchText}%`
+            }
+          },
+          {
+            id: {
+              [Op.or]: ingredientBasedRecipeIds.map(element => element.RecipeId)
+            }
+          }
+        ]
+      },
+      attributes: ["id", "title", "preparationTime", "UserId"]
+    });
+    if (request.query.onlyUserRecipes) {
+      searchedRecipes = searchedRecipes.filter(
+        recipe => recipe.UserId === userId
+      );
+    }
+    return mapRecipeHighLevelDetails(searchedRecipes, userId);
+  } catch (error) {
+    console.log(
+      `error ocurred while searching for recipes based on search criteria: ${JSON.stringify(
+        request.query
+      )} detailed error is following: ${error.stack}`
+    );
+  }
+};
+
+/**
+ * maps list of recipe to desired data for client
+ * @param {array of recipe to map} recipes
+ * @param {current userId} userId
+ */
+function mapRecipeHighLevelDetails(recipes, userId) {
+  return recipes.map(recipe => {
+    return {
+      title: recipe.title,
+      preparationTime: recipe.preparationTime,
+      id: recipe.id,
+      userRecipe: recipe.UserId === userId
+    };
+  });
+}
+
 module.exports = {
   createRecipe,
   persistAndFetchIngredients,
   persistRecipeIngredients,
   getAllRecipesForCurrentUser,
-  getRecipeDetails
+  getRecipeDetails,
+  getRecipesByTextSearch
 };

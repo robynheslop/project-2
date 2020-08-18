@@ -86,7 +86,9 @@ const viewRecipeInDetail = id => {
 
 // search by criteria
 const findRecipesUsingCriteria = formData => {
-  $.get("/recipe/search", formData).then(response => console.log(response));
+  location.assign(
+    `/recipe/search/?onlyUserRecipes=${formData.onlyUserRecipes}&searchText=${formData.searchText}`
+  );
 };
 
 // delete recipe
@@ -200,8 +202,11 @@ $(document).ready(() => {
   $("#searchRecipeButton").on("click", event => {
     event.preventDefault();
     const formData = {
-      location: $("input[name='recipesToSearch']:checked").val(),
-      content: $("#searchTerm").val()
+      onlyUserRecipes:
+        $("input[name='recipesToSearch']:checked").val() === "my-recipes"
+          ? true
+          : false,
+      searchText: $("#searchTerm").val()
     };
     findRecipesUsingCriteria(formData);
   });
