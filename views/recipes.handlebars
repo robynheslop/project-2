@@ -24,7 +24,7 @@
           All Recipes
         </label>
       </div>
-      <button type="submit" class="btn btn-primary disabled" id="searchRecipeButton">Search</button>
+      <button type="submit" class="btn btn-primary disabled" id="searchForRecipeButton">Search</button>
 
       {{!-- Logo separator --}}
       <br>
@@ -62,7 +62,10 @@
     </div>
   </div>
 
+  {{!-- Food facts & Food Jokes --}}
+  <div class="row center" id="food-facts-jokes" style="display:show">
 
+<<<<<<< HEAD
   {{!-- <h3>I want to....</h3>
     <button id="addNewRecipeButton">
       Add A New Recipe
@@ -105,23 +108,19 @@
       {{/each}}
     </ul>
   </div>
-
-  <div class="row" id="detailedRecipeViewHere" style="display:none">
-    <span class="close">&times;</span>
-    {{#each recipeDetails}}
-    <div>
-      <h3>{{this.title}}</h3>
-      <p>Ingredients: {{this.ingredients}}</p>
-      <p>Instructions: {{this.instructions}}</p>
-      <p>Preparation Time: {{this.preparationTime}}</p>
-      <p>Servings: {{this.servings}}</p>
-      <p>Notes: {{this.notes}}</p>
-      <button editId={{this.id}} class="editRecipeButton" type="submit">Edit Recipe</button>
-      <button deleteId={{this.id}} class="deleteRecipeButton" type="submit">Delete Recipe</button>
+=======
+    <div class="col-md-4" id="food-facts">
+      <h4>Food for thought:</h4>
+      <p class="food-fact"></p>
     </div>
-    {{/each}}
-  </div>
+>>>>>>> added food facts & food jokes to homepage & scrollin to add recipe page
 
+    <div class="col-md-4" id="food-jokes">
+      <h4>Laughing stock:</h4>
+      <p class="food-joke"></p>
+    </div>
+
+  </div>
 
   <div class="col-md-8" id="newRecipeForm" style="display:none">
     <span class="close">&times;</span>
@@ -164,18 +163,7 @@
   </div>
 
 </div>
-</div>
 
-<!-- Sticky Footer -->
-<footer class="footer">
-  <div class="container-footer">
-    <img src="/images/e-logo.png" alt="e-logo" style="height: 52px; width: 216px; display: block">
-    <p class="text-muted">© Copyright 2020 All Rights Reserved | Website developed by <a class="has-text-primary"
-        target="_blank" href="https://github.com/nitinmuk">Nitin</a>, <a class="has-text-primary" target="_blank"
-        href="https://github.com/robynheslop">Robyn</a> & <a class="has-text-primary" target="_blank"
-        href="https://github.com/arjaesj">RJ</a></p>
-  </div>
-</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="/js/recipes.js"></script>

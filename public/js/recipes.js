@@ -135,6 +135,7 @@ $(document).ready(() => {
     $(".vertical").hide();
     $("#dishOftheDay").hide();
     $("#addNewRecipe").hide();
+    $("#food-facts-jokes").hide();
   });
 
   $("#viewAllRecipesButton").on("click", event => {
@@ -145,6 +146,7 @@ $(document).ready(() => {
     $(".vertical").hide();
     $("#dishOftheDay").hide();
     $("#addNewRecipe").hide();
+    $("#food-facts-jokes").hide();
   });
 
   $("#searchForRecipeButton").on("click", event => {
