@@ -72,7 +72,56 @@ button {
 }
 
 #addNewRecipe,
-#newRecipeForm {
+#newRecipeForm,
+#appendSearchItemsHere {
     margin: auto;
     margin-top: 5px;
+}
+#food-facts-jokes {
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.food-fact,
+.food-joke {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+#newRecipeForm,
+#appendSearchItemsHere {
+    overflow-y: scroll;
+    height:calc(50vh - 40px);
+}
+
+#appendSearchItemsHere {
+    display: none;
+}
+
+.recipe-card {
+    margin-top: 20px;
+    justify-content: space-evenly;
+}
+p.recipe-card-prep-time {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+
+#newRecipeForm {
+    overflow-y: scroll;
+    height:calc(50vh - 40px);
+}
+   
+#appendSearchItemsHere {
+    display: none;
+}
+
+.recipe-card {
+    margin-top: 20px;
+    justify-content: space-evenly;
+}
+p.recipe-card-prep-time {
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
