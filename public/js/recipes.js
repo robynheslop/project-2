@@ -50,18 +50,9 @@ const parseRecipesWithSpoonacular = () => {
   });
 };
 
-const filterIngredientListFromSpoonacular = ingredientResponse => {
-  ingredientResponse.map(item => {
-    return {
-      title: item.originalName,
-      quantity: item.amount,
-      units: item.unitShort
-    };
-  });
-};
-
 const submitNewRecipe = formData => {
-  $.post("/api/recipe", formData).then(response => console.log(response));
+  console.log(formData);
+  $.post("/api/recipe", formData).then(resetFormAfterSubmission());
 };
 
 const resetFormAfterSubmission = () => {
@@ -79,6 +70,10 @@ const resetFormAfterSubmission = () => {
 
 const getAllMyRecipes = () => {
   window.location.replace("/my-recipes");
+};
+
+const loadNewRecipeForm = () => {
+  window.location.replace("/add-recipe");
 };
 
 const viewRecipeInDetail = id => {
@@ -109,7 +104,9 @@ const getRecipeDetailsToUpdate = id => {
 
 // update recipe
 const submitUpdatedRecipe = formData => {
-  $.put("/api/recipe/" + formData.id, formData).then(console.log("submitted"));
+  $.put("/api/recipe/" + formData.id, formData).then(
+    resetFormAfterSubmission()
+  );
 };
 
 $(document).ready(() => {
@@ -119,50 +116,16 @@ $(document).ready(() => {
   let recipeID;
   initiaizeFirebase();
 
-  // check for information in local storange regarding divs to show when page loads
-  const idToShow = localStorage.getItem("show");
-  if (idToShow) {
-    $(`${idToShow}`).show();
-    localStorage.removeItem("show");
-  }
-
   // display form to add a new recipe
   $("#addNewRecipeButton").on("click", event => {
     event.preventDefault();
     updating = false;
-    $("#newRecipeForm").show();
-    $("#searchForRecipeForm").hide();
-    $(".vertical").hide();
-    $("#dishOftheDay").hide();
-    $("#addNewRecipe").hide();
-    $("#food-facts-jokes").hide();
+    loadNewRecipeForm();
   });
 
   $("#viewAllRecipesButton").on("click", event => {
     event.preventDefault();
     getAllMyRecipes();
-    $("appendSearchItemsHere").show();
-    $("#searchForRecipeForm").hide();
-    $(".vertical").hide();
-    $("#dishOftheDay").hide();
-    $("#addNewRecipe").hide();
-    $("#food-facts-jokes").hide();
-  });
-
-  $("#searchForRecipeButton").on("click", event => {
-    event.preventDefault();
-    $("#newRecipeForm").hide();
-    $("#appendSearchItemsHere").hide();
-    $("#searchForRecipeForm").show();
-    $("#detailedRecipeViewHere").show();
-  });
-
-  $(".close").on("click", event => {
-    event.preventDefault();
-    $("#newRecipeForm").hide();
-    $("#appendSearchItemsHere").hide();
-    $("#searchForRecipeForm").hide();
-    $("#detailedRecipeViewHere").hide();
   });
 
   $("#sendRecipeButton").on("click", async event => {
@@ -170,9 +133,14 @@ $(document).ready(() => {
     // disable submit button
     $("#sendRecipeButton").prop("disabled", true);
     const ingredientResponse = await parseRecipesWithSpoonacular();
-    const separatedIngredients = filterIngredientListFromSpoonacular(
-      ingredientResponse
-    );
+    const separatedIngredients = await ingredientResponse.map(item => {
+      return {
+        title: item.originalName,
+        quantity: item.amount,
+        units: item.unitShort
+      };
+    });
+    console.log(separatedIngredients);
     const recipeURL = await handleFileUploadSubmit();
     const formData = {
       title: $("#recipe-title").val(),
@@ -189,7 +157,6 @@ $(document).ready(() => {
     } else {
       submitNewRecipe(formData);
     }
-    resetFormAfterSubmission();
   });
 
   $("#searchRecipeButton").on("click", event => {
@@ -204,7 +171,8 @@ $(document).ready(() => {
   // request details of particular recipe from database
   $(".viewRecipeButton").click(event => {
     event.preventDefault();
-    viewRecipeInDetail($(event.target).attr("viewId"));
+    console.log($(event.target).attr("view-id"));
+    viewRecipeInDetail($(event.target).attr("view-id"));
   });
 
   // get details of recipe ready to render on form for editing

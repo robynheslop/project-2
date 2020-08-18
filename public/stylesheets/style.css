@@ -94,9 +94,6 @@ button {
     height:calc(50vh - 40px);
 }
 
-#appendSearchItemsHere {
-    display: none;
-}
 
 .recipe-card {
     margin-top: 20px;
@@ -113,10 +110,6 @@ p.recipe-card-prep-time {
     height:calc(50vh - 40px);
 }
    
-#appendSearchItemsHere {
-    display: none;
-}
-
 .recipe-card {
     margin-top: 20px;
     justify-content: space-evenly;

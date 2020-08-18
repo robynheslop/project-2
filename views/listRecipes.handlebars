@@ -1,0 +1,14 @@
+<div class="row" id="appendSearchItemsHere">
+    <span class="close">&times;</span>
+    <ul>
+        {{#each recipe}}
+        <li>
+            <h2>{{this.title}}</h2>
+            <p>Preparation Time: {{this.preparationTime}}</p>
+            <button view-id={{this.id}} class="viewRecipeButton" type="submit">View Recipe</button>
+            <button edit-id={{this.id}} class="editRecipeButton" type="submit">Edit Recipe</button>
+            <button delete-id={{this.id}} class="deleteRecipeButton" type="submit">Delete Recipe</button>
+        </li>
+        {{/each}}
+    </ul>
+</div>
