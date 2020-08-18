@@ -123,13 +123,14 @@ const getAllRecipesForCurrentUser = async request => {
       where: {
         UserId: userId
       },
-      attributes: ["id", "title", "preparationTime"]
+      attributes: ["id", "title", "preparationTime", "imageUrl"]
     });
     return recipes.map(recipe => {
       return {
         title: recipe.title,
         preparationTime: recipe.preparationTime,
-        id: recipe.id
+        id: recipe.id,
+        imageUrl: recipe.imageUrl
       };
     });
   } catch (error) {

@@ -1,14 +1,22 @@
-<div class="row" id="appendSearchItemsHere">
-    <span class="close">&times;</span>
-    <ul>
-        {{#each recipe}}
-        <li>
+<div class="col-md-5" id="appendSearchItemsHere">
+    {{#each recipe}}
+    <div class="recipe-card">
+        <div class="col-md-4">
+            <img src="{{recipe.imageUrl}}" alt="{{{recipe.title}}}"
+                style="height: 120px; width: 200px; float: left; margin-top: 20px">
+            {{!-- <img src="/images/pancake.png" alt="dish-image"
+                style="height: 120px; width: 200px; float: left; margin-top: 20px"> --}}
+        </div>
+        <div class="col-md-8" id="recipe-details">
             <h2>{{this.title}}</h2>
-            <p>Preparation Time: {{this.preparationTime}}</p>
-            <button view-id={{this.id}} class="viewRecipeButton" type="submit">View Recipe</button>
-            <button edit-id={{this.id}} class="editRecipeButton" type="submit">Edit Recipe</button>
-            <button delete-id={{this.id}} class="deleteRecipeButton" type="submit">Delete Recipe</button>
-        </li>
-        {{/each}}
-    </ul>
+            <p class="recipe-card-prep-time">Preparation Time: {{this.preparationTime}}</p>
+            <button viewId={{this.id}} class="btn btn-secondary viewRecipeButton" type="submit">View
+                Recipe</button>
+            <button editId={{this.id}} class="btn btn-secondary editRecipeButton" type="submit">Edit
+                Recipe</button>
+            <button deleteId={{this.id}} class="btn btn-secondary deleteRecipeButton" type="submit">Delete
+                Recipe</button>
+        </div>
+    </div>
+    {{/each}}
 </div>

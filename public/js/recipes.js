@@ -111,7 +111,7 @@ const submitUpdatedRecipe = formData => {
 
 $(document).ready(() => {
   // display user email in header
-  $(".member-name").text(localStorage.getItem("userEmail"));
+  $(".member-name").text(localStorage.getItem("userName"));
   let updating = false;
   let recipeID;
   initiaizeFirebase();
@@ -140,17 +140,20 @@ $(document).ready(() => {
         units: item.unitShort
       };
     });
-    console.log(separatedIngredients);
-    const recipeURL = await handleFileUploadSubmit();
     const formData = {
       title: $("#recipe-title").val(),
       instructions: $("#recipe-instructions").val(),
       ingredients: separatedIngredients,
       servings: $("#recipe-servings").val(),
       preparationTime: $("#recipe-preparation-time").val(),
-      notes: $("#recipe-notes").val(),
-      imageUrl: recipeURL
+      notes: $("#recipe-notes").val()
     };
+    const recipeURL = await handleFileUploadSubmit();
+    if (recipeURL) {
+      formData.imageUrl = recipeURL;
+    } else {
+      formData.imageUrl = "/images/e-logo.png";
+    }
     if (updating) {
       formData.id = recipeID;
       submitUpdatedRecipe(formData);
