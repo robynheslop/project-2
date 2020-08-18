@@ -60,12 +60,12 @@ module.exports = function(app) {
     let recipeStatus = true;
     const recipe = await ru.createRecipe(request);
     recipeStatus = recipe ? true : false;
-    const persistedIngredients = recipeStatus ?
-      await ru.persistAndFetchIngredients(request) :
+    const persistedIngredients = recipeStatus
+      ? await ru.persistAndFetchIngredients(request)
       : undefined;
     recipeStatus = persistedIngredients ? true : false;
-    recipeStatus = recipeStatus ?
-      await ru.persistRecipeIngredients(request, persistedIngredients, recipe) :
+    recipeStatus = recipeStatus
+      ? await ru.persistRecipeIngredients(request, persistedIngredients, recipe)
       : false;
     recipeStatus ? response.status(201).end() : response.status(500).end();
   });

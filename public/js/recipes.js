@@ -9,7 +9,7 @@ $(document).ready(() => {
 
   // get food joke for homepage
   $.get(
-    "https://api.spoonacular.com/food/jokes/random?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f"
+    "https://api.spoonacular.com/food/jokes/random?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5"
   ).then(response => console.log(response));
 
   // check for information in local storange regarding divs to show when page loads
@@ -120,7 +120,7 @@ $(document).ready(() => {
   const parseRecipesWithSpoonacular = () => {
     return $.ajax({
       url:
-        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f",
+        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5",
       method: "POST",
       data: {
         ingredientList: $("#recipe-ingredients").val(),
