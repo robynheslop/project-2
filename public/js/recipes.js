@@ -17,7 +17,7 @@ const initiaizeFirebase = () => {
   const storageService = firebase.storage();
   storageRef = storageService.ref();
   firebase.analytics();
-}
+};
 
 const saveImageFileToVariable = event => {
   selectedFile = event.target.files[0];
@@ -84,7 +84,6 @@ const viewRecipeInDetail = id => {
   window.location.replace(`/recipes/${id}`);
 };
 
-
 // search by criteria
 const findRecipesUsingCriteria = formData => {
   $.get("/recipe/search", formData).then(response => console.log(response));
@@ -118,6 +117,7 @@ $(document).ready(() => {
   let updating = false;
   let recipeID;
   initiaizeFirebase();
+
   // get food fact for homepage
   // $.get(
   //   "https://api.spoonacular.com/food/trivia/random?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5"
