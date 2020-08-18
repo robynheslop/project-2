@@ -1,6 +1,7 @@
 $(document).ready(() => {
   // Getting references to our sign up form and input
   const signUpForm = $("form.signup");
+  const signUpUsername = $("input#username-input");
   const signUpEmailInput = $("input#signup-email-input");
   const signUpPasswordInput = $("input#signup-password-input");
 
@@ -8,28 +9,34 @@ $(document).ready(() => {
   signUpForm.on("submit", event => {
     event.preventDefault();
     const userData = {
+      username: signUpUsername.val().trim(),
       email: signUpEmailInput.val().trim(),
       password: signUpPasswordInput.val().trim()
     };
 
-    if (!userData.email || !userData.password) {
+    console.log(userData);
+
+    if (!userData.username || !userData.email || !userData.password) {
       return;
     }
     // If we have an email and password, run the signUpUser function
-    signUpUser(userData.email, userData.password);
+    signUpUser(userData.username, userData.email, userData.password);
+    signUpUsername.val("");
     signUpEmailInput.val("");
     signUpPasswordInput.val("");
   });
 
   // Does a post to the signup route. If successful, we are redirected to the recipe homepage page
   // Otherwise we log any errors
-  function signUpUser(email, password) {
+  function signUpUser(username, email, password) {
     $.post("/api/signup", {
+      username: username,
       email: email,
       password: password
     })
       .then(() => {
         $.get("/api/user_data").then(data => {
+          localStorage.setItem("userName", data.username);
           localStorage.setItem("userEmail", data.email);
           localStorage.setItem("userId", data.id);
         });
@@ -75,6 +82,7 @@ $(document).ready(() => {
     })
       .then(() => {
         $.get("/api/user_data").then(data => {
+          localStorage.setItem("userName", data.username);
           localStorage.setItem("userEmail", data.email);
           localStorage.setItem("userId", data.id);
         });
