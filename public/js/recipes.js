@@ -31,14 +31,20 @@ $(document).ready(() => {
     updating = false;
     console.log("updating: " + updating);
     $("#newRecipeForm").show();
-    $("#appendSearchItemsHere").hide();
     $("#searchForRecipeForm").hide();
-    $("#detailedRecipeViewHere").hide();
+    $(".vertical").hide();
+    $("#dishOftheDay").hide();
+    $("#addNewRecipe").hide();
   });
 
   $("#viewAllRecipesButton").on("click", event => {
     event.preventDefault();
     getAllMyRecipes();
+    $("appendSearchItemsHere").show();
+    $("#searchForRecipeForm").hide();
+    $(".vertical").hide();
+    $("#dishOftheDay").hide();
+    $("#addNewRecipe").hide();
   });
 
   // display form to search for a recipe

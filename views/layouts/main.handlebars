@@ -6,12 +6,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
     <link href="/stylesheets/sticky-footer.css" rel="stylesheet">
     <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
+
+    <header class="container header" id="timeless-recipes-header">
+        <div class="col-md-9" id="logo-header">
+            <img src="/images/timeless-recipe-logo.png" alt="timeless-recipes-logo" id="timeless-recipes-logo">
+        </div>
+        <div class="header-links row">
+            <a href="/logout">
+                <h5>Log out</h5>
+            </a>
+            <a href="/recipes-home-page" id="home-button"><i class="fas fa-home fa-2x"></i></a>
+        </div>
+
+        <hr>
+    </header>
+
     {{{ body }}}
+
+    <!-- Sticky Footer -->
+    <footer class="footer">
+        <div class="container-footer">
+            <img src="/images/e-logo.png" alt="e-logo" style="height: 52px; width: 216px; display: block">
+            <p class="text-muted">© Copyright 2020 All Rights Reserved | Website developed by <a
+                    class="has-text-primary" target="_blank" href="https://github.com/nitinmuk">Nitin</a>, <a
+                    class="has-text-primary" target="_blank" href="https://github.com/robynheslop">Robyn</a> & <a
+                    class="has-text-primary" target="_blank" href="https://github.com/arjaesj">RJ</a></p>
+        </div>
+    </footer>
+
 </body>
 
 </html>
