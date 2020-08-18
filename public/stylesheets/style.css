@@ -108,3 +108,7 @@ p.recipe-card-prep-time {
 }
 
 
+#newRecipeForm {
+    overflow-y: scroll;
+    height:calc(50vh - 40px);
+}
