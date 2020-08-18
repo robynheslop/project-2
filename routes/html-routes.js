@@ -47,9 +47,18 @@ module.exports = function(app) {
     response.render("listRecipes", { recipe: recipeData });
   });
 
+  // get recipe details by id
   app.get("/recipes/:id", isAuthenticated, async (request, response) => {
     const recipeDetails = await ru.getRecipeDetails(request);
     response.render("recipeDetails", { recipeDetails: recipeDetails });
   });
+
+  app.get("/recipe/search/", isAuthenticated, async (request, response) => {
+    console.log(request.query);
+    const recipeData = await ru.getRecipesByTextSearch(request);
+    console.log(JSON.stringify(recipeData));
+    response.render("recipes", {recipe: recipeData});
+  });
+
 };
 
