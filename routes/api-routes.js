@@ -57,6 +57,7 @@ module.exports = function(app) {
   });
 
   app.post("/api/recipe", isAuthenticated, async (request, response) => {
+    console.log(request.body);
     let recipeStatus = true;
     const recipe = await ru.createRecipe(request);
     recipeStatus = recipe ? true : false;

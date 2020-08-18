@@ -1,6 +1,122 @@
+let selectedFile;
+let storageRef;
+
+const firebaseConfig = {
+  apiKey: "AIzaSyByL1PUuaMDhkAltQxfcyB_9JRlTjHDrvc",
+  authDomain: "timeless-recipes.firebaseapp.com",
+  databaseURL: "https://timeless-recipes.firebaseio.com",
+  projectId: "timeless-recipes",
+  storageBucket: "timeless-recipes.appspot.com",
+  messagingSenderId: "458595131064",
+  appId: "1:458595131064:web:23b7367678f93563595e4d",
+  measurementId: "G-N0LYPZJNZS"
+};
+
+const initiaizeFirebase = () => {
+  firebase.initializeApp(firebaseConfig);
+  const storageService = firebase.storage();
+  storageRef = storageService.ref();
+  firebase.analytics();
+};
+
+const saveImageFileToVariable = event => {
+  selectedFile = event.target.files[0];
+};
+
+const handleFileUploadSubmit = async () => {
+  const userId = localStorage.getItem("userId");
+  try {
+    await storageRef
+      .child(`images/${userId}/${selectedFile.name}`)
+      .put(selectedFile);
+    const url = await storageRef
+      .child(`images/${userId}/${selectedFile.name}`)
+      .getDownloadURL();
+    return url;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const parseRecipesWithSpoonacular = () => {
+  return $.ajax({
+    url:
+      "https://api.spoonacular.com/recipes/parseIngredients?apiKey=4ef67de632354c9c93ca78cbb90d74c2",
+    method: "POST",
+    data: {
+      ingredientList: $("#recipe-ingredients").val(),
+      servings: $("#recipe-servings").val()
+    }
+  });
+};
+
+const filterIngredientListFromSpoonacular = ingredientResponse => {
+  ingredientResponse.map(item => {
+    return {
+      title: item.originalName,
+      quantity: item.amount,
+      units: item.unitShort
+    };
+  });
+};
+
+const submitNewRecipe = formData => {
+  $.post("/api/recipe", formData).then(response => console.log(response));
+};
+
+const clearRecipeDataFieldsAfterSubmission = () => {
+  updating = false;
+  recipeID = "";
+  $("#recipe-title").val("");
+  $("#recipe-instructions").val("");
+  $("#recipe-servings").val("");
+  $("#recipe-preparation-time").val("");
+  $("#recipe-notes").val("");
+  $("#recipe-ingredients").val("");
+  $("#recipe-image-upload").val("");
+};
+
+const getAllMyRecipes = () => {
+  window.location.replace("/my-recipes");
+};
+
+const viewRecipeInDetail = id => {
+  window.location.replace(`/recipes/${id}`);
+};
+
+// search by criteria
+const findRecipesUsingCriteria = formData => {
+  $.get("/recipe/search", formData).then(response => console.log(response));
+};
+
+// delete recipe
+const removeRecipe = id => {
+  $.delete(`/api/recipes/${id}`).then(response => console.log(response));
+};
+
+// get detalils to update recipe
+const getRecipeDetailsToUpdate = id => {
+  $.get(`/api/recipes/${id}`).then(response => {
+    $("#recipe-title").val(response.title);
+    $("#recipe-ingredients").val(response.ingredients);
+    $("#recipe-instructions").val(response.instructions);
+    $("#recipe-servings").val(response.servings);
+    $("#recipe-preparation-time").val(response.preparationTime);
+    $("#recipe-notes").val(response.notes);
+  });
+};
+
+// update recipe
+const submitUpdatedRecipe = formData => {
+  $.put("/api/recipe/" + formData.id, formData).then(console.log("submitted"));
+};
+
 $(document).ready(() => {
+  // display user email in header
+  $(".member-name").text(localStorage.getItem("userEmail"));
   let updating = false;
   let recipeID;
+  initiaizeFirebase();
 
   // get food fact for homepage
   // $.get(
@@ -16,6 +132,7 @@ $(document).ready(() => {
   //   $(".food-joke").text(response.text);
   // });
 
+
   // check for information in local storange regarding divs to show when page loads
   const idToShow = localStorage.getItem("show");
   if (idToShow) {
@@ -23,17 +140,10 @@ $(document).ready(() => {
     localStorage.removeItem("show");
   }
 
-  // This file just does a GET request to figure out which user is logged in
-  // and updates the HTML on the page
-  $.get("/api/user_data").then(data => {
-    $(".member-name").text(data.email);
-  });
-
   // display form to add a new recipe
   $("#addNewRecipeButton").on("click", event => {
     event.preventDefault();
     updating = false;
-    console.log("updating: " + updating);
     $("#newRecipeForm").show();
     $("#searchForRecipeForm").hide();
     $(".vertical").hide();
@@ -53,7 +163,6 @@ $(document).ready(() => {
     $("#food-facts-jokes").hide();
   });
 
-  // display form to search for a recipe
   $("#searchForRecipeButton").on("click", event => {
     event.preventDefault();
     $("#newRecipeForm").hide();
@@ -62,7 +171,6 @@ $(document).ready(() => {
     $("#detailedRecipeViewHere").show();
   });
 
-  // hide all of the divs above
   $(".close").on("click", event => {
     event.preventDefault();
     $("#newRecipeForm").hide();
@@ -71,89 +179,21 @@ $(document).ready(() => {
     $("#detailedRecipeViewHere").hide();
   });
 
-  const clearFormFields = () => {
-    $("#recipe-title").val("");
-    $("#recipe-instructions").val("");
-    $("#recipe-servings").val("");
-    $("#recipe-preparation-time").val("");
-    $("#recipe-notes").val("");
-    $("#recipe-ingredients").val("");
-  };
-
-  const getAllMyRecipes = () => {
-    $.get("/my-recipes").then(() => {
-      localStorage.setItem("show", "#appendSearchItemsHere");
-      window.location.replace("/my-recipes");
-    });
-  };
-
-  const submitNewRecipe = formData => {
-    $.post("/api/recipe", formData).then(response => console.log(response));
-  };
-
-  const submitUpdatedRecipe = formData => {
-    $.put("/api/recipe/" + formData.id, formData).then(
-      console.log("submitted")
-    );
-  };
-
-  const findRecipesUsingCriteria = formData => {
-    $.get("/recipe/search", formData).then(response => console.log(response));
-  };
-
-  const viewRecipeInDetail = id => {
-    $.get(`/recipes/${id}`).then(() => {
-      localStorage.setItem("show", "#detailedRecipeViewHere");
-      window.location.replace(`/recipes/${id}`);
-    });
-  };
-
-  const getRecipeDetailsToUpdate = id => {
-    $.get(`/api/recipes/${id}`).then(response => {
-      $("#recipe-title").val(response.title);
-      $("#recipe-ingredients").val(response.ingredients);
-      $("#recipe-instructions").val(response.instructions);
-      $("#recipe-servings").val(response.servings);
-      $("#recipe-preparation-time").val(response.preparationTime);
-      $("#recipe-notes").val(response.notes);
-    });
-  };
-
-  const removeRecipe = id => {
-    $.delete(`/api/recipes/${id}`).then(response => console.log(response));
-  };
-
-  const parseRecipesWithSpoonacular = () => {
-    return $.ajax({
-      url:
-        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=4ef67de632354c9c93ca78cbb90d74c2",
-      method: "POST",
-      data: {
-        ingredientList: $("#recipe-ingredients").val(),
-        servings: $("#recipe-servings").val()
-      }
-    });
-  };
-
   $("#sendRecipeButton").on("click", async event => {
     event.preventDefault();
-    $("#newRecipeForm").hide();
-    // ajax request to spoonacular
     const ingredientResponse = await parseRecipesWithSpoonacular();
-    const separatedIngredients = await ingredientResponse.map(item => {
-      return {
-        title: item.originalName,
-        quantity: item.amount,
-        units: item.unitShort
-      };
-    });
+    const separatedIngredients = filterIngredientListFromSpoonacular(
+      ingredientResponse
+    );
+    const recipeURL = await handleFileUploadSubmit();
     const formData = {
       title: $("#recipe-title").val(),
       instructions: $("#recipe-instructions").val(),
       ingredients: separatedIngredients,
       servings: $("#recipe-servings").val(),
       preparationTime: $("#recipe-preparation-time").val(),
-      notes: $("#recipe-notes").val()
+      notes: $("#recipe-notes").val(),
+      imageUrl: recipeURL
     };
     if (updating) {
       formData.id = recipeID;
@@ -161,9 +201,7 @@ $(document).ready(() => {
     } else {
       submitNewRecipe(formData);
     }
-    updating = false;
-    recipeID = "";
-    clearFormFields();
+    clearRecipeDataFieldsAfterSubmission();
   });
 
   $("#searchRecipeButton").on("click", event => {
@@ -194,4 +232,6 @@ $(document).ready(() => {
     event.preventDefault();
     removeRecipe($(event.target).attr("deleteId"));
   });
+
+  $("#recipe-image-upload").on("change", saveImageFileToVariable);
 });
