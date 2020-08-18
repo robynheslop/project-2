@@ -1,3 +1,6 @@
+let selectedFile;
+let storageRef;
+
 const firebaseConfig = {
   apiKey: "AIzaSyByL1PUuaMDhkAltQxfcyB_9JRlTjHDrvc",
   authDomain: "timeless-recipes.firebaseapp.com",
@@ -8,12 +11,13 @@ const firebaseConfig = {
   appId: "1:458595131064:web:23b7367678f93563595e4d",
   measurementId: "G-N0LYPZJNZS"
 };
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const storageService = firebase.storage();
-const storageRef = storageService.ref();
-firebase.analytics();
-let selectedFile;
+
+const initiaizeFirebase = () => {
+  firebase.initializeApp(firebaseConfig);
+  const storageService = firebase.storage();
+  storageRef = storageService.ref();
+  firebase.analytics();
+}
 
 const saveImageFileToVariable = event => {
   selectedFile = event.target.files[0];
@@ -113,7 +117,7 @@ $(document).ready(() => {
   $(".member-name").text(localStorage.getItem("userEmail"));
   let updating = false;
   let recipeID;
-
+  initiaizeFirebase();
   // get food fact for homepage
   // $.get(
   //   "https://api.spoonacular.com/food/trivia/random?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5"
