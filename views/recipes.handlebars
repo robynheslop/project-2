@@ -91,7 +91,7 @@
       </div>
     </div> --}}
 
-  <div class="row" id="appendSearchItemsHere" style="display:none">
+  <div class="row" id="appendSearchItemsHere">
     <span class="close">&times;</span>
     <ul>
       {{#each recipe}}
@@ -155,7 +155,7 @@
       <div class="form-group">
         <label>Upload An Image (Optional).</label>
         <br>
-        <input type="file" class="file-select" accept="image/*"/>
+        <input type="file" id="recipe-image-upload" accept="image/*"/>
       </div>
       <div class="form-group">
         <button class="btn btn-primary disabled" id="sendRecipeButton" type="submit">Submit</button>

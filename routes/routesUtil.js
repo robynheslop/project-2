@@ -12,7 +12,7 @@ const createRecipe = async request => {
     servings: request.body.servings,
     preparationTime: request.body.preparationTime,
     notes: request.body.notes,
-    image: request.body.image,
+    imageUrl: request.body.imageUrl,
     UserId: request.user.id
   };
   try {
@@ -181,11 +181,10 @@ const getRecipeDetails = async request => {
       preparationTime: recipe.preparationTime,
       servings: recipe.servings,
       notes: recipe.notes,
-      image: recipe.image,
+      imageUrl: recipe.imageUrl,
       ingredients: ingredientDetails,
       id: request.params.id
     };
-    console.log(recipeDetails);
     return recipeDetails;
   } catch (error) {
     console.log(

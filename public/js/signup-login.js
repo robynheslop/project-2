@@ -29,6 +29,10 @@ $(document).ready(() => {
       password: password
     })
       .then(() => {
+        $.get("/api/user_data").then(data => {
+          localStorage.setItem("userEmail", data.email);
+          localStorage.setItem("userId", data.id);
+        });
         window.location.replace("/recipes-home-page");
         // If there's an error, handle it by throwing up a bootstrap alert
       })
@@ -70,6 +74,10 @@ $(document).ready(() => {
       password: password
     })
       .then(() => {
+        $.get("/api/user_data").then(data => {
+          localStorage.setItem("userEmail", data.email);
+          localStorage.setItem("userId", data.id);
+        });
         window.location.replace("/recipes-home-page");
         // If there's an error, log the error
       })

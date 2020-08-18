@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     notes: {
       type: DataTypes.TEXT
     },
-    image: {
+    imageUrl: {
       type: DataTypes.TEXT
     }
   });
