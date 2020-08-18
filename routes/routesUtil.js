@@ -12,6 +12,7 @@ const createRecipe = async request => {
     servings: request.body.servings,
     preparationTime: request.body.preparationTime,
     notes: request.body.notes,
+    image: request.body.image,
     UserId: request.user.id
   };
   try {
@@ -173,14 +174,18 @@ const getRecipeDetails = async request => {
         };
       });
     }
+    console.log(recipe);
     const recipeDetails = {
       title: recipe.title,
       instructions: recipe.instructions,
       preparationTime: recipe.preparationTime,
       servings: recipe.servings,
       notes: recipe.notes,
-      ingredients: ingredientDetails
+      image: recipe.image,
+      ingredients: ingredientDetails,
+      id: request.params.id
     };
+    console.log(recipeDetails);
     return recipeDetails;
   } catch (error) {
     console.log(
