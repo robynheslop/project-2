@@ -31,14 +31,20 @@ module.exports = function(app) {
 
 
   app.get("/recipes-home-page", isAuthenticated, (request, response) => {
-    response.render("recipes");
+    response.render("recipesHome");
   });
+
+   // new html route to render new handlebar 
+  app.get("/add-recipe", isAuthenticated, (request, response) => {
+    response.render("newRecipeForm");
+  });
+
 
   // Here we've add our isAuthenticated middleware to this route.
   // If a user who is not logged in tries to access this route they will be redirected to the signup page
   app.get("/my-recipes", isAuthenticated, async (request, response) => {
     const recipeData = await ru.getAllRecipesForCurrentUser(request);
-    response.render("recipes", { recipe: recipeData });
+    response.render("listRecipes", { recipe: recipeData });
   });
 
   app.get("/recipes/:id", isAuthenticated, async (request, response) => {
