@@ -69,17 +69,13 @@
       <h4>Food for thought:</h4>
       <p class="food-fact"></p>
     </div>
-<<<<<<< HEAD
-
-    <div class="col-md-4" id="food-jokes">
-      <h4>Laughing stock:</h4>
-      <p class="food-joke"></p>
-=======
 
     <div class="col-md-4" id="food-jokes">
       <h4>Laughing stock:</h4>
       <p class="food-joke"></p>
     </div>
+
+  </div>
 
   {{!-- View all recipe display --}}
   <div class="col-md-8" id="appendSearchItemsHere" style="display:none">
@@ -97,15 +93,11 @@
         <button class="btn btn-secondary" deleteId={{this.id}} class="deleteRecipeButton" type="submit">Delete
           Recipe</button>
       </div>
->>>>>>> cf5ff4ec9d1e1748544726f7ccff034c7fc2d425
     </div>
-
-<<<<<<< HEAD
+    {{/each}}
   </div>
 
-=======
   {{!-- Create new recipe form --}}
->>>>>>> cf5ff4ec9d1e1748544726f7ccff034c7fc2d425
   <div class="col-md-8" id="newRecipeForm" style="display:none">
     <span class="close">&times;</span>
     <form id="recipeForm" enctype="multipart/form-data">
@@ -136,18 +128,12 @@
         <textarea class="form-control" id="recipe-notes" type="text" rows="5" required></textarea>
       </div>
       <div class="form-group">
-        <label>Upload An Image (Optional).</label>
-        <br>
-        <input type="file" id="recipe-image-upload" accept="image/*" />
-      </div>
-      <div class="form-group">
         <button class="btn btn-primary disabled" id="sendRecipeButton" type="submit">Submit</button>
       </div>
     </form>
   </div>
 
 </div>
-
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="/js/recipes.js"></script>
