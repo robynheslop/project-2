@@ -18,6 +18,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     notes: {
       type: DataTypes.TEXT
+    },
+    imageUrl: {
+      type: DataTypes.TEXT
     }
   });
   return Recipe;

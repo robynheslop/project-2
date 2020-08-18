@@ -11,7 +11,8 @@
         <p>Preparation Time: {{recipeDetails.preparationTime}}</p>
         <p>Servings: {{recipeDetails.servings}}</p>
         <p>Notes: {{recipeDetails.notes}}</p>
-        <button editId="{{recipeDetails.id}}" class="editRecipeButton" type="submit">Edit Recipe</button>
-        <button deleteId="{{recipeDetails.id}}" class="deleteRecipeButton" type="submit">Delete Recipe</button>
+        <img src="{{recipeDetails.imageUrl}}" alt="{{{recipeDetails.title}}}" width="300px">
+        <button edit-Id="{{recipeDetails.id}}" class="editRecipeButton" type="submit">Edit Recipe</button>
+        <button delete-Id="{{recipeDetails.id}}" class="deleteRecipeButton" type="submit">Delete Recipe</button>
     </div>
 </div>
