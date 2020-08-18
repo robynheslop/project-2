@@ -120,13 +120,17 @@ $(document).ready(() => {
 
   // get food fact for homepage
   // $.get(
-  //   "https://api.spoonacular.com/food/trivia/random?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5"
-  // ).then(response => console.log(response));
+  //   "https://api.spoonacular.com/food/trivia/random?apiKey=4ef67de632354c9c93ca78cbb90d74c2"
+  // ).then(response => {
+  //   $(".food-fact").text(response.text);
+  // });
 
   // get food joke for homepage
   // $.get(
-  //   "https://api.spoonacular.com/food/jokes/random?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5"
-  // ).then(response => console.log(response));
+  //   "https://api.spoonacular.com/food/jokes/random?apiKey=4ef67de632354c9c93ca78cbb90d74c2"
+  // ).then(response => {
+  //   $(".food-joke").text(response.text);
+  // });
 
   // check for information in local storange regarding divs to show when page loads
   const idToShow = localStorage.getItem("show");
@@ -144,6 +148,7 @@ $(document).ready(() => {
     $(".vertical").hide();
     $("#dishOftheDay").hide();
     $("#addNewRecipe").hide();
+    $("#food-facts-jokes").hide();
   });
 
   $("#viewAllRecipesButton").on("click", event => {
@@ -154,6 +159,7 @@ $(document).ready(() => {
     $(".vertical").hide();
     $("#dishOftheDay").hide();
     $("#addNewRecipe").hide();
+    $("#food-facts-jokes").hide();
   });
 
   $("#searchForRecipeButton").on("click", event => {
