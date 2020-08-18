@@ -16,7 +16,7 @@ p {
 }
 
 .footer {
-    margin-top: 50px;
+    margin-top: 20px;
     margin-bottom: 0px;
     text-align: -webkit-center;
     position: absolute;
@@ -31,5 +31,4 @@ p {
 .container-footer {
     width: auto;
     max-width: 680px;
-    padding: 20px 15px;
 }

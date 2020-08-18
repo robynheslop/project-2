@@ -76,3 +76,18 @@ button {
     margin: auto;
     margin-top: 5px;
 }
+#food-facts-jokes {
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.food-fact,
+.food-joke {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+#newRecipeForm {
+    overflow-y: scroll;
+    height:calc(50vh - 40px);
+}

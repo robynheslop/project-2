@@ -3,14 +3,18 @@ $(document).ready(() => {
   let recipeID;
 
   // get food fact for homepage
-  $.get(
-    "https://api.spoonacular.com/food/trivia/random?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5"
-  ).then(response => console.log(response));
+  // $.get(
+  //   "https://api.spoonacular.com/food/trivia/random?apiKey=4ef67de632354c9c93ca78cbb90d74c2"
+  // ).then(response => {
+  //   $(".food-fact").text(response.text);
+  // });
 
   // get food joke for homepage
-  $.get(
-    "https://api.spoonacular.com/food/jokes/random?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5"
-  ).then(response => console.log(response));
+  // $.get(
+  //   "https://api.spoonacular.com/food/jokes/random?apiKey=4ef67de632354c9c93ca78cbb90d74c2"
+  // ).then(response => {
+  //   $(".food-joke").text(response.text);
+  // });
 
   // check for information in local storange regarding divs to show when page loads
   const idToShow = localStorage.getItem("show");
@@ -35,6 +39,7 @@ $(document).ready(() => {
     $(".vertical").hide();
     $("#dishOftheDay").hide();
     $("#addNewRecipe").hide();
+    $("#food-facts-jokes").hide();
   });
 
   $("#viewAllRecipesButton").on("click", event => {
@@ -45,6 +50,7 @@ $(document).ready(() => {
     $(".vertical").hide();
     $("#dishOftheDay").hide();
     $("#addNewRecipe").hide();
+    $("#food-facts-jokes").hide();
   });
 
   // display form to search for a recipe
@@ -120,7 +126,7 @@ $(document).ready(() => {
   const parseRecipesWithSpoonacular = () => {
     return $.ajax({
       url:
-        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=bdfbfd72f72a4581a44198a9ce8cf3f5",
+        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=4ef67de632354c9c93ca78cbb90d74c2",
       method: "POST",
       data: {
         ingredientList: $("#recipe-ingredients").val(),
