@@ -42,9 +42,7 @@ $(document).ready(() => {
 
   // need to add error catching into this block
   const handleFileUploadSubmit = async () => {
-    const userId = await $.get("/api/user_data").then(data => {
-      return data.id;
-    });
+    const userId = localStorage.getItem("id");
     try {
       await storageRef
         .child(`images/${userId}/${selectedFile.name}`)
@@ -61,7 +59,9 @@ $(document).ready(() => {
   // This file just does a GET request to figure out which user is logged in
   // and updates the HTML on the page
   $.get("/api/user_data").then(data => {
-    $(".member-name").text(data.email);
+    console.log(data);
+    localStorage.setItem("email", data.email);
+    localStorage.setItem("id", data.id);
   });
 
   // display form to add a new recipe
