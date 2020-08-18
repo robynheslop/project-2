@@ -69,14 +69,43 @@
       <h4>Food for thought:</h4>
       <p class="food-fact"></p>
     </div>
+<<<<<<< HEAD
+
+    <div class="col-md-4" id="food-jokes">
+      <h4>Laughing stock:</h4>
+      <p class="food-joke"></p>
+=======
 
     <div class="col-md-4" id="food-jokes">
       <h4>Laughing stock:</h4>
       <p class="food-joke"></p>
     </div>
 
+  {{!-- View all recipe display --}}
+  <div class="col-md-8" id="appendSearchItemsHere" style="display:none">
+    <span class="close">&times;</span>
+    {{#each recipe}}
+    <div class="recipe-card">
+      <div class="col">
+        <img src="/images/pancake.png" alt="dish-image" style="height: 120px; width: 200px; display: block">
+      </div>
+      <div class="col">
+        <h2>{{this.title}}</h2>
+        <p class="recipe-card-prep-time">Preparation Time: {{this.preparationTime}}</p>
+        <button class="btn btn-secondary" viewId={{this.id}} class="viewRecipeButton" type="submit">View Recipe</button>
+        <button class="btn btn-secondary" editId={{this.id}} class="editRecipeButton" type="submit">Edit Recipe</button>
+        <button class="btn btn-secondary" deleteId={{this.id}} class="deleteRecipeButton" type="submit">Delete
+          Recipe</button>
+      </div>
+>>>>>>> cf5ff4ec9d1e1748544726f7ccff034c7fc2d425
+    </div>
+
+<<<<<<< HEAD
   </div>
 
+=======
+  {{!-- Create new recipe form --}}
+>>>>>>> cf5ff4ec9d1e1748544726f7ccff034c7fc2d425
   <div class="col-md-8" id="newRecipeForm" style="display:none">
     <span class="close">&times;</span>
     <form id="recipeForm" enctype="multipart/form-data">
