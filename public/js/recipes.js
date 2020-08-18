@@ -67,6 +67,7 @@ const submitNewRecipe = formData => {
 const resetFormAfterSubmission = () => {
   updating = false;
   recipeID = "";
+  $("#sendRecipeButton").prop("disabled", false);
   $("#recipe-title").val("");
   $("#recipe-instructions").val("");
   $("#recipe-servings").val("");
