@@ -3,7 +3,7 @@
 $(document).ready(() => {
     // Getting references to our sign up form and input
     const signUpForm = $("form.signup");
-    const signUpEmailInput = $("input#sign-up-email-input");
+    const signUpEmailInput = $("input#signup-email-input");
     const signUpPasswordInput = $("input#signup-password-input");
 
     // When the signup button is clicked, we validate the email and password are not blank
@@ -11,7 +11,7 @@ $(document).ready(() => {
         event.preventDefault();
         const userData = {
             email: signUpEmailInput.val().trim(),
-            password: passignUpPasswordInputswordInput.val().trim()
+            password: signUpPasswordInput.val().trim()
         };
 
         if (!userData.email || !userData.password) {
@@ -23,10 +23,10 @@ $(document).ready(() => {
         signUpPasswordInput.val("");
     });
 
-    // Does a post to the signup route. If successful, we are redirected to the members page
+    // Does a post to the signup route. If successful, we are redirected to the recipe homepage page
     // Otherwise we log any errors
     function signUpUser(email, password) {
-        $.post("/api/signup-login", {
+        $.post("/api/signup", {
                 email: email,
                 password: password
             })
@@ -67,7 +67,7 @@ $(document).ready(() => {
 
     // loginUser does a post to our "api/login" route and if successful, redirects us the the members page
     function loginUser(email, password) {
-        $.post("/api/signup-login", {
+        $.post("/api/login", {
                 email: email,
                 password: password
             })
