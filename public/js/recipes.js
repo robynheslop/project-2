@@ -1,6 +1,7 @@
 $(document).ready(() => {
   let selectedFile;
   let storageRef;
+  // display user email in header
   $(".member-name").text(localStorage.getItem("userName"));
   $(".food-fact").text(localStorage.getItem("trivia"));
   $(".food-joke").text(localStorage.getItem("joke"));
@@ -24,6 +25,8 @@ $(document).ready(() => {
     storageRef = storageService.ref();
     firebase.analytics();
   };
+
+  initiaizeFirebase();
 
   const saveImageFileToVariable = event => {
     selectedFile = event.target.files[0];
