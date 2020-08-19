@@ -63,9 +63,12 @@ $(document).ready(() => {
       .catch(handleLoginErr);
   }
 
-  function handleLoginErr(err) {
-    $("#alert .msg").text(err.responseJSON);
-    $("#alert").fadeIn(500);
+  function handleLoginErr() {
+    $("#modal-header").text("Login Error");
+    $("#modal-body").text(
+      "There seems to be a problem with those credentials. Check your details and try again."
+    );
+    $("#recipeModal").modal("toggle");
   }
 
   // Getting references to our log in form and input
@@ -100,9 +103,6 @@ $(document).ready(() => {
       .then(() => {
         getAndStoreUserDataThenLoadNewPage();
       })
-      .catch(err => {
-        console.log(err);
-        $("#loginError").modal("show");
-      });
+      .catch(handleLoginErr);
   }
 });

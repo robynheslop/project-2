@@ -11,7 +11,8 @@
     <div class="col-md-2"></div>
     <div class="form-group col-md-4 search-view-recipes" id="searchForRecipeForm" style="display:show">
       <h4>Search for a specific dish</h4>
-      <input type="text" class="form-control" placeholder="Enter an ingredient or dish to search for" id="searchTerm" required>
+      <input type="text" class="form-control" placeholder="Enter an ingredient or dish to search for" id="searchTerm"
+        required>
       <div class="form-check">
         <label class="form-check-label">
           <input type="radio" class="form-check-input" name="recipesToSearch" id="my-recipes" value="my-recipes"
@@ -42,13 +43,22 @@
     <div class="col-md-1 vertical"></div>
 
     {{!-- Dish of the day --}}
-    <div class="col-md-6 recommended-recipes" id="dishOftheDay" style="display:show">
+    <div class="col-md-4 recommended-recipes" id="dishOftheDay" style="display:show">
       <h4>Recipe Of The Day</h4>
+
+      <div class="card" style="width: 100%;">
+        <img class="card-img-top" src="/images/pancake.png" alt="dish-of-the-day">
+        <div class="card-body">
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+            content.</p>
+        </div>
+      </div>
+
 
       <div class="card border-light mb-3" style="width: 200px;">
         <div class="card-header">Recipe 1</div>
         <div class="card-body">
-          <img src="/images/pancake.png" alt="dish-of-the-day" style="height: 250px; width: 400px; display: block;">
+          <img src="/images/pancake.png" alt="dish-of-the-day" style="width=fit; display: block;">
         </div>
       </div>
     </div>

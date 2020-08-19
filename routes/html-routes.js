@@ -57,7 +57,7 @@ module.exports = function(app) {
     response.render("recipeDetails", { recipeDetails: recipeDetails });
   });
 
-  app.get("/recipe/search/", isAuthenticated, async (request, response) => {
+  app.get("/recipe/search", isAuthenticated, async (request, response) => {
     const recipeData = await ru.getRecipesByTextSearch(request);
     if (recipeData && !recipeData.length) {
       const responseString = `We can't find any recipes containing \"${request.query.searchText}\". Let's look for something else...`;

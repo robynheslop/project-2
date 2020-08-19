@@ -60,7 +60,23 @@ $(document).ready(() => {
   };
 
   const submitNewRecipe = formData => {
-    $.post("/api/recipe", formData).then(resetFormAfterSubmission());
+    $.post({
+      url: "/api/recipe",
+      data: formData,
+      success: function() {
+        $("#sendRecipeButton").prop("disabled", true);
+        $("#modal-header").text("Success!");
+        $("#modal-body").text("You have added a new recipe to your database");
+        $("#recipeModal").modal("toggle");
+        resetFormAfterSubmission();
+      },
+      error: function(errorThrown) {
+        $("#sendRecipeButton").prop("disabled", true);
+        $("#modal-header").text("Submission Failed");
+        $("#modal-body").text(errorThrown);
+        $("#recipeModal").modal("toggle");
+      }
+    });
   };
 
   const resetFormAfterSubmission = () => {
@@ -90,17 +106,14 @@ $(document).ready(() => {
   // search by criteria
   const findRecipesUsingCriteria = formData => {
     location.assign(
-      `/recipe/search/?onlyUserRecipes=${formData.onlyUserRecipes}&searchText=${formData.searchText}`
+      `/recipe/search?onlyUserRecipes=${formData.onlyUserRecipes}&searchText=${formData.searchText}`
     );
   };
 
   // delete recipe
   const removeRecipe = id => {
     console.log(id);
-    $.ajax({
-      url: `/api/recipes/${id}`,
-      type: DELETE
-    }).then(response => console.log(response));
+    $.delete(`/api/recipes/${id}`).then(response => console.log(response));
   };
 
   // get detalils to update recipe
@@ -136,6 +149,7 @@ $(document).ready(() => {
 
   $("#sendRecipeButton").on("click", async event => {
     event.preventDefault();
+    $("#sendRecipeButton").prop("disabled", true);
     const ingredientResponse = await parseRecipesWithSpoonacular();
     const separatedIngredients = await ingredientResponse.map(item => {
       return {
@@ -149,9 +163,10 @@ $(document).ready(() => {
       instructions: $("#recipe-instructions").val(),
       ingredients: separatedIngredients,
       servings: $("#recipe-servings").val(),
-      preparationTime: $("#recipe-preparation-time").val(),
-      notes: $("#recipe-notes").val()
+      preparationTime: $("#recipe-preparation-time").val()
     };
+
+    formData.notes = $("#recipe-notes").val();
     const recipeURL = await handleFileUploadSubmit();
     if (recipeURL) {
       formData.imageUrl = recipeURL;
@@ -175,7 +190,13 @@ $(document).ready(() => {
           : false,
       searchText: $("#searchTerm").val()
     };
-    findRecipesUsingCriteria(formData);
+    if (!formData.searchTest) {
+      $("#modal-header").text("Error");
+      $("#modal-body").text("You must enter a title or ingredient to search");
+      $("#recipeModal").modal("toggle");
+    } else {
+      findRecipesUsingCriteria(formData);
+    }
   });
 
   // request details of particular recipe from database
