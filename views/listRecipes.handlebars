@@ -1,47 +1,49 @@
 <div class="col-md-5" id="appendSearchItemsHere">
-        {{#each recipe}}
-            {{#if this.userRecipe}}
-            <div class="recipe-card">
-                <div class="col-md-4">
-                    <img src="{{this.imageUrl}}" alt="{{{this.title}}}"
-                        style="height: 120px; width: 200px; float: left; margin-top: 20px">
-                    {{!-- <img src="/images/pancake.png" alt="dish-image"
+    {{#each recipe}}
+    {{#if this.userRecipe}}
+    <div class="recipe-card">
+        <div class="col-md-4">
+            <img src="{{this.imageUrl}}" alt="{{{this.title}}}"
+                style="height: 120px; width: 200px; float: left; margin-top: 20px">
+            {{!-- <img src="/images/pancake.png" alt="dish-image"
                         style="height: 120px; width: 200px; float: left; margin-top: 20px"> --}}
-                </div>
-                <div class="col-md-8" id="recipe-details">
-                    <h2>{{this.title}}</h2>
-                                    <i class="fas fa-user-edit fa-2x float-right"></i>
-                    <p class="recipe-card-prep-time">Preparation Time: {{this.preparationTime}}</p>
-                    <button viewId={{this.id}} class="btn btn-secondary viewRecipeButton" type="submit">View
-                        Recipe</button>
-                    <button editId={{this.id}} class="btn btn-secondary editRecipeButton" type="submit">Edit
-                        Recipe</button>
-                    <button deleteId={{this.id}} class="btn btn-secondary deleteRecipeButton" type="submit">Delete
-                        Recipe</button>
-                </div>
-            </div>
-            {{else}}
-            <div class="recipe-card">
-                <div class="col-md-4">
-                    <img src="{{this.imageUrl}}" alt="{{{this.title}}}"
-                        style="height: 120px; width: 200px; float: left; margin-top: 20px">
-                    {{!-- <img src="/images/pancake.png" alt="dish-image"
+        </div>
+        <div class="col-md-8" id="recipe-details">
+            <h2>{{this.title}}</h2>
+            <i class="fas fa-user-edit fa-2x float-right"></i>
+            <p class="recipe-card-prep-time">Preparation Time: {{this.preparationTime}}</p>
+            <button viewId={{this.id}} class="btn btn-secondary viewRecipeButton" type="submit">View
+                Recipe</button>
+            <button editId={{this.id}} class="btn btn-secondary editRecipeButton" type="submit">Edit
+                Recipe</button>
+            <button deleteId={{this.id}} class="btn btn-secondary deleteRecipeButton" type="submit">Delete
+                Recipe</button>
+        </div>
+    </div>
+    {{else}}
+    <div class="recipe-card">
+        <div class="col-md-4">
+            <img src="{{this.imageUrl}}" alt="{{{this.title}}}"
+                style="height: 120px; width: 200px; float: left; margin-top: 20px">
+            {{!-- <img src="/images/pancake.png" alt="dish-image"
                         style="height: 120px; width: 200px; float: left; margin-top: 20px"> --}}
-                </div>
-                <div class="col-md-8" id="recipe-details">
-                    <h2>{{this.title}}</h2>
-                    <p class="recipe-card-prep-time">Preparation Time: {{this.preparationTime}}</p>
-                    <button viewId={{this.id}} class="btn btn-secondary viewRecipeButton" type="submit">View
-                        Recipe</button>
-                    <button class="btn btn-secondary disabledButton" type="submit" data-toggle="modal" data-target="#notYourRecipe">Edit
-                        Recipe</button>
-                    <button class="btn btn-secondary disabledButton" type="submit" data-toggle="modal" data-target="#notYourRecipe">Delete
-                        Recipe</button>
-                </div>
-            </div>
-            {{/if}}
-        {{/each}}
-        
+        </div>
+        <div class="col-md-8" id="recipe-details">
+            <h2>{{this.title}}</h2>
+            <p class="recipe-card-prep-time">Preparation Time: {{this.preparationTime}}</p>
+            <button viewId={{this.id}} class="btn btn-secondary viewRecipeButton" type="submit">View
+                Recipe</button>
+            <button class="btn btn-secondary disabledButton" type="submit" data-toggle="modal"
+                data-target="#notYourRecipe">Edit
+                Recipe</button>
+            <button class="btn btn-secondary disabledButton" type="submit" data-toggle="modal"
+                data-target="#notYourRecipe">Delete
+                Recipe</button>
+        </div>
+    </div>
+    {{/if}}
+    {{/each}}
+
 </div>
 <!-- Modal -->
 <div class="modal fade" id="notYourRecipe" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
