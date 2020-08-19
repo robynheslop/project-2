@@ -60,7 +60,6 @@ $(document).ready(() => {
   };
 
   const submitNewRecipe = formData => {
-    console.log(formData);
     $.post("/api/recipe", formData).then(resetFormAfterSubmission());
   };
 
@@ -152,7 +151,6 @@ $(document).ready(() => {
       preparationTime: $("#recipe-preparation-time").val(),
       notes: $("#recipe-notes").val()
     };
-    console.log(formData);
     const recipeURL = await handleFileUploadSubmit();
     if (recipeURL) {
       formData.imageUrl = recipeURL;
@@ -169,7 +167,6 @@ $(document).ready(() => {
 
   $("#searchForRecipeButton").on("click", event => {
     event.preventDefault();
-    console.log("searching");
     const formData = {
       onlyUserRecipes:
         $("input[name='recipesToSearch']:checked").val() === "my-recipes"
@@ -183,7 +180,6 @@ $(document).ready(() => {
   // request details of particular recipe from database
   $(".viewRecipeButton").click(event => {
     event.preventDefault();
-    console.log($(event.target).attr("viewid"));
     viewRecipeInDetail($(event.target).attr("viewid"));
   });
 

@@ -38,9 +38,6 @@ $(document).ready(() => {
       email: signUpEmailInput.val().trim(),
       password: signUpPasswordInput.val().trim()
     };
-
-    console.log(userData);
-
     if (!userData.username || !userData.email || !userData.password) {
       return;
     }

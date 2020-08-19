@@ -58,7 +58,6 @@ module.exports = function(app) {
   });
 
   app.get("/recipe/search/", isAuthenticated, async (request, response) => {
-    console.log(request.query);
     const recipeData = await ru.getRecipesByTextSearch(request);
     if (recipeData && !recipeData.length) {
       const responseString = `We can't find any recipes containing \"${request.query.searchText}\".`;

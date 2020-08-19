@@ -227,7 +227,6 @@ const getRecipesByTextSearch = async request => {
       },
       attributes: ["id", "title", "preparationTime", "imageUrl", "UserId"]
     });
-    console.log(typeof request.query.onlyUserRecipes);
     if (request.query.onlyUserRecipes === "true") {
       searchedRecipes = searchedRecipes.filter(
         recipe => recipe.UserId === userId
