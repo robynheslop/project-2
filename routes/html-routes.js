@@ -4,20 +4,20 @@ const isAuthenticated = require("../config/middleware/isAuthenticated");
 const ru = require("./routesUtil");
 
 module.exports = function(app) {
-  app.get("/", (req, res) => {
+  app.get("/", (request, response) => {
     // If the user already has an account send them to the members page
-    if (req.user) {
-      res.render("recipesHome");
+    if (request.user) {
+      response.render("recipesHome");
     }
-    res.render("signup-login");
+    response.render("signup-login");
   });
 
-  app.get("/signup-login", (req, res) => {
+  app.get("/signup-login", (request, response) => {
     // If the user already has an account send them to the members page
-    if (req.user) {
-      res.render("recipesHome");
+    if (request.user) {
+      response.render("recipesHome");
     }
-    res.render("signup-login");
+    response.render("signup-login");
   });
 
   app.get("/recipes-home-page", isAuthenticated, (request, response) => {
