@@ -1,39 +1,38 @@
-<div class="col-md-8" id="newRecipeForm">
-    <span class="close">&times;</span>
-    <form id="recipeForm" enctype="multipart/form-data">
-      <div class="form-group">
-        <label>Recipe Title.</label>
-        <input class="form-control" name="title" id="recipe-title" type="text" required>
-      </div>
-      <div class="form-group">
-        <label>Ingredients. Please enter each ingredient on a new line.</label>
-        <textarea class="form-control" id="recipe-ingredients" type="text" rows="9"
-          placeholder="250g Kobe Sirloin Steak&#13;&#10;3 tsp salt" required></textarea>
-      </div>
-      <div class="form-group">
-        <label>Instructions. Please enter each instruction on a new line.</label>
-        <textarea class="form-control" id="recipe-instructions" type="text" rows="9"
-          placeholder="1. Season with salt & pepper&#13;&#10;2. Grill on a very hot pan." required></textarea>
-      </div>
-      <div class="form-group">
-        <label>Servings.</label>
-        <input class="form-control" id="recipe-servings" type="number" min="0" required>
-      </div>
-      <div class="form-group">
-        <label>Preparation Time.</label>
-        <input class="form-control" id="recipe-preparation-time" type="number" min="0" required>
-      </div>
-      <div class="form-group">
-        <label>Notes.</label>
-        <textarea class="form-control" id="recipe-notes" type="text" rows="5" required></textarea>
-      </div>
-       <div class="form-group">
-        <label>Upload An Image (Optional).</label>
-        <br>
-        <input type="file" id="recipe-image-upload" accept="image/*"/>
-      </div>
-      <div class="form-group">
-        <button class="btn btn-primary disabled" id="sendRecipeButton" type="submit">Submit</button>
-      </div>
-    </form>
-  </div>
+<div class="col-md-5" id="newRecipeForm">
+  <form id="recipeForm" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>Recipe Title.</label>
+      <input class="form-control" name="title" id="recipe-title" type="text" required>
+    </div>
+    <div class="form-group">
+      <label>Ingredients. Please enter each ingredient on a new line.</label>
+      <textarea class="form-control" id="recipe-ingredients" type="text" rows="9"
+        placeholder="250g Kobe Sirloin Steak&#13;&#10;3 tsp salt" required></textarea>
+    </div>
+    <div class="form-group">
+      <label>Instructions. Please enter each instruction on a new line.</label>
+      <textarea class="form-control" id="recipe-instructions" type="text" rows="9"
+        placeholder="1. Season with salt & pepper&#13;&#10;2. Grill on a very hot pan." required></textarea>
+    </div>
+    <div class="form-group">
+      <label>Servings.</label>
+      <input class="form-control" id="recipe-servings" type="number" min="0" required>
+    </div>
+    <div class="form-group">
+      <label>Preparation Time.</label>
+      <input class="form-control" id="recipe-preparation-time" type="number" min="0" required>
+    </div>
+    <div class="form-group">
+      <label>Notes.</label>
+      <textarea class="form-control" id="recipe-notes" type="text" rows="5" required></textarea>
+    </div>
+    <div class="form-group">
+      <label>Upload An Image (Optional).</label>
+      <br>
+      <input type="file" id="recipe-image-upload" accept="image/*" />
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary disabled" id="sendRecipeButton" type="submit">Submit</button>
+    </div>
+  </form>
+</div>

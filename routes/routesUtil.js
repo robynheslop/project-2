@@ -123,7 +123,7 @@ const getAllRecipesForCurrentUser = async request => {
       where: {
         UserId: userId
       },
-      attributes: ["id", "title", "preparationTime"]
+      attributes: ["id", "title", "preparationTime", "imageUrl"]
     });
     return mapRecipeHighLevelDetails(recipes, userId);
   } catch (error) {

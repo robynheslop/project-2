@@ -14,7 +14,8 @@
       <input type="text" class="form-control" placeholder="Enter dish name here" id="searchTerm">
       <div class="form-check">
         <label class="form-check-label">
-          <input type="radio" class="form-check-input" name="recipesToSearch" id="my-recipes" value="my-recipes">
+          <input type="radio" class="form-check-input" name="recipesToSearch" id="my-recipes" value="my-recipes"
+            checked="">
           My Recipes
         </label>
       </div>
@@ -76,30 +77,6 @@
     </div>
 
   </div>
-
-  {{!-- View all recipe display --}}
-  <div class="col-md-8" id="appendSearchItemsHere" style="display:none">
-    <span class="close">&times;</span>
-    {{#each recipe}}
-    <div class="recipe-card">
-      <div class="col">
-        <img src="/images/pancake.png" alt="dish-image" style="height: 120px; width: 200px; display: block">
-      </div>
-      <div class="col">
-        <h2>{{this.title}}</h2>
-        <p class="recipe-card-prep-time">Preparation Time: {{this.preparationTime}}</p>
-        <button class="btn btn-secondary" viewId={{this.id}} class="viewRecipeButton" type="submit">View Recipe</button>
-        <button class="btn btn-secondary" editId={{this.id}} class="editRecipeButton" type="submit">Edit Recipe</button>
-        <button class="btn btn-secondary" deleteId={{this.id}} class="deleteRecipeButton" type="submit">Delete
-          Recipe</button>
-      </div>
-    </div>
-    {{/each}}
-  </div>
-
-  {{!-- Create new recipe form --}}
-  
-
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

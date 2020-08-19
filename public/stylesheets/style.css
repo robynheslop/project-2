@@ -112,8 +112,14 @@ p.recipe-card-prep-time {
    
 .recipe-card {
     margin-top: 20px;
-    justify-content: space-evenly;
+    justify-content: space-around;
 }
+
+#recipe-details {
+    float: right;
+    margin-top: 20px;
+}
+
 p.recipe-card-prep-time {
     margin-top: 0px;
     margin-bottom: 0px;
