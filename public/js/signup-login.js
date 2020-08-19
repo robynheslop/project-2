@@ -14,11 +14,12 @@ const getAndStoreFoodJoke = () => {
   });
 };
 
-const getAndStoreUserData = () => {
+const getAndStoreUserDataThenLoadNewPage = () => {
   $.get("/api/user_data").then(data => {
     localStorage.setItem("userName", data.username);
     localStorage.setItem("userEmail", data.email);
     localStorage.setItem("userId", data.id);
+    window.location.assign("/recipes-home-page");
   });
 };
 
@@ -57,8 +58,7 @@ $(document).ready(() => {
       password: password
     })
       .then(() => {
-        getAndStoreUserData();
-        window.location.assign("/recipes-home-page");
+        getAndStoreUserDataThenLoadNewPage();
       })
       .catch(handleLoginErr);
   }
@@ -98,11 +98,11 @@ $(document).ready(() => {
       password: password
     })
       .then(() => {
-        getAndStoreUserData();
-        window.location.assign("/recipes-home-page");
+        getAndStoreUserDataThenLoadNewPage();
       })
       .catch(err => {
         console.log(err);
+        $("#loginError").modal("show");
       });
   }
 });

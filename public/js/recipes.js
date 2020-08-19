@@ -66,7 +66,6 @@ $(document).ready(() => {
   const resetFormAfterSubmission = () => {
     updating = false;
     recipeID = "";
-    $("#sendRecipeButton").prop("disabled", false);
     $("#recipe-title").val("");
     $("#recipe-instructions").val("");
     $("#recipe-servings").val("");
@@ -97,7 +96,11 @@ $(document).ready(() => {
 
   // delete recipe
   const removeRecipe = id => {
-    $.delete(`/api/recipes/${id}`).then(response => console.log(response));
+    console.log(id);
+    $.ajax({
+      url: `/api/recipes/${id}`,
+      type: DELETE
+    }).then(response => console.log(response));
   };
 
   // get detalils to update recipe
@@ -133,8 +136,6 @@ $(document).ready(() => {
 
   $("#sendRecipeButton").on("click", async event => {
     event.preventDefault();
-    // disable submit button
-    $("#sendRecipeButton").prop("disabled", true);
     const ingredientResponse = await parseRecipesWithSpoonacular();
     const separatedIngredients = await ingredientResponse.map(item => {
       return {
