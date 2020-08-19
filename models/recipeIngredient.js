@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const RecipeIngredient = sequelize.define("RecipeIngredient", {
     ingredientQuantity: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false
     },
     ingredQuantUnit: {
