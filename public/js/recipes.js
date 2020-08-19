@@ -113,7 +113,10 @@ $(document).ready(() => {
   // delete recipe
   const removeRecipe = id => {
     console.log(id);
-    $.delete(`/api/recipes/${id}`).then(response => console.log(response));
+    $.ajax({
+      url: `/api/recipes/${id}`,
+      type: DELETE
+    }).then(response => console.log(response));
   };
 
   // get detalils to update recipe
@@ -163,10 +166,9 @@ $(document).ready(() => {
       instructions: $("#recipe-instructions").val(),
       ingredients: separatedIngredients,
       servings: $("#recipe-servings").val(),
-      preparationTime: $("#recipe-preparation-time").val()
+      preparationTime: $("#recipe-preparation-time").val(),
+      notes: $("#recipe-notes").val()
     };
-
-    formData.notes = $("#recipe-notes").val();
     const recipeURL = await handleFileUploadSubmit();
     if (recipeURL) {
       formData.imageUrl = recipeURL;
@@ -190,7 +192,6 @@ $(document).ready(() => {
           : false,
       searchText: $("#searchTerm").val()
     };
-    console.log(!formData.searchText);
     if (!formData.searchText) {
       $("#modal-header").text("Error: ");
       $("#modal-body").text("You must enter a title or ingredient to search");
