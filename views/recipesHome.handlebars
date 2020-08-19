@@ -46,21 +46,25 @@
     <div class="col-md-4 recommended-recipes" id="dishOftheDay" style="display:show">
       <h4>Recipe Of The Day</h4>
 
-      <div class="card" style="width: 100%;">
-        <img class="card-img-top" src="/images/pancake.png" alt="dish-of-the-day">
-        <div class="card-body">
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-            content.</p>
+      <div class="card" id="recipeOfTheDay" style="width: 100%">
+        <img class="card-img-top p-3" src="/images/pancake.png" alt="dish-of-the-day">
+        <div class="card-body" id="recipeOfTheDayBody">
+          <h3>Best Pancake Recipe</h3>
+          <div>
+            <p class="card-text float-left" id="recipeOfTheDayPrepTime"><i class="far fa-clock"></i> 10 mins.</p>
+            <button viewId="1" class="btn btn-primary disabled viewRecipeButton float-right" type="submit">View
+              Recipe</button>
+          </div>
         </div>
       </div>
 
 
-      <div class="card border-light mb-3" style="width: 200px;">
+      {{!-- <div class="card border-light mb-3" style="width: 200px;">
         <div class="card-header">Recipe 1</div>
         <div class="card-body">
           <img src="/images/pancake.png" alt="dish-of-the-day" style="width=fit; display: block;">
         </div>
-      </div>
+      </div> --}}
     </div>
 
   </div>

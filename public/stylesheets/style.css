@@ -124,3 +124,15 @@ p.recipe-card-prep-time {
     margin-top: 0px;
     margin-bottom: 0px;
 }
+
+#recipeOfTheDay {
+    border: none !important;
+}
+
+#recipeOfTheDayBody {
+    padding-top: 0px;
+}
+
+#recipeOfTheDayPrepTime {
+    padding-top: 22px;
+}

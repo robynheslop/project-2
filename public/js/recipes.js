@@ -73,7 +73,7 @@ $(document).ready(() => {
       error: function(errorThrown) {
         $("#sendRecipeButton").prop("disabled", true);
         $("#modal-header").text("Submission Failed");
-        $("#modal-body").text(errorThrown);
+        $("#modal-body").text(errorThrown.statusText);
         $("#recipeModal").modal("toggle");
       }
     });
@@ -190,8 +190,9 @@ $(document).ready(() => {
           : false,
       searchText: $("#searchTerm").val()
     };
-    if (!formData.searchTest) {
-      $("#modal-header").text("Error");
+    console.log(!formData.searchText);
+    if (!formData.searchText) {
+      $("#modal-header").text("Error: ");
       $("#modal-body").text("You must enter a title or ingredient to search");
       $("#recipeModal").modal("toggle");
     } else {
