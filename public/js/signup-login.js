@@ -57,11 +57,8 @@ $(document).ready(() => {
       password: password
     })
       .then(() => {
-        getAndStoreFoodTrivia();
-        getAndStoreFoodJoke();
-        getAndStoreUserData().then(
-          window.location.assign("/recipes-home-page")
-        );
+        getAndStoreUserData();
+        window.location.assign("/recipes-home-page");
       })
       .catch(handleLoginErr);
   }
