@@ -60,7 +60,23 @@ $(document).ready(() => {
   };
 
   const submitNewRecipe = formData => {
-    $.post("/api/recipe", formData).then(resetFormAfterSubmission());
+    $.post({
+      url: "/api/recipe",
+      data: formData,
+      success: function() {
+        $("#sendRecipeButton").prop("disabled", true);
+        $("#modal-header").text("Success!");
+        $("#modal-body").text("You have added a new recipe to your profile");
+        $("#recipeModal").modal("toggle");
+        resetFormAfterSubmission();
+      },
+      error: function(errorThrown) {
+        $("#sendRecipeButton").prop("disabled", true);
+        $("#modal-header").text("Submission Failed");
+        $("#modal-body").text(errorThrown.statusText);
+        $("#recipeModal").modal("toggle");
+      }
+    });
   };
 
   const resetFormAfterSubmission = () => {
@@ -90,7 +106,7 @@ $(document).ready(() => {
   // search by criteria
   const findRecipesUsingCriteria = formData => {
     location.assign(
-      `/recipe/search/?onlyUserRecipes=${formData.onlyUserRecipes}&searchText=${formData.searchText}`
+      `/recipe/search?onlyUserRecipes=${formData.onlyUserRecipes}&searchText=${formData.searchText}`
     );
   };
 
@@ -136,6 +152,7 @@ $(document).ready(() => {
 
   $("#sendRecipeButton").on("click", async event => {
     event.preventDefault();
+    $("#sendRecipeButton").prop("disabled", true);
     const ingredientResponse = await parseRecipesWithSpoonacular();
     const separatedIngredients = await ingredientResponse.map(item => {
       return {
@@ -175,7 +192,13 @@ $(document).ready(() => {
           : false,
       searchText: $("#searchTerm").val()
     };
-    findRecipesUsingCriteria(formData);
+    if (!formData.searchText) {
+      $("#modal-header").text("Error: ");
+      $("#modal-body").text("You must enter a title or ingredient to search");
+      $("#recipeModal").modal("toggle");
+    } else {
+      findRecipesUsingCriteria(formData);
+    }
   });
 
   // request details of particular recipe from database
