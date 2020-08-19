@@ -111,7 +111,6 @@ p.recipe-card-prep-time {
     margin-right: 50px;
 }
 
-<<<<<<< HEAD
 p.recipe-card-prep-time {
     margin-top: 0px;
     margin-bottom: 0px;
@@ -127,10 +126,11 @@ p.recipe-card-prep-time {
 
 #recipeOfTheDayPrepTime {
     padding-top: 22px;
-=======
+    margin-right: 120px;
+}
+
 @media (min-width: 340px) {
     .recipe-image {
         float: none;
     }
->>>>>>> edited styling for view all recipes and view specific recipe
 }
