@@ -173,7 +173,7 @@ $(document).ready(() => {
     if (recipeURL) {
       formData.imageUrl = recipeURL;
     } else {
-      formData.imageUrl = "/images/e-logo.png";
+      formData.imageUrl = "/images/e-logo-placeholder.png";
     }
     if (updating) {
       formData.id = recipeID;
