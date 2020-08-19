@@ -19,12 +19,12 @@ $(document).ready(() => {
     measurementId: "G-N0LYPZJNZS"
   };
 
-  const initiaizeFirebase = () => {
+  function initiaizeFirebase() {
     firebase.initializeApp(firebaseConfig);
     const storageService = firebase.storage();
     storageRef = storageService.ref();
     firebase.analytics();
-  };
+  }
 
   initiaizeFirebase();
 
