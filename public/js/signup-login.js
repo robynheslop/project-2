@@ -1,10 +1,35 @@
+const getAndStoreFoodTrivia = () => {
+  $.get(
+    "https://api.spoonacular.com/food/trivia/random?apiKey=8dcefe9d9cdd4170802511b6c2f4b0b2"
+  ).then(response => {
+    localStorage.setItem("trivia", response.text);
+  });
+};
+
+const getAndStoreFoodJoke = () => {
+  $.get(
+    "https://api.spoonacular.com/food/jokes/random?apiKey=8dcefe9d9cdd4170802511b6c2f4b0b2"
+  ).then(response => {
+    localStorage.setItem("joke", response.text);
+  });
+};
+
+const getAndStoreUserData = () => {
+  $.get("/api/user_data").then(data => {
+    localStorage.setItem("userName", data.username);
+    localStorage.setItem("userEmail", data.email);
+    localStorage.setItem("userId", data.id);
+  });
+};
+
 $(document).ready(() => {
   // Getting references to our sign up form and input
   const signUpForm = $("form.signup");
   const signUpUsername = $("input#username-input");
   const signUpEmailInput = $("input#signup-email-input");
   const signUpPasswordInput = $("input#signup-password-input");
-
+  getAndStoreFoodJoke();
+  getAndStoreFoodTrivia();
   // When the signup button is clicked, we validate the email and password are not blank
   signUpForm.on("submit", event => {
     event.preventDefault();
@@ -35,13 +60,11 @@ $(document).ready(() => {
       password: password
     })
       .then(() => {
-        $.get("/api/user_data").then(data => {
-          localStorage.setItem("userName", data.username);
-          localStorage.setItem("userEmail", data.email);
-          localStorage.setItem("userId", data.id);
-        });
-        window.location.replace("/recipes-home-page");
-        // If there's an error, handle it by throwing up a bootstrap alert
+        getAndStoreFoodTrivia();
+        getAndStoreFoodJoke();
+        getAndStoreUserData().then(
+          window.location.assign("/recipes-home-page")
+        );
       })
       .catch(handleLoginErr);
   }
@@ -81,13 +104,8 @@ $(document).ready(() => {
       password: password
     })
       .then(() => {
-        $.get("/api/user_data").then(data => {
-          localStorage.setItem("userName", data.username);
-          localStorage.setItem("userEmail", data.email);
-          localStorage.setItem("userId", data.id);
-        });
-        window.location.replace("/recipes-home-page");
-        // If there's an error, log the error
+        getAndStoreUserData();
+        window.location.assign("/recipes-home-page");
       })
       .catch(err => {
         console.log(err);

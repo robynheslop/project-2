@@ -1,22 +1,63 @@
 <div class="col-md-5" id="appendSearchItemsHere">
-    {{#each recipe}}
-    <div class="recipe-card">
-        <div class="col-md-4">
-            <img src="{{recipe.imageUrl}}" alt="{{{recipe.title}}}"
-                style="height: 120px; width: 200px; float: left; margin-top: 20px">
-            {{!-- <img src="/images/pancake.png" alt="dish-image"
-                style="height: 120px; width: 200px; float: left; margin-top: 20px"> --}}
-        </div>
-        <div class="col-md-8" id="recipe-details">
-            <h2>{{this.title}}</h2>
-            <p class="recipe-card-prep-time">Preparation Time: {{this.preparationTime}}</p>
-            <button viewId={{this.id}} class="btn btn-secondary viewRecipeButton" type="submit">View
-                Recipe</button>
-            <button editId={{this.id}} class="btn btn-secondary editRecipeButton" type="submit">Edit
-                Recipe</button>
-            <button deleteId={{this.id}} class="btn btn-secondary deleteRecipeButton" type="submit">Delete
-                Recipe</button>
+        {{#each recipe}}
+            {{#if this.userRecipe}}
+            <div class="recipe-card">
+                <div class="col-md-4">
+                    <img src="{{this.imageUrl}}" alt="{{{this.title}}}"
+                        style="height: 120px; width: 200px; float: left; margin-top: 20px">
+                    {{!-- <img src="/images/pancake.png" alt="dish-image"
+                        style="height: 120px; width: 200px; float: left; margin-top: 20px"> --}}
+                </div>
+                <div class="col-md-8" id="recipe-details">
+                    <h2>{{this.title}}</h2>
+                    <p class="recipe-card-prep-time">Preparation Time: {{this.preparationTime}}</p>
+                    <button viewId={{this.id}} class="btn btn-secondary viewRecipeButton" type="submit">View
+                        Recipe</button>
+                    <button editId={{this.id}} class="btn btn-secondary editRecipeButton" type="submit">Edit
+                        Recipe</button>
+                    <button deleteId={{this.id}} class="btn btn-secondary deleteRecipeButton" type="submit">Delete
+                        Recipe</button>
+                </div>
+            </div>
+            {{else}}
+            <div class="recipe-card">
+                <div class="col-md-4">
+                    <img src="{{this.imageUrl}}" alt="{{{this.title}}}"
+                        style="height: 120px; width: 200px; float: left; margin-top: 20px">
+                    {{!-- <img src="/images/pancake.png" alt="dish-image"
+                        style="height: 120px; width: 200px; float: left; margin-top: 20px"> --}}
+                </div>
+                <div class="col-md-8" id="recipe-details">
+                    <h2>{{this.title}}</h2>
+                    <p class="recipe-card-prep-time">Preparation Time: {{this.preparationTime}}</p>
+                    <button viewId={{this.id}} class="btn btn-secondary viewRecipeButton" type="submit">View
+                        Recipe</button>
+                    <button class="btn btn-secondary disabledButton" type="submit" data-toggle="modal" data-target="#notYourRecipe">Edit
+                        Recipe</button>
+                    <button class="btn btn-secondary disabledButton" type="submit" data-toggle="modal" data-target="#notYourRecipe">Delete
+                        Recipe</button>
+                </div>
+            </div>
+            {{/if}}
+        {{/each}}
+        
+</div>
+<!-- Modal -->
+<div class="modal fade" id="notYourRecipe" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-5 m-3">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4>Oops</h4>
+                <p>You don't own this recipe, and cannot edit or delete it.</p>
+            </div>
         </div>
     </div>
-    {{/each}}
 </div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/recipes.js"></script>
