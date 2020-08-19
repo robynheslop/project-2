@@ -66,7 +66,7 @@ $(document).ready(() => {
       success: function() {
         $("#sendRecipeButton").prop("disabled", true);
         $("#modal-header").text("Success!");
-        $("#modal-body").text("You have added a new recipe to your database");
+        $("#modal-body").text("You have added a new recipe to your profile");
         $("#recipeModal").modal("toggle");
         resetFormAfterSubmission();
       },
