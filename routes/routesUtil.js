@@ -225,9 +225,9 @@ const getRecipesByTextSearch = async request => {
           }
         ]
       },
-      attributes: ["id", "title", "preparationTime", "UserId"]
+      attributes: ["id", "title", "preparationTime", "imageUrl", "UserId"]
     });
-    if (request.query.onlyUserRecipes) {
+    if (request.query.onlyUserRecipes === "true") {
       searchedRecipes = searchedRecipes.filter(
         recipe => recipe.UserId === userId
       );
@@ -253,7 +253,8 @@ function mapRecipeHighLevelDetails(recipes, userId) {
       title: recipe.title,
       preparationTime: recipe.preparationTime,
       id: recipe.id,
-      userRecipe: recipe.UserId === userId
+      imageUrl: recipe.imageUrl,
+      userRecipe: recipe.UserId ? recipe.UserId === userId : true
     };
   });
 }

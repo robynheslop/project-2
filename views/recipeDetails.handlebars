@@ -1,18 +1,24 @@
-<div class="row" id="detailedRecipeViewHere">
-    <span class="close">&times;</span>
-    <div>
-        <h3>{{recipeDetails.title}}</h3>
-        <p> Ingredients:
-            {{#each recipeDetails.ingredients}}
+<div class="container">
+    <div class="row" id="detailedRecipeViewHere">
+        <div class="col-md-5" id="detailedRecipeViewHere">
+            <span class="close">&times;</span>
+            <div>
+                <h3>{{recipeDetails.title}}</h3>
+                <p> Ingredients:
+                    {{#each recipeDetails.ingredients}}
                 <p>{{this.quantity}} {{this.unit}} {{this.title}}</p>
-            {{/each}}
-        </p>
-        <p>Instructions: {{recipeDetails.instructions}}</p>
-        <p>Preparation Time: {{recipeDetails.preparationTime}}</p>
-        <p>Servings: {{recipeDetails.servings}}</p>
-        <p>Notes: {{recipeDetails.notes}}</p>
-        <img src="{{recipeDetails.imageUrl}}" alt="{{{recipeDetails.title}}}" width="300px">
-        <button edit-Id="{{recipeDetails.id}}" class="editRecipeButton" type="submit">Edit Recipe</button>
-        <button delete-Id="{{recipeDetails.id}}" class="deleteRecipeButton" type="submit">Delete Recipe</button>
+                {{/each}}
+                </p>
+                <p>Instructions: {{recipeDetails.instructions}}</p>
+                <p>Preparation Time: {{recipeDetails.preparationTime}}</p>
+                <p>Servings: {{recipeDetails.servings}}</p>
+                <p>Notes: {{recipeDetails.notes}}</p>
+                <img src="{{recipeDetails.imageUrl}}" alt="{{{recipeDetails.title}}}" width="300px">
+                <button edit-Id="{{recipeDetails.id}}" class="editRecipeButton" type="submit">Edit Recipe</button>
+                <button delete-Id="{{recipeDetails.id}}" class="deleteRecipeButton" type="submit">Delete Recipe</button>
+            </div>
+        </div>
     </div>
 </div>
+
+<script type="text/javascript" src="/js/recipes.js"></script>

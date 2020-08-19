@@ -39,12 +39,16 @@ module.exports = function(app) {
     response.render("newRecipeForm");
   });
 
-
   // Here we've add our isAuthenticated middleware to this route.
   // If a user who is not logged in tries to access this route they will be redirected to the signup page
   app.get("/my-recipes", isAuthenticated, async (request, response) => {
     const recipeData = await ru.getAllRecipesForCurrentUser(request);
-    response.render("listRecipes", { recipe: recipeData });
+    if (recipeData && !recipeData.length) {
+      const responseString = "You have no recipes saved! Start adding them today.";
+      response.render("noSearchResults", {noResults: responseString});
+    } else {
+      response.render("listRecipes", { recipe: recipeData });    
+    }
   });
 
   // get recipe details by id
@@ -54,11 +58,13 @@ module.exports = function(app) {
   });
 
   app.get("/recipe/search/", isAuthenticated, async (request, response) => {
-    console.log(request.query);
     const recipeData = await ru.getRecipesByTextSearch(request);
-    console.log(JSON.stringify(recipeData));
-    response.render("recipes", {recipe: recipeData});
+    if (recipeData && !recipeData.length) {
+      const responseString = `We can't find any recipes containing \"${request.query.searchText}\". Let's look for something else...`;
+      response.render("noSearchResults", {noResults: responseString});
+    } else {
+      response.render("listRecipes", {recipe: recipeData});    
+    }
   });
-
 };
 

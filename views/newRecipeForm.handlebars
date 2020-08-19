@@ -23,11 +23,13 @@
       <input class="form-control" id="recipe-preparation-time" type="number" min="0" required>
     </div>
     <div class="form-group">
-      <label>Notes.</label>
-      <textarea class="form-control" id="recipe-notes" type="text" rows="5" required></textarea>
+      <label>Notes - Optional.</label>
+      <textarea class="form-control" id="recipe-notes" type="text" rows="5"></textarea>
     </div>
     <div class="form-group">
-      <label>Upload An Image (Optional).</label>
+      <label>Upload An Image - Optional.</label>
+      <br>
+      <small id="passwordHelpInline" class="text-muted">Please choose landscape images</small>
       <br>
       <input type="file" id="recipe-image-upload" accept="image/*" />
     </div>
@@ -36,3 +38,5 @@
     </div>
   </form>
 </div>
+
+<script type="text/javascript" src="/js/recipes.js"></script>
