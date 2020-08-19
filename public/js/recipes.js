@@ -33,17 +33,19 @@ $(document).ready(() => {
   };
 
   const handleFileUploadSubmit = async () => {
-    const userId = localStorage.getItem("userId");
-    try {
-      await storageRef
-        .child(`images/${userId}/${selectedFile.name}`)
-        .put(selectedFile);
-      const url = await storageRef
-        .child(`images/${userId}/${selectedFile.name}`)
-        .getDownloadURL();
-      return url;
-    } catch (error) {
-      console.log(error);
+    if (selectedFile) {
+      const userId = localStorage.getItem("userId");
+      try {
+        await storageRef
+          .child(`images/${userId}/${selectedFile.name}`)
+          .put(selectedFile);
+        const url = await storageRef
+          .child(`images/${userId}/${selectedFile.name}`)
+          .getDownloadURL();
+        return url;
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -150,36 +152,57 @@ $(document).ready(() => {
     getAllMyRecipes();
   });
 
+  const mandatoryFieldsPopulated = formData => {
+    if (
+      formData.title &&
+      formData.title.trim().length &&
+      formData.instructions &&
+      formData.instructions.trim().length &&
+      formData.ingredients &&
+      formData.ingredients.trim().length &&
+      formData.servings &&
+      formData.servings >= $("#recipe-servings").attr("min") &&
+      formData.preparationTime &&
+      formData.preparationTime >= $("#recipe-preparation-time").attr("min")
+    ) {
+      return true;
+    }
+    return false;
+  };
+
   $("#sendRecipeButton").on("click", async event => {
-    event.preventDefault();
-    $("#sendRecipeButton").prop("disabled", true);
-    const ingredientResponse = await parseRecipesWithSpoonacular();
-    const separatedIngredients = await ingredientResponse.map(item => {
-      return {
-        title: item.originalName,
-        quantity: item.amount,
-        units: item.unitShort
-      };
-    });
     const formData = {
       title: $("#recipe-title").val(),
       instructions: $("#recipe-instructions").val(),
-      ingredients: separatedIngredients,
+      ingredients: $("#recipe-ingredients").val(),
       servings: $("#recipe-servings").val(),
       preparationTime: $("#recipe-preparation-time").val(),
       notes: $("#recipe-notes").val()
     };
-    const recipeURL = await handleFileUploadSubmit();
-    if (recipeURL) {
-      formData.imageUrl = recipeURL;
-    } else {
-      formData.imageUrl = "/images/e-logo-placeholder.png";
-    }
-    if (updating) {
-      formData.id = recipeID;
-      submitUpdatedRecipe(formData);
-    } else {
-      submitNewRecipe(formData);
+    if (mandatoryFieldsPopulated(formData)) {
+      event.preventDefault();
+      $("#sendRecipeButton").prop("disabled", true);
+      const ingredientResponse = await parseRecipesWithSpoonacular();
+      const separatedIngredients = await ingredientResponse.map(item => {
+        return {
+          title: item.originalName,
+          quantity: item.amount,
+          units: item.unitShort
+        };
+      });
+      formData.ingredients = separatedIngredients;
+      const recipeURL = await handleFileUploadSubmit();
+      if (recipeURL) {
+        formData.imageUrl = recipeURL;
+      } else {
+        formData.imageUrl = "/images/e-logo-placeholder.png";
+      }
+      if (updating) {
+        formData.id = recipeID;
+        submitUpdatedRecipe(formData);
+      } else {
+        submitNewRecipe(formData);
+      }
     }
   });
 
