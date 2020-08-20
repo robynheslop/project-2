@@ -71,6 +71,10 @@ button {
     margin-top: 10px;
 }
 
+#detailed-recipe-instructions {
+    white-space: pre-wrap
+}
+
 #addNewRecipe,
 #newRecipeForm,
 #appendSearchItemsHere,
@@ -126,7 +130,7 @@ p.recipe-card-prep-time {
 
 #recipeOfTheDayPrepTime {
     padding-top: 22px;
-    margin-right: 120px;
+    margin-left: 20px;
 }
 
 @media (min-width: 340px) {

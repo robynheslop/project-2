@@ -7,6 +7,7 @@ $(document).ready(() => {
   $(".food-joke").text(localStorage.getItem("joke"));
   let updating = false;
   let recipeID;
+  let deleting = false;
 
   const firebaseConfig = {
     apiKey: "AIzaSyByL1PUuaMDhkAltQxfcyB_9JRlTjHDrvc",
@@ -66,14 +67,14 @@ $(document).ready(() => {
       url: "/api/recipe",
       data: formData,
       success: function() {
-        $("#sendRecipeButton").prop("disabled", true);
+        $("#sendRecipeButton").prop("disabled", false);
         $("#modal-header").text("Success!");
         $("#modal-body").text("You have added a new recipe to your profile");
         $("#recipeModal").modal("toggle");
         resetFormAfterSubmission();
       },
       error: function(errorThrown) {
-        $("#sendRecipeButton").prop("disabled", true);
+        $("#sendRecipeButton").prop("disabled", false);
         $("#modal-header").text("Submission Failed");
         $("#modal-body").text(errorThrown.statusText);
         $("#recipeModal").modal("toggle");
@@ -110,6 +111,13 @@ $(document).ready(() => {
     location.assign(
       `/recipe/search?onlyUserRecipes=${formData.onlyUserRecipes}&searchText=${formData.searchText}`
     );
+  };
+
+  const ifDeletingReloadPage = () => {
+    if (deleting) {
+      deleting = false;
+      location.reload();
+    }
   };
 
   // delete recipe
@@ -251,8 +259,10 @@ $(document).ready(() => {
   // sending a delete request for a recipe id
   $(".deleteRecipeButton").click(event => {
     event.preventDefault();
+    deleting = true;
     removeRecipe($(event.target).attr("deleteId"));
   });
 
   $("#recipe-image-upload").on("change", saveImageFileToVariable);
+  $("#recipeModal").on("hide.bs.modal", ifDeletingReloadPage);
 });

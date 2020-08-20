@@ -45,7 +45,11 @@ module.exports = function(app) {
   // get recipe details by id
   app.get("/recipes/:id", isAuthenticated, async (request, response) => {
     const recipeDetails = await ru.getRecipeDetails(request);
-    response.render("recipeDetails", { recipeDetails: recipeDetails });
+    if (recipeDetails) {
+      response.render("recipeDetails", { recipeDetails: recipeDetails });
+    } else {
+      response.render("recipesHome");
+    }
   });
 
   app.get("/recipe/search", isAuthenticated, async (request, response) => {
