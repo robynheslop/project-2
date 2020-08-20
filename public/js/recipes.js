@@ -115,7 +115,7 @@ $(document).ready(() => {
 
   const ifDeletingNavigateHome = () => {
     if (deleting) {
-      window.location.assign("/recipes-home-page");
+      $.get("/recipes-home-page");
     }
   };
 
