@@ -20,7 +20,7 @@ const createRecipe = async request => {
     return recipe;
   } catch (error) {
     console.log(
-      `Error ocurred while creating recipe. detailed error is following: ${error}`
+      `Error ocurred while creating recipe. detailed error is following: ${error.stack}`
     );
   }
 };
@@ -36,7 +36,7 @@ const persistAndFetchIngredients = async request => {
     persistedIngredients = await db.Ingredient.findAll();
   } catch (error) {
     console.log(
-      `Failed to retreive saved ingredients due to following error: ${error}`
+      `Failed to retreive saved ingredients due to following error: ${error.stack}`
     );
     return;
   }
@@ -68,7 +68,7 @@ const persistAndFetchIngredients = async request => {
     persistedIngredients = persistedIngredients.concat(newlyCreatedIngredient);
   } catch (error) {
     console.log(
-      `failed to persist new ingredients due to following error: ${error}`
+      `failed to persist new ingredients due to following error: ${error.stack}`
     );
     return;
   }
@@ -105,7 +105,7 @@ const persistRecipeIngredients = async (
     return true;
   } catch (error) {
     console.log(
-      `failed to persist recipe ingredients due to following error: ${error}`
+      `failed to persist recipe ingredients due to following error: ${error.stack}`
     );
     return false;
   }
@@ -127,7 +127,9 @@ const getAllRecipesForCurrentUser = async request => {
     });
     return mapRecipeHighLevelDetails(recipes, userId);
   } catch (error) {
-    console.log(`Failed to retrieve recipes due to following error: ${error}`);
+    console.log(
+      `Failed to retrieve recipes due to following error: ${error.stack}`
+    );
   }
 };
 
@@ -176,16 +178,26 @@ const getRecipeDetails = async request => {
       notes: recipe.notes,
       imageUrl: recipe.imageUrl,
       ingredients: ingredientDetails,
-      id: request.params.id
+      id: request.params.id,
+      userRecipe: recipe.UserId === request.user.id
     };
     return recipeDetails;
   } catch (error) {
     console.log(
-      `Failed to retrieve recipe details due to following error: ${error}`
+      `Failed to retrieve recipe details due to following error: ${error.stack}`
     );
   }
 };
 
+/**
+ * searches recipe by searching searchText in
+ * recipe title as well as ingredient title
+ * and returns all recipes where either searchhText
+ * present in title or recipe is based on one of such inredient
+ * also filters searched recipe based on if user is looking for
+ * his/her own recipes or all other users recipes as well.
+ * @param {request sent by client} request
+ */
 const getRecipesByTextSearch = async request => {
   try {
     const userId = request.user.id;
@@ -259,11 +271,41 @@ function mapRecipeHighLevelDetails(recipes, userId) {
   });
 }
 
+/**
+ * deletes input recipe id from database
+ * @param {request sent by client} request
+ */
+const deleteRecipe = async request => {
+  try {
+    const recipeId = request.params.id;
+    if (recipeId) {
+      await db.RecipeIngredient.destroy({
+        where: {
+          RecipeId: recipeId
+        }
+      });
+      await db.Recipe.destroy({
+        where: {
+          id: recipeId
+        }
+      });
+      return 204;
+    }
+    return 400;
+  } catch (error) {
+    console.log(
+      `Error ocurred while deleting recipeId: ${recipeId}. Detailed error is following: ${error.stack}`
+    );
+    return 500;
+  }
+};
+
 module.exports = {
   createRecipe,
   persistAndFetchIngredients,
   persistRecipeIngredients,
   getAllRecipesForCurrentUser,
   getRecipeDetails,
-  getRecipesByTextSearch
+  getRecipesByTextSearch,
+  deleteRecipe
 };
