@@ -67,14 +67,14 @@ $(document).ready(() => {
       url: "/api/recipe",
       data: formData,
       success: function() {
-        $("#sendRecipeButton").prop("disabled", true);
+        $("#sendRecipeButton").prop("disabled", false);
         $("#modal-header").text("Success!");
         $("#modal-body").text("You have added a new recipe to your profile");
         $("#recipeModal").modal("toggle");
         resetFormAfterSubmission();
       },
       error: function(errorThrown) {
-        $("#sendRecipeButton").prop("disabled", true);
+        $("#sendRecipeButton").prop("disabled", false);
         $("#modal-header").text("Submission Failed");
         $("#modal-body").text(errorThrown.statusText);
         $("#recipeModal").modal("toggle");
