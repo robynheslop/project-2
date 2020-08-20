@@ -7,6 +7,7 @@ $(document).ready(() => {
   $(".food-joke").text(localStorage.getItem("joke"));
   let updating = false;
   let recipeID;
+  let deleting = false;
 
   const firebaseConfig = {
     apiKey: "AIzaSyByL1PUuaMDhkAltQxfcyB_9JRlTjHDrvc",
@@ -110,6 +111,12 @@ $(document).ready(() => {
     location.assign(
       `/recipe/search?onlyUserRecipes=${formData.onlyUserRecipes}&searchText=${formData.searchText}`
     );
+  };
+
+  const ifDeletingNavigateHome = () => {
+    if (deleting) {
+      window.location.assign("/recipes-home-page");
+    }
   };
 
   // delete recipe
@@ -251,8 +258,10 @@ $(document).ready(() => {
   // sending a delete request for a recipe id
   $(".deleteRecipeButton").click(event => {
     event.preventDefault();
+    deleting = true;
     removeRecipe($(event.target).attr("deleteId"));
   });
 
   $("#recipe-image-upload").on("change", saveImageFileToVariable);
+  $("#recipeModal").on("hide.bs.modal", ifDeletingNavigateHome);
 });
