@@ -116,7 +116,7 @@ $(document).ready(() => {
   const ifDeletingNavigateHome = () => {
     if (deleting) {
       deleting = false;
-      $.get("/recipes-home-page");
+      location.reload();
     }
   };
 
