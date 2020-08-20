@@ -2,7 +2,7 @@
   <form id="recipeForm" enctype="multipart/form-data">
     <div class="form-group">
       <label>Recipe Title.</label>
-      <input class="form-control" name="title" id="recipe-title" type="text" required>
+      <input class="form-control" name="title" id="recipe-title" type="text" required pattern=".*\S+.*" title="atleast one character required.">
     </div>
     <div class="form-group">
       <label>Ingredients. Please enter each ingredient on a new line.</label>
@@ -16,11 +16,11 @@
     </div>
     <div class="form-group">
       <label>Servings.</label>
-      <input class="form-control" id="recipe-servings" type="number" min="0" required>
+      <input class="form-control" id="recipe-servings" type="number" min="1" required>
     </div>
     <div class="form-group">
       <label>Preparation Time in minutes.</label>
-      <input class="form-control" id="recipe-preparation-time" type="number" min="0" required>
+      <input class="form-control" id="recipe-preparation-time" type="number" min="1" required>
     </div>
     <div class="form-group">
       <label>Notes - Optional.</label>
