@@ -113,7 +113,7 @@ $(document).ready(() => {
     );
   };
 
-  const ifDeletingNavigateHome = () => {
+  const ifDeletingReloadPage = () => {
     if (deleting) {
       deleting = false;
       location.reload();
@@ -264,5 +264,5 @@ $(document).ready(() => {
   });
 
   $("#recipe-image-upload").on("change", saveImageFileToVariable);
-  $("#recipeModal").on("hide.bs.modal", ifDeletingNavigateHome);
+  $("#recipeModal").on("hide.bs.modal", ifDeletingReloadPage);
 });
