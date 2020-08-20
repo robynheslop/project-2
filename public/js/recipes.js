@@ -117,8 +117,18 @@ $(document).ready(() => {
     console.log(id);
     $.ajax({
       url: `/api/recipes/${id}`,
-      type: DELETE
-    }).then(response => console.log(response));
+      type: "DELETE",
+      success: function() {
+        $("#modal-header").text("Success!");
+        $("#modal-body").text("This recipe has been deleted");
+        $("#recipeModal").modal("toggle");
+      },
+      error: function(errorThrown) {
+        $("#modal-header").text("Deletion Failed");
+        $("#modal-body").text(errorThrown.statusText);
+        $("#recipeModal").modal("toggle");
+      }
+    });
   };
 
   // get detalils to update recipe

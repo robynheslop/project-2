@@ -71,4 +71,9 @@ module.exports = function(app) {
       : false;
     recipeStatus ? response.status(201).end() : response.status(500).end();
   });
+
+  app.delete("/api/recipes/:id", isAuthenticated, async (request, response) => {
+    const statusCode = await ru.deleteRecipe(request);
+    response.status(statusCode).end();
+  });
 };
