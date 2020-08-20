@@ -1,6 +1,6 @@
 const getAndStoreFoodTrivia = () => {
   $.get(
-    "https://api.spoonacular.com/food/trivia/random?apiKey=8dcefe9d9cdd4170802511b6c2f4b0b2"
+    "https://api.spoonacular.com/food/trivia/random?apiKey=9b8a3b5738b64ccb97ea54d7847ea2c0"
   ).then(response => {
     localStorage.setItem("trivia", response.text);
   });
@@ -8,7 +8,7 @@ const getAndStoreFoodTrivia = () => {
 
 const getAndStoreFoodJoke = () => {
   $.get(
-    "https://api.spoonacular.com/food/jokes/random?apiKey=8dcefe9d9cdd4170802511b6c2f4b0b2"
+    "https://api.spoonacular.com/food/jokes/random?apiKey=9b8a3b5738b64ccb97ea54d7847ea2c0"
   ).then(response => {
     localStorage.setItem("joke", response.text);
   });

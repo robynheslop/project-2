@@ -146,6 +146,9 @@ const getRecipeDetails = async request => {
         id: recipeId
       }
     });
+    if (!recipe) {
+      return;
+    }
     let ingredientDetails = [];
     const recipeIngredients = await recipe.getRecipeIngredients();
     if (recipeIngredients && recipeIngredients.length) {

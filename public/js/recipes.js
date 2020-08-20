@@ -53,7 +53,7 @@ $(document).ready(() => {
   const parseRecipesWithSpoonacular = () => {
     return $.ajax({
       url:
-        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=4ef67de632354c9c93ca78cbb90d74c2",
+        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=7c4af557cc3a4d27a00082d3cc2023e1",
       method: "POST",
       data: {
         ingredientList: $("#recipe-ingredients").val(),
