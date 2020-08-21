@@ -6,6 +6,7 @@ const getAndStoreFoodTrivia = () => {
   });
 };
 
+// adding a new comment for push
 const getAndStoreFoodJoke = () => {
   $.get(
     "https://api.spoonacular.com/food/jokes/random?apiKey=9b8a3b5738b64ccb97ea54d7847ea2c0"
