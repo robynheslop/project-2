@@ -3,6 +3,7 @@ const { Storage } = require("@google-cloud/storage");
 const { Op } = require("sequelize");
 const fs = require("fs");
 const axios = require("axios");
+require("dotenv").config();
 const storage = new Storage({
   keyFilename: "./googlekey/timelessRecipeGoogleKey.json"
 });
@@ -81,10 +82,10 @@ const persistAndFetchIngredients = async request => {
     ingredientList: request.body.ingredients,
     servings: request.body.servings
   };
+  const apiKeyParseIngredients = process.env.API_KEY_PARSE_INGREDIENTS;
   await axios({
     method: "post",
-    url:
-      "https://api.spoonacular.com/recipes/parseIngredients?apiKey=7c4af557cc3a4d27a00082d3cc2023e1",
+    url: `https://api.spoonacular.com/recipes/parseIngredients?apiKey=${apiKeyParseIngredients}`,
     params: spoonacularRequestData
   })
     .then(res => {

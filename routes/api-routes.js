@@ -8,9 +8,8 @@ const ru = require("./routesUtil");
 const multer = require("multer");
 const axios = require("axios");
 const upload = multer({ dest: "./temp/uploads/" });
-
+require("dotenv").config();
 module.exports = function(app) {
-  // eslint-disable-next-line prettier/prettier
   // Using the passport.authenticate middleware with our local strategy.
   // If the user has valid login credentials, send them to the members page.
   // Otherwise the user will be sent an error
@@ -90,9 +89,10 @@ module.exports = function(app) {
   });
 
   app.get("/food-fact", async (request, response) => {
+    const apiKeyFoodFact = process.env.API_KEY_TRIVA_JOKE;
     axios
       .get(
-        "https://api.spoonacular.com/food/trivia/random?apiKey=8dcefe9d9cdd4170802511b6c2f4b0b2"
+        `https://api.spoonacular.com/food/trivia/random?apiKey=${apiKeyFoodFact}`
       )
       .then(res => {
         response.json(res.data.text);
@@ -101,9 +101,10 @@ module.exports = function(app) {
   });
 
   app.get("/food-joke", async (request, response) => {
+    const apiKeyFoodJoke = process.env.API_KEY_TRIVA_JOKE;
     axios
       .get(
-        "https://api.spoonacular.com/food/jokes/random?apiKey=8dcefe9d9cdd4170802511b6c2f4b0b2"
+        `https://api.spoonacular.com/food/jokes/random?apiKey=${apiKeyFoodJoke}`
       )
       .then(res => {
         response.json(res.data.text);

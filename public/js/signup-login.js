@@ -48,6 +48,7 @@ $(document).ready(() => {
   // Does a post to the signup route. If successful, we are redirected to the recipe homepage page
   // Otherwise we log any errors
   function signUpUser(username, email, password) {
+    $("#signup-modal").modal("toggle");
     $.post("/api/signup", {
       username: username,
       email: email,
@@ -74,6 +75,7 @@ $(document).ready(() => {
 
   // When the form is submitted, we validate there's an email and password entered
   loginForm.on("submit", event => {
+    $("#login-modal").modal("toggle");
     event.preventDefault();
     const userData = {
       email: loginEmailInput.val().trim(),
@@ -97,7 +99,9 @@ $(document).ready(() => {
       password: password
     })
       .then(() => {
-        getAndStoreUserDataThenLoadNewPage();
+        setTimeout(() => {
+          getAndStoreUserDataThenLoadNewPage();
+        }, 3000);
       })
       .catch(handleLoginErr);
   }
