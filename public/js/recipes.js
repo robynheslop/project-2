@@ -1,6 +1,5 @@
 $(document).ready(() => {
   let selectedFile;
-  let storageRef;
   // display user email in header
   $(".member-name").text(localStorage.getItem("userName"));
   $(".food-fact").text(localStorage.getItem("trivia"));
