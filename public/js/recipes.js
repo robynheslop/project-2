@@ -13,10 +13,8 @@ $(document).ready(() => {
   };
 
   const parseRecipesWithSpoonacular = () => {
-    return $.ajax({
-      url:
-        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=7c4af557cc3a4d27a00082d3cc2023e1",
-      method: "POST",
+    return $.post({
+      url: "/parse-ingredients",
       data: {
         ingredientList: $("#recipe-ingredients").val(),
         servings: $("#recipe-servings").val()
