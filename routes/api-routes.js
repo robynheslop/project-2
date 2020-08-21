@@ -60,15 +60,42 @@ module.exports = function(app) {
   });
 
   app.post("/api/recipe", isAuthenticated, async (request, response) => {
+    const spoonacularRequestData = {
+      ingredientList: request.body.ingredients,
+      servings: request.body.servings
+    };
+    const recipeData = request;
+    await axios({
+      method: "post",
+      url:
+        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=7c4af557cc3a4d27a00082d3cc2023e1",
+      params: spoonacularRequestData
+    })
+      .then(res => {
+        recipeData.body.ingredients = res.data.map(item => {
+          return {
+            title: item.originalName,
+            quantity: item.amount,
+            units: item.unitShort
+          };
+        });
+      })
+      .catch(error => {
+        response.json(error);
+      });
     let recipeStatus = true;
-    const recipe = await ru.createRecipe(request);
+    const recipe = await ru.createRecipe(recipeData);
     recipeStatus = recipe ? true : false;
     const persistedIngredients = recipeStatus
-      ? await ru.persistAndFetchIngredients(request)
+      ? await ru.persistAndFetchIngredients(recipeData)
       : undefined;
     recipeStatus = persistedIngredients ? true : false;
     recipeStatus = recipeStatus
-      ? await ru.persistRecipeIngredients(request, persistedIngredients, recipe)
+      ? await ru.persistRecipeIngredients(
+          recipeData,
+          persistedIngredients,
+          recipe
+        )
       : false;
     recipeStatus ? response.status(201).end() : response.status(500).end();
   });
@@ -101,21 +128,6 @@ module.exports = function(app) {
   });
 
   app.post("/parse-ingredients", async (request, response) => {
-    const requestData = {
-      ingredientList: request.body.ingredientList,
-      servings: request.body.servings
-    };
-    axios({
-      method: "post",
-      url:
-        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=7c4af557cc3a4d27a00082d3cc2023e1",
-      params: requestData
-    })
-      .then(res => {
-        response.json(res.data);
-      })
-      .catch(error => {
-        response.json(error);
-      });
+    
   });
 };
