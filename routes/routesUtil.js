@@ -3,9 +3,10 @@ const { Storage } = require("@google-cloud/storage");
 const { Op } = require("sequelize");
 const fs = require("fs");
 const axios = require("axios");
+
 require("dotenv").config();
 const storage = new Storage({
-  keyFilename: "./googlekey/timelessRecipeGoogleKey.json"
+  keyFilename: "./config/timelessRecipeGoogleKey.json"
 });
 const bucketName = "timeless-recipes.appspot.com";
 
@@ -23,12 +24,8 @@ const generateImageUrlToSave = async request => {
       .upload(`./temp/uploads/${request.file.filename}`, {
         // Support for HTTP requests made with `Accept-Encoding: gzip`
         gzip: true,
-        // By setting the option `destination`, you can change the name of the
-        // object you are uploading to a bucket.
         metadata: {
           // Enable long-lived HTTP caching headers
-          // Use only if the contents of the file will never change
-          // (If the contents will change, use cacheControl: 'no-cache')
           cacheControl: "public, max-age=31536000",
           contentType:
             request.file.mimetype === "image/jpeg" ? "image/jp2" : "image/png"
