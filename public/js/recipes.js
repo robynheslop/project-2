@@ -12,16 +12,6 @@ $(document).ready(() => {
     selectedFile = event.target.files[0];
   };
 
-  const parseRecipesWithSpoonacular = () => {
-    return $.post({
-      url: "/parse-ingredients",
-      data: {
-        ingredientList: $("#recipe-ingredients").val(),
-        servings: $("#recipe-servings").val()
-      }
-    });
-  };
-
   const submitNewRecipe = formData => {
     $.post({
       url: "/api/recipe",
@@ -160,15 +150,6 @@ $(document).ready(() => {
     if (mandatoryFieldsPopulated(formData)) {
       event.preventDefault();
       $("#sendRecipeButton").prop("disabled", true);
-      const ingredientResponse = await parseRecipesWithSpoonacular();
-      const separatedIngredients = await ingredientResponse.map(item => {
-        return {
-          title: item.originalName,
-          quantity: item.amount,
-          units: item.unitShort
-        };
-      });
-      formData.ingredients = separatedIngredients;
       if (selectedFile) {
         formData.image = selectedFile;
       }
