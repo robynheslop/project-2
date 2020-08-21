@@ -5,6 +5,7 @@ const passport = require("../config/passport");
 const isAuthenticated = require("../config/middleware/isAuthenticated");
 // require to create/get/update recipes
 const ru = require("./routesUtil");
+const axios = require("axios");
 
 module.exports = function(app) {
   // eslint-disable-next-line prettier/prettier
@@ -75,5 +76,46 @@ module.exports = function(app) {
   app.delete("/api/recipes/:id", isAuthenticated, async (request, response) => {
     const statusCode = await ru.deleteRecipe(request);
     response.status(statusCode).end();
+  });
+
+  app.get("/food-fact", async (request, response) => {
+    axios
+      .get(
+        "https://api.spoonacular.com/food/trivia/random?apiKey=8dcefe9d9cdd4170802511b6c2f4b0b2"
+      )
+      .then(res => {
+        response.json(res.data.text);
+      })
+      .catch(error => console.log("Error", error));
+  });
+
+  app.get("/food-joke", async (request, response) => {
+    axios
+      .get(
+        "https://api.spoonacular.com/food/jokes/random?apiKey=8dcefe9d9cdd4170802511b6c2f4b0b2"
+      )
+      .then(res => {
+        response.json(res.data.text);
+      })
+      .catch(error => console.log("Error", error));
+  });
+
+  app.post("/parse-ingredients", async (request, response) => {
+    const requestData = {
+      ingredientList: request.body.ingredientList,
+      servings: request.body.servings
+    };
+    axios({
+      method: "post",
+      url:
+        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=7c4af557cc3a4d27a00082d3cc2023e1",
+      params: requestData
+    })
+      .then(res => {
+        response.json(res.data);
+      })
+      .catch(error => {
+        response.json(error);
+      });
   });
 };

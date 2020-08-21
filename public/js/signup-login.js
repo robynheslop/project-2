@@ -1,17 +1,12 @@
 const getAndStoreFoodTrivia = () => {
-  $.get(
-    "https://api.spoonacular.com/food/trivia/random?apiKey=9b8a3b5738b64ccb97ea54d7847ea2c0"
-  ).then(response => {
-    localStorage.setItem("trivia", response.text);
+  $.get("/food-fact").then(response => {
+    localStorage.setItem("trivia", response);
   });
 };
 
-// adding a new comment for push
 const getAndStoreFoodJoke = () => {
-  $.get(
-    "https://api.spoonacular.com/food/jokes/random?apiKey=9b8a3b5738b64ccb97ea54d7847ea2c0"
-  ).then(response => {
-    localStorage.setItem("joke", response.text);
+  $.get("/food-joke").then(response => {
+    localStorage.setItem("joke", response);
   });
 };
 
