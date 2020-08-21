@@ -1,18 +1,64 @@
 const db = require("../models");
+const { Storage } = require("@google-cloud/storage");
 const { Op } = require("sequelize");
+const fs = require("fs");
+const axios = require("axios");
+const storage = new Storage({
+  keyFilename: "./googlekey/timelessRecipeGoogleKey.json"
+});
+const bucketName = "timeless-recipes.appspot.com";
+
+const imageUrlFixed =
+  "https://storage.googleapis.com/timeless-recipes.appspot.com/";
+const defaultUrl = "/images/e-logo-placeholder.png";
+
+const generateImageUrlForClient = savedUrl =>
+  savedUrl ? `${imageUrlFixed}${savedUrl}` : defaultUrl;
+
+const generateImageUrlToSave = async request => {
+  if (request.file) {
+    await storage
+      .bucket(bucketName)
+      .upload(`./temp/uploads/${request.file.filename}`, {
+        // Support for HTTP requests made with `Accept-Encoding: gzip`
+        gzip: true,
+        // By setting the option `destination`, you can change the name of the
+        // object you are uploading to a bucket.
+        metadata: {
+          // Enable long-lived HTTP caching headers
+          // Use only if the contents of the file will never change
+          // (If the contents will change, use cacheControl: 'no-cache')
+          cacheControl: "public, max-age=31536000",
+          contentType:
+            request.file.mimetype === "image/jpeg" ? "image/jp2" : "image/png"
+        }
+      });
+    console.log(`${request.file.filename} uploaded to ${bucketName}.`);
+    fs.unlink(`./temp/uploads/${request.file.filename}`, error =>
+      error
+        ? console.log(
+            `error ocurred while deleting recipe image from temp folder. detailed error is following: ${error}`
+          )
+        : console.log(`${request.file.filename} is deleted from temp`)
+    );
+    return request.file.filename;
+  }
+  return null;
+};
 /**
  * creates a recipe entry in recipes table
  * and returns same
  * @param {request received from client} request
  */
 const createRecipe = async request => {
+  const recipeImageUrl = await generateImageUrlToSave(request);
   const recipeObject = {
     title: request.body.title,
     instructions: request.body.instructions,
     servings: request.body.servings,
     preparationTime: request.body.preparationTime,
     notes: request.body.notes,
-    imageUrl: request.body.imageUrl,
+    imageUrl: recipeImageUrl,
     UserId: request.user.id
   };
   try {
@@ -31,6 +77,31 @@ const createRecipe = async request => {
  * @param {request received from client} request
  */
 const persistAndFetchIngredients = async request => {
+  const spoonacularRequestData = {
+    ingredientList: request.body.ingredients,
+    servings: request.body.servings
+  };
+  await axios({
+    method: "post",
+    url:
+      "https://api.spoonacular.com/recipes/parseIngredients?apiKey=7c4af557cc3a4d27a00082d3cc2023e1",
+    params: spoonacularRequestData
+  })
+    .then(res => {
+      request.body.ingredients = res.data.map(item => {
+        return {
+          title: item.originalName,
+          quantity: item.amount,
+          units: item.unitShort
+        };
+      });
+    })
+    .catch(error => {
+      console.log(
+        `Failed to process ingredients data. Detailed error is : ${error}`
+      );
+      return;
+    });
   let persistedIngredients;
   try {
     persistedIngredients = await db.Ingredient.findAll();
@@ -179,7 +250,7 @@ const getRecipeDetails = async request => {
       preparationTime: recipe.preparationTime,
       servings: recipe.servings,
       notes: recipe.notes,
-      imageUrl: recipe.imageUrl,
+      imageUrl: generateImageUrlForClient(recipe.imageUrl),
       ingredients: ingredientDetails,
       id: request.params.id,
       userRecipe: recipe.UserId === request.user.id
@@ -268,7 +339,7 @@ function mapRecipeHighLevelDetails(recipes, userId) {
       title: recipe.title,
       preparationTime: recipe.preparationTime,
       id: recipe.id,
-      imageUrl: recipe.imageUrl,
+      imageUrl: generateImageUrlForClient(recipe.imageUrl),
       userRecipe: recipe.UserId ? recipe.UserId === userId : true
     };
   });
@@ -287,6 +358,19 @@ const deleteRecipe = async request => {
           RecipeId: recipeId
         }
       });
+      const recipe = await db.Recipe.findOne({
+        where: {
+          id: recipeId
+        },
+        attributes: ["imageUrl", "title"]
+      });
+      const imageFileName = recipe.imageUrl;
+      if (imageFileName) {
+        await storage
+          .bucket(bucketName)
+          .file(imageFileName)
+          .delete();
+      }
       await db.Recipe.destroy({
         where: {
           id: recipeId
@@ -297,7 +381,7 @@ const deleteRecipe = async request => {
     return 400;
   } catch (error) {
     console.log(
-      `Error ocurred while deleting recipeId: ${recipeId}. Detailed error is following: ${error.stack}`
+      `Error ocurred while deleting recipeId: ${recipeId}. Detailed error is following: ${error.message}`
     );
     return 500;
   }

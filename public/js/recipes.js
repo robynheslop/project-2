@@ -12,10 +12,23 @@ $(document).ready(() => {
     selectedFile = event.target.files[0];
   };
 
-  const submitNewRecipe = formData => {
+  const submitNewRecipe = data => {
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("instructions", data.instructions);
+    formData.append("ingredients", data.ingredients);
+    formData.append("servings", data.servings);
+    formData.append("preparationTime", data.preparationTime);
+    formData.append("notes", data.notes);
+    if (selectedFile) {
+      formData.append("recipeImage", selectedFile, selectedFile.name);
+    }
     $.post({
       url: "/api/recipe",
       data: formData,
+      contentType: false,
+      cache: false,
+      processData: false,
       success: function() {
         $("#sendRecipeButton").prop("disabled", false);
         $("#modal-header").text("Success!");
@@ -150,9 +163,6 @@ $(document).ready(() => {
     if (mandatoryFieldsPopulated(formData)) {
       event.preventDefault();
       $("#sendRecipeButton").prop("disabled", true);
-      if (selectedFile) {
-        formData.image = selectedFile;
-      }
       if (updating) {
         formData.id = recipeID;
         submitUpdatedRecipe(formData);

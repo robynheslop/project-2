@@ -5,7 +5,9 @@ const passport = require("../config/passport");
 const isAuthenticated = require("../config/middleware/isAuthenticated");
 // require to create/get/update recipes
 const ru = require("./routesUtil");
+const multer = require("multer");
 const axios = require("axios");
+const upload = multer({ dest: "./temp/uploads/" });
 
 module.exports = function(app) {
   // eslint-disable-next-line prettier/prettier
@@ -59,46 +61,28 @@ module.exports = function(app) {
     }
   });
 
-  app.post("/api/recipe", isAuthenticated, async (request, response) => {
-    const spoonacularRequestData = {
-      ingredientList: request.body.ingredients,
-      servings: request.body.servings
-    };
-    const recipeData = request;
-    await axios({
-      method: "post",
-      url:
-        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=7c4af557cc3a4d27a00082d3cc2023e1",
-      params: spoonacularRequestData
-    })
-      .then(res => {
-        recipeData.body.ingredients = res.data.map(item => {
-          return {
-            title: item.originalName,
-            quantity: item.amount,
-            units: item.unitShort
-          };
-        });
-      })
-      .catch(error => {
-        response.json(error);
-      });
-    let recipeStatus = true;
-    const recipe = await ru.createRecipe(recipeData);
-    recipeStatus = recipe ? true : false;
-    const persistedIngredients = recipeStatus
-      ? await ru.persistAndFetchIngredients(recipeData)
-      : undefined;
-    recipeStatus = persistedIngredients ? true : false;
-    recipeStatus = recipeStatus
-      ? await ru.persistRecipeIngredients(
-          recipeData,
-          persistedIngredients,
-          recipe
-        )
-      : false;
-    recipeStatus ? response.status(201).end() : response.status(500).end();
-  });
+  app.post(
+    "/api/recipe",
+    isAuthenticated,
+    upload.single("recipeImage"),
+    async (request, response) => {
+      let recipeStatus = true;
+      const recipe = await ru.createRecipe(request);
+      recipeStatus = recipe ? true : false;
+      const persistedIngredients = recipeStatus
+        ? await ru.persistAndFetchIngredients(request)
+        : undefined;
+      recipeStatus = persistedIngredients ? true : false;
+      recipeStatus = recipeStatus
+        ? await ru.persistRecipeIngredients(
+            request,
+            persistedIngredients,
+            recipe
+          )
+        : false;
+      recipeStatus ? response.status(201).end() : response.status(500).end();
+    }
+  );
 
   app.delete("/api/recipes/:id", isAuthenticated, async (request, response) => {
     const statusCode = await ru.deleteRecipe(request);
@@ -125,9 +109,5 @@ module.exports = function(app) {
         response.json(res.data.text);
       })
       .catch(error => console.log("Error", error));
-  });
-
-  app.post("/parse-ingredients", async (request, response) => {
-    
   });
 };
