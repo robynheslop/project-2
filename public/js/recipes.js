@@ -9,45 +9,8 @@ $(document).ready(() => {
   let recipeID;
   let deleting = false;
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyByL1PUuaMDhkAltQxfcyB_9JRlTjHDrvc",
-    authDomain: "timeless-recipes.firebaseapp.com",
-    databaseURL: "https://timeless-recipes.firebaseio.com",
-    projectId: "timeless-recipes",
-    storageBucket: "timeless-recipes.appspot.com",
-    messagingSenderId: "458595131064",
-    appId: "1:458595131064:web:23b7367678f93563595e4d",
-    measurementId: "G-N0LYPZJNZS"
-  };
-
-  function initiaizeFirebase() {
-    firebase.initializeApp(firebaseConfig);
-    const storageService = firebase.storage();
-    storageRef = storageService.ref();
-    firebase.analytics();
-  }
-
-  initiaizeFirebase();
-
   const saveImageFileToVariable = event => {
     selectedFile = event.target.files[0];
-  };
-
-  const handleFileUploadSubmit = async () => {
-    if (selectedFile) {
-      const userId = localStorage.getItem("userId");
-      try {
-        await storageRef
-          .child(`images/${userId}/${selectedFile.name}`)
-          .put(selectedFile);
-        const url = await storageRef
-          .child(`images/${userId}/${selectedFile.name}`)
-          .getDownloadURL();
-        return url;
-      } catch (error) {
-        console.log(error);
-      }
-    }
   };
 
   const parseRecipesWithSpoonacular = () => {
@@ -209,11 +172,8 @@ $(document).ready(() => {
         };
       });
       formData.ingredients = separatedIngredients;
-      const recipeURL = await handleFileUploadSubmit();
-      if (recipeURL) {
-        formData.imageUrl = recipeURL;
-      } else {
-        formData.imageUrl = "/images/e-logo-placeholder.png";
+      if (selectedFile) {
+        formData.image = selectedFile;
       }
       if (updating) {
         formData.id = recipeID;
