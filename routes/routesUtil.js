@@ -1,18 +1,70 @@
 const db = require("../models");
+// Load the SDK for JavaScript
+const AWS = require("aws-sdk");
 const { Op } = require("sequelize");
+const fs = require("fs");
+const axios = require("axios");
+
+require("dotenv").config();
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
+const bucketName = "timeless-recipes.appspot.com";
+
+const imageUrlFixed =
+  "https://s3-ap-southeast-2.amazonaws.com/timeless-recipes.appspot.com/";
+const defaultUrl = "/images/e-logo-placeholder.png";
+
+const generateImageUrlForClient = savedUrl =>
+  savedUrl ? `${imageUrlFixed}${savedUrl}` : defaultUrl;
+
+const generateImageUrlToSave = async request => {
+  if (request.file) {
+    const uploadParams = { Bucket: bucketName, Key: "", Body: "" };
+    const fileStream = fs.createReadStream(
+      `./temp/uploads/${request.file.filename}`
+    );
+    fileStream.on("error", error => {
+      console.log("File Error", error);
+      return;
+    });
+    uploadParams.Body = fileStream;
+    uploadParams.Key = request.file.filename;
+    // call S3 to retrieve upload file to specified bucket
+    s3.upload(uploadParams, (error, data) => {
+      if (error) {
+        console.log("Error", error);
+      }
+      if (data) {
+        console.log("Upload Success", data.Location);
+        fs.unlink(`./temp/uploads/${request.file.filename}`, error =>
+          error
+            ? console.log(
+                `error ocurred while deleting recipe image from temp folder. detailed error is following: ${error}`
+              )
+            : console.log(`${request.file.filename} is deleted from temp`)
+        );
+      }
+    });
+    return request.file.filename;
+  }
+  return null;
+};
 /**
  * creates a recipe entry in recipes table
  * and returns same
  * @param {request received from client} request
  */
 const createRecipe = async request => {
+  const recipeImageUrl = await generateImageUrlToSave(request);
   const recipeObject = {
     title: request.body.title,
     instructions: request.body.instructions,
     servings: request.body.servings,
     preparationTime: request.body.preparationTime,
     notes: request.body.notes,
-    imageUrl: request.body.imageUrl,
+    imageUrl: recipeImageUrl,
     UserId: request.user.id
   };
   try {
@@ -31,6 +83,31 @@ const createRecipe = async request => {
  * @param {request received from client} request
  */
 const persistAndFetchIngredients = async request => {
+  const spoonacularRequestData = {
+    ingredientList: request.body.ingredients,
+    servings: request.body.servings
+  };
+  const apiKeyParseIngredients = process.env.API_KEY_PARSE_INGREDIENTS;
+  await axios({
+    method: "post",
+    url: `https://api.spoonacular.com/recipes/parseIngredients?apiKey=${apiKeyParseIngredients}`,
+    params: spoonacularRequestData
+  })
+    .then(res => {
+      request.body.ingredients = res.data.map(item => {
+        return {
+          title: item.originalName,
+          quantity: item.amount,
+          units: item.unitShort
+        };
+      });
+    })
+    .catch(error => {
+      console.log(
+        `Failed to process ingredients data. Detailed error is : ${error}`
+      );
+      return;
+    });
   let persistedIngredients;
   try {
     persistedIngredients = await db.Ingredient.findAll();
@@ -179,7 +256,7 @@ const getRecipeDetails = async request => {
       preparationTime: recipe.preparationTime,
       servings: recipe.servings,
       notes: recipe.notes,
-      imageUrl: recipe.imageUrl,
+      imageUrl: generateImageUrlForClient(recipe.imageUrl),
       ingredients: ingredientDetails,
       id: request.params.id,
       userRecipe: recipe.UserId === request.user.id
@@ -268,7 +345,7 @@ function mapRecipeHighLevelDetails(recipes, userId) {
       title: recipe.title,
       preparationTime: recipe.preparationTime,
       id: recipe.id,
-      imageUrl: recipe.imageUrl,
+      imageUrl: generateImageUrlForClient(recipe.imageUrl),
       userRecipe: recipe.UserId ? recipe.UserId === userId : true
     };
   });
@@ -287,6 +364,25 @@ const deleteRecipe = async request => {
           RecipeId: recipeId
         }
       });
+      const recipe = await db.Recipe.findOne({
+        where: {
+          id: recipeId
+        },
+        attributes: ["imageUrl", "title"]
+      });
+      const imageFileName = recipe.imageUrl;
+      if (imageFileName) {
+        const params = { Bucket: bucketName, Key: imageFileName };
+        s3.deleteObject(params, error => {
+          if (error) {
+            console.log(error, error.stack);
+          } else {
+            console.log(
+              `${imageFileName} removed successfully from ${bucketName}`
+            );
+          }
+        });
+      }
       await db.Recipe.destroy({
         where: {
           id: recipeId

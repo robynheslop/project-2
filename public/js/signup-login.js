@@ -1,16 +1,12 @@
 const getAndStoreFoodTrivia = () => {
-  $.get(
-    "https://api.spoonacular.com/food/trivia/random?apiKey=9b8a3b5738b64ccb97ea54d7847ea2c0"
-  ).then(response => {
-    localStorage.setItem("trivia", response.text);
+  $.get("/food-fact").then(response => {
+    localStorage.setItem("trivia", response);
   });
 };
 
 const getAndStoreFoodJoke = () => {
-  $.get(
-    "https://api.spoonacular.com/food/jokes/random?apiKey=9b8a3b5738b64ccb97ea54d7847ea2c0"
-  ).then(response => {
-    localStorage.setItem("joke", response.text);
+  $.get("/food-joke").then(response => {
+    localStorage.setItem("joke", response);
   });
 };
 
@@ -52,6 +48,7 @@ $(document).ready(() => {
   // Does a post to the signup route. If successful, we are redirected to the recipe homepage page
   // Otherwise we log any errors
   function signUpUser(username, email, password) {
+    $("#signup-modal").modal("toggle");
     $.post("/api/signup", {
       username: username,
       email: email,
@@ -78,6 +75,7 @@ $(document).ready(() => {
 
   // When the form is submitted, we validate there's an email and password entered
   loginForm.on("submit", event => {
+    $("#login-modal").modal("toggle");
     event.preventDefault();
     const userData = {
       email: loginEmailInput.val().trim(),

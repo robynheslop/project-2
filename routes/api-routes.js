@@ -5,9 +5,11 @@ const passport = require("../config/passport");
 const isAuthenticated = require("../config/middleware/isAuthenticated");
 // require to create/get/update recipes
 const ru = require("./routesUtil");
-
+const multer = require("multer");
+const axios = require("axios");
+const upload = multer({ dest: "./temp/uploads/" });
+require("dotenv").config();
 module.exports = function(app) {
-  // eslint-disable-next-line prettier/prettier
   // Using the passport.authenticate middleware with our local strategy.
   // If the user has valid login credentials, send them to the members page.
   // Otherwise the user will be sent an error
@@ -58,22 +60,55 @@ module.exports = function(app) {
     }
   });
 
-  app.post("/api/recipe", isAuthenticated, async (request, response) => {
-    let recipeStatus = true;
-    const recipe = await ru.createRecipe(request);
-    recipeStatus = recipe ? true : false;
-    const persistedIngredients = recipeStatus
-      ? await ru.persistAndFetchIngredients(request)
-      : undefined;
-    recipeStatus = persistedIngredients ? true : false;
-    recipeStatus = recipeStatus
-      ? await ru.persistRecipeIngredients(request, persistedIngredients, recipe)
-      : false;
-    recipeStatus ? response.status(201).end() : response.status(500).end();
-  });
+  app.post(
+    "/api/recipe",
+    isAuthenticated,
+    upload.single("recipeImage"),
+    async (request, response) => {
+      let recipeStatus = true;
+      const recipe = await ru.createRecipe(request);
+      recipeStatus = recipe ? true : false;
+      const persistedIngredients = recipeStatus
+        ? await ru.persistAndFetchIngredients(request)
+        : undefined;
+      recipeStatus = persistedIngredients ? true : false;
+      recipeStatus = recipeStatus
+        ? await ru.persistRecipeIngredients(
+            request,
+            persistedIngredients,
+            recipe
+          )
+        : false;
+      recipeStatus ? response.status(201).end() : response.status(500).end();
+    }
+  );
 
   app.delete("/api/recipes/:id", isAuthenticated, async (request, response) => {
     const statusCode = await ru.deleteRecipe(request);
     response.status(statusCode).end();
+  });
+
+  app.get("/food-fact", async (request, response) => {
+    const apiKeyFoodFact = process.env.API_KEY_TRIVA_JOKE;
+    axios
+      .get(
+        `https://api.spoonacular.com/food/trivia/random?apiKey=${apiKeyFoodFact}`
+      )
+      .then(res => {
+        response.json(res.data.text);
+      })
+      .catch(error => console.log("Error", error));
+  });
+
+  app.get("/food-joke", async (request, response) => {
+    const apiKeyFoodJoke = process.env.API_KEY_TRIVA_JOKE;
+    axios
+      .get(
+        `https://api.spoonacular.com/food/jokes/random?apiKey=${apiKeyFoodJoke}`
+      )
+      .then(res => {
+        response.json(res.data.text);
+      })
+      .catch(error => console.log("Error", error));
   });
 };

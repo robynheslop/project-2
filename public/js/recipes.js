@@ -1,6 +1,5 @@
 $(document).ready(() => {
   let selectedFile;
-  let storageRef;
   // display user email in header
   $(".member-name").text(localStorage.getItem("userName"));
   $(".food-fact").text(localStorage.getItem("trivia"));
@@ -9,63 +8,27 @@ $(document).ready(() => {
   let recipeID;
   let deleting = false;
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyByL1PUuaMDhkAltQxfcyB_9JRlTjHDrvc",
-    authDomain: "timeless-recipes.firebaseapp.com",
-    databaseURL: "https://timeless-recipes.firebaseio.com",
-    projectId: "timeless-recipes",
-    storageBucket: "timeless-recipes.appspot.com",
-    messagingSenderId: "458595131064",
-    appId: "1:458595131064:web:23b7367678f93563595e4d",
-    measurementId: "G-N0LYPZJNZS"
-  };
-
-  function initiaizeFirebase() {
-    firebase.initializeApp(firebaseConfig);
-    const storageService = firebase.storage();
-    storageRef = storageService.ref();
-    firebase.analytics();
-  }
-
-  initiaizeFirebase();
-
   const saveImageFileToVariable = event => {
     selectedFile = event.target.files[0];
   };
 
-  const handleFileUploadSubmit = async () => {
+  const submitNewRecipe = data => {
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("instructions", data.instructions);
+    formData.append("ingredients", data.ingredients);
+    formData.append("servings", data.servings);
+    formData.append("preparationTime", data.preparationTime);
+    formData.append("notes", data.notes);
     if (selectedFile) {
-      const userId = localStorage.getItem("userId");
-      try {
-        await storageRef
-          .child(`images/${userId}/${selectedFile.name}`)
-          .put(selectedFile);
-        const url = await storageRef
-          .child(`images/${userId}/${selectedFile.name}`)
-          .getDownloadURL();
-        return url;
-      } catch (error) {
-        console.log(error);
-      }
+      formData.append("recipeImage", selectedFile, selectedFile.name);
     }
-  };
-
-  const parseRecipesWithSpoonacular = () => {
-    return $.ajax({
-      url:
-        "https://api.spoonacular.com/recipes/parseIngredients?apiKey=7c4af557cc3a4d27a00082d3cc2023e1",
-      method: "POST",
-      data: {
-        ingredientList: $("#recipe-ingredients").val(),
-        servings: $("#recipe-servings").val()
-      }
-    });
-  };
-
-  const submitNewRecipe = formData => {
     $.post({
       url: "/api/recipe",
       data: formData,
+      contentType: false,
+      cache: false,
+      processData: false,
       success: function() {
         $("#sendRecipeButton").prop("disabled", false);
         $("#modal-header").text("Success!");
@@ -200,21 +163,6 @@ $(document).ready(() => {
     if (mandatoryFieldsPopulated(formData)) {
       event.preventDefault();
       $("#sendRecipeButton").prop("disabled", true);
-      const ingredientResponse = await parseRecipesWithSpoonacular();
-      const separatedIngredients = await ingredientResponse.map(item => {
-        return {
-          title: item.originalName,
-          quantity: item.amount,
-          units: item.unitShort
-        };
-      });
-      formData.ingredients = separatedIngredients;
-      const recipeURL = await handleFileUploadSubmit();
-      if (recipeURL) {
-        formData.imageUrl = recipeURL;
-      } else {
-        formData.imageUrl = "/images/e-logo-placeholder.png";
-      }
       if (updating) {
         formData.id = recipeID;
         submitUpdatedRecipe(formData);

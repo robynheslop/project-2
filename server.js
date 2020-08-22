@@ -35,6 +35,8 @@ db.RecipeIngredient.belongsTo(db.Recipe);
 db.Ingredient.hasMany(db.RecipeIngredient);
 db.RecipeIngredient.belongsTo(db.Ingredient);
 
+require("dotenv").config();
+
 // Syncing our database and logging a message to the user upon success
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {
