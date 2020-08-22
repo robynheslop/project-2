@@ -60,6 +60,7 @@ module.exports = function(app) {
     }
   });
 
+  // route to create new recipe
   app.post(
     "/api/recipe",
     isAuthenticated,
@@ -80,6 +81,17 @@ module.exports = function(app) {
           )
         : false;
       recipeStatus ? response.status(201).end() : response.status(500).end();
+    }
+  );
+  // route to update existing recipe
+  app.put(
+    "/api/recipe/:id",
+    isAuthenticated,
+    upload.single("recipeImage"),
+    async (request, response) => {
+      console.log(request.body);
+      console.log(request.params);
+      response.status(201).end();
     }
   );
 
