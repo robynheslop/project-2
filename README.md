@@ -12,6 +12,7 @@ Find the application live on Heroku [here](https://fast-reaches-40282.herokuapp.
 * [Installation](#installation)
 * [Usage](#usage)
 * [Tests](#tests)
+* [Technologies](#technologies)
 * [Contributing](#contributing)
 * [License](#license)
 * [Questions](#questions)
@@ -36,6 +37,15 @@ Create an account with Timeless Recipe and explore the possibilities:
 
 ## Tests
 No testing has been implemented for this application. 
+
+## Technologies
+* NODE.js, Express, MySQL, Sequelize & Passport
+* Handlebars
+* jQuery and Bootstrap
+* Travis
+* Spoonacular API
+* AWS
+
 ## Contributing
 Contributions are welcome. Feel free to fork the project and create a pull request with your changes - be sure to document your code clearly. 
 ## License

@@ -9,15 +9,17 @@ $(document).ready(() => {
   $("#recipeOfTheDayTitle").text(recipeOfTheDay.title);
   $("#recipeOfTheDayPicture").attr("src", recipeOfTheDay.imageUrl);
   $("#recipeOfTheDayViewButton").attr("viewId", recipeOfTheDay.id);
-  let recipeID;
   let deleting = false;
   let updating = false;
   const updatesToRecipe = {};
 
+  // taking target file and storing in saved variable
   const saveImageFileToVariable = event => {
     selectedFile = event.target.files[0];
   };
 
+  // parameter of data
+  // creates a new form data object
   const prepareFormData = data => {
     const formData = new FormData();
     formData.append("title", data.title);
@@ -32,6 +34,9 @@ $(document).ready(() => {
     return formData;
   };
 
+  // parameter = recipe data. creates new FormData object with it
+  // posts this to /api/recipe
+  // success/failure triggers modals
   const submitNewRecipe = data => {
     const formData = prepareFormData(data);
     $.post({
@@ -56,9 +61,8 @@ $(document).ready(() => {
     });
   };
 
+  // clear form fields following successful submission of recipe
   const resetFormAfterSubmission = () => {
-    updating = false;
-    recipeID = "";
     $("#recipe-title").val("");
     $("#recipe-instructions").val("");
     $("#recipe-servings").val("");
@@ -68,35 +72,21 @@ $(document).ready(() => {
     $("#recipe-image-upload").val("");
   };
 
-  const getAllMyRecipes = () => {
-    window.location.assign("/my-recipes");
-  };
-
-  const loadNewRecipeForm = () => {
-    window.location.assign("/add-recipe");
-  };
-
-  const viewRecipeInDetail = id => {
-    window.location.assign(`/recipes/${id}`);
-  };
-
-  // search by criteria
-  const findRecipesUsingCriteria = formData => {
-    location.assign(
-      `/recipe/search?onlyUserRecipes=${formData.onlyUserRecipes}&searchText=${formData.searchText}`
-    );
-  };
-
+  // activated after modal closes. If the previous action was delete, it reloads location
+  // if the previous action was to update a recipe, location is changed to /recipes/:id
+  // which renders a detailed view of the recipe just updated (and clears all data in updatedRecipe)
   const ifChangeDoneReloadPage = () => {
     if (deleting) {
       deleting = false;
       location.reload();
     } else if (updating) {
+      updating = false;
       location.assign(`/recipes/${updatesToRecipe.id}`);
     }
   };
 
-  // delete recipe
+  // receives ID of recipe to delete
+  // Sucess/failure of request triggers modal
   const removeRecipe = id => {
     $.ajax({
       url: `/api/recipes/${id}`,
@@ -114,12 +104,9 @@ $(document).ready(() => {
     });
   };
 
-  // get detalils to update recipe
-  const getRecipeDetailsToUpdate = id => {
-    location.assign(`/edit-recipe/${id}`);
-  };
-
-  // update recipe
+  // makes updatesToRecipes into a FormData object
+  // then makes a put request with it
+  // succes/failure triggers modal message
   const submitUpdatedRecipe = updatesToRecipe => {
     const formData = prepareFormData(updatesToRecipe);
     $.ajax({
@@ -144,6 +131,11 @@ $(document).ready(() => {
     });
   };
 
+  // receives the variable updatesToRecipe, a collection of changes to form when editing recipe
+  // it checks that each key found in this object is not null
+  // with the exception of notes, which is not a mandatory field.
+  // if null fields are found, it returns false
+  // otherwise, it returns true
   const checkForNullFieldsUpdating = updatesToRecipe => {
     const result = Object.keys(updatesToRecipe).every(key => {
       switch (key) {
@@ -159,18 +151,23 @@ $(document).ready(() => {
     return result;
   };
 
-  // display form to add a new recipe
+  // add event listener to add recipe button
+  // on click, send users to location /add-recipe
   $("#addNewRecipeButton").on("click", event => {
     event.preventDefault();
     updating = false;
-    loadNewRecipeForm();
+    window.location.assign("/add-recipe");
   });
 
+  // registering event listener to button
+  // on click, send users to location /my-recipes
   $("#viewAllRecipesButton").on("click", event => {
     event.preventDefault();
-    getAllMyRecipes();
+    window.location.assign("/my-recipes");
   });
 
+  // accepts form data
+  // if any forms are null or empty, return false else returns true
   const mandatoryFieldsPopulated = formData => {
     if (
       formData.title &&
@@ -189,6 +186,11 @@ $(document).ready(() => {
     return false;
   };
 
+  // add event listener to send recipe button
+  // when clicked, data is collected from form.
+  // if the mandatory field chckec on form data is true
+  // button disabled, loading modal activated
+  // and submitNewRecipe is called on form data
   $("#sendRecipeButton").on("click", event => {
     const formData = {
       title: $("#recipe-title").val(),
@@ -201,14 +203,14 @@ $(document).ready(() => {
     if (mandatoryFieldsPopulated(formData)) {
       event.preventDefault();
       $("#sendRecipeButton").prop("disabled", true);
-      $("#modal-header").text("Adding Your Recipe...");
-      $("#modal-body").text(`<img src="/images/e-logo.gif" alt="e-logo gif"
-          style="height: 52px; width: 216px; display: block; margin: auto;">`);
-      $("#recipeModal").modal("toggle");
       submitNewRecipe(formData);
     }
   });
 
+  // add event listener to update recipe button
+  // on click checks for null fields on updatesToRecipe
+  // if null check is true, button is disabled, id added and updating set to true
+  // modal activated and submitUpdatedRecipe is called on updatesToRecipe
   $("#updateRecipeButton").on("click", async event => {
     if (checkForNullFieldsUpdating(updatesToRecipe)) {
       event.preventDefault();
@@ -216,14 +218,14 @@ $(document).ready(() => {
       // add ID
       updatesToRecipe.id = $(event.target).attr("recipeId");
       updating = true;
-      $("#modal-header").text("Updating Your Recipe...");
-      $("#modal-body").text(`<img src="/images/e-logo.gif" alt="e-logo gif"
-          style="height: 52px; width: 216px; display: block; margin: auto;">`);
-      $("#recipeModal").modal("toggle");
       submitUpdatedRecipe(updatesToRecipe);
     }
   });
 
+  // listen to clicks of search for recipe button
+  // saves search term, and conditions for search (in own or all recipes)
+  // if search term is null, activate error modal
+  // if not, change location utilising search terms
   $("#searchForRecipeButton").on("click", event => {
     event.preventDefault();
     const formData = {
@@ -238,32 +240,41 @@ $(document).ready(() => {
       $("#modal-body").text("You must enter a title or ingredient to search");
       $("#recipeModal").modal("toggle");
     } else {
-      findRecipesUsingCriteria(formData);
+      location.assign(
+        `/recipe/search?onlyUserRecipes=${formData.onlyUserRecipes}&searchText=${formData.searchText}`
+      );
     }
   });
 
   // request details of particular recipe from database
   $(".viewRecipeButton").click(event => {
     event.preventDefault();
-    viewRecipeInDetail($(event.target).attr("viewid"));
+    window.location.assign(`/recipes/${$(event.target).attr("viewid")}`);
   });
 
-  // get details of recipe ready to render on form for editing
+  // add event listener to clicks of edit recipe buttons
+  // on click, send users to location /edit-recipe/:recipe-id
   $(".editRecipeButton").click(event => {
     event.preventDefault();
-    recipeID = $(event.target).attr("editId");
-    getRecipeDetailsToUpdate(recipeID);
+    location.assign(`/edit-recipe/${$(event.target).attr("editId")}`);
   });
 
   // sending a delete request for a recipe id
+  // sets deleting to true
   $(".deleteRecipeButton").click(event => {
     event.preventDefault();
     deleting = true;
     removeRecipe($(event.target).attr("deleteId"));
   });
 
+  // listens for changes to image upload and called saveImageFileToVariable
   $("#recipe-image-upload").on("change", saveImageFileToVariable);
+
+  // when modal is hidden, calls ifChangeDoneReloadPage
   $("#recipeModal").on("hide.bs.modal", ifChangeDoneReloadPage);
+
+  // when changes are made to form field
+  // changes are saved to variable updatesToRecipe
   $("form :input").change(() => {
     updatesToRecipe[event.target.name] = event.target.value
       ? event.target.value
