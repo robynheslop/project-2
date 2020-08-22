@@ -18,7 +18,7 @@ Find the application live on Heroku [here](https://fast-reaches-40282.herokuapp.
 * [Questions](#questions)
 
 ## Installation
-To use this application locally, be sure to have NODE.js and MySQL installed on your local machine. Clone the files. Open the directory and run `npm install` to install dependencies. You will require API keys for Spoonacular and Firebase, and to add these keys a .env file in main directory, along with your MySQL user/database information. 
+To use this application locally, be sure to have NODE.js and MySQL installed on your local machine. Clone the files. Open the directory and run `npm install` to install dependencies. You will require API keys for Spoonacular and AWS, and store these keys in a .env file in main directory, along with your MySQL user/database information. 
 
 Alternatively, you can use this application through [Heroku](https://fast-reaches-40282.herokuapp.com/).
 
@@ -45,6 +45,9 @@ No testing has been implemented for this application.
 * Travis
 * Spoonacular API
 * AWS
+* Multer
+* dotenv
+* Adobe XD for wireframing & prototyping
 
 ## Contributing
 Contributions are welcome. Feel free to fork the project and create a pull request with your changes - be sure to document your code clearly. 

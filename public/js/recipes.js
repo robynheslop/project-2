@@ -151,10 +151,19 @@ $(document).ready(() => {
     return result;
   };
 
+  // Generic loading modal: no header
+  const loadingModal = () => {
+    $("#modal-body").html(
+      "<img src='/images/e-logo.gif' alt='e-logo gif' style='height: 52px; width: 216px; display: block; margin: auto;'>"
+    );
+    $("#recipeModal").modal("toggle");
+  };
+
   // add event listener to add recipe button
   // on click, send users to location /add-recipe
   $("#addNewRecipeButton").on("click", event => {
     event.preventDefault();
+    loadingModal();
     updating = false;
     window.location.assign("/add-recipe");
   });
@@ -163,6 +172,7 @@ $(document).ready(() => {
   // on click, send users to location /my-recipes
   $("#viewAllRecipesButton").on("click", event => {
     event.preventDefault();
+    loadingModal();
     window.location.assign("/my-recipes");
   });
 
@@ -243,12 +253,17 @@ $(document).ready(() => {
       location.assign(
         `/recipe/search?onlyUserRecipes=${formData.onlyUserRecipes}&searchText=${formData.searchText}`
       );
+      $("#modal-header").text("Searching. Please Wait...");
+      $("#modal-body").html(`<img src="/images/e-logo.gif" alt="e-logo gif"
+          style="height: 52px; width: 216px; display: block; margin: auto;">`);
+      $("#recipeModal").modal("toggle");
     }
   });
 
   // request details of particular recipe from database
   $(".viewRecipeButton").click(event => {
     event.preventDefault();
+    loadingModal();
     window.location.assign(`/recipes/${$(event.target).attr("viewid")}`);
   });
 
@@ -256,6 +271,7 @@ $(document).ready(() => {
   // on click, send users to location /edit-recipe/:recipe-id
   $(".editRecipeButton").click(event => {
     event.preventDefault();
+    loadingModal();
     location.assign(`/edit-recipe/${$(event.target).attr("editId")}`);
   });
 

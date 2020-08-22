@@ -55,7 +55,7 @@ $(document).ready(() => {
   // Does a post to the signup route. If successful, we are redirected to the recipe homepage page
   // Otherwise we log any errors
   function signUpUser(username, email, password) {
-    $("#signup-modal").modal("toggle");
+    signupLodingModal();
     $.post("/api/signup", {
       username: username,
       email: email,
@@ -75,6 +75,22 @@ $(document).ready(() => {
     $("#recipeModal").modal("toggle");
   }
 
+  function signupLodingModal() {
+    $("#modal-header").text("Creating User...");
+    $("#modal-body").html(
+      "<img src='/images/e-logo.gif' alt='e-logo gif' style='height: 52px; width: 216px; display: block; margin: auto;'>"
+    );
+    $("#recipeModal").modal("toggle");
+  }
+
+  function loginLodingModal() {
+    $("#modal-header").text("Logging In...");
+    $("#modal-body").html(
+      "<img src='/images/e-logo.gif' alt='e-logo gif' style='height: 52px; width: 216px; display: block; margin: auto;'>"
+    );
+    $("#recipeModal").modal("toggle");
+  }
+
   // Getting references to our log in form and input
   const loginForm = $("form.login");
   const loginEmailInput = $("input#login-email-input");
@@ -82,7 +98,7 @@ $(document).ready(() => {
 
   // When the form is submitted, we validate there's an email and password entered
   loginForm.on("submit", event => {
-    $("#login-modal").modal("toggle");
+    loginLodingModal();
     event.preventDefault();
     const userData = {
       email: loginEmailInput.val().trim(),
