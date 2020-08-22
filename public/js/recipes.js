@@ -257,7 +257,6 @@ $(document).ready(() => {
       $("#modal-body").html(`<img src="/images/e-logo.gif" alt="e-logo gif"
           style="height: 52px; width: 216px; display: block; margin: auto;">`);
       $("#recipeModal").modal("toggle");
-      findRecipesUsingCriteria(formData);
     }
   });
 
@@ -280,7 +279,6 @@ $(document).ready(() => {
   // sets deleting to true
   $(".deleteRecipeButton").click(event => {
     event.preventDefault();
-    loadingModal();
     deleting = true;
     removeRecipe($(event.target).attr("deleteId"));
   });
