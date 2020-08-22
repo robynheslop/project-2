@@ -108,7 +108,6 @@ $(document).ready(() => {
   };
 
   // update recipe
-<<<<<<< HEAD
   const submitUpdatedRecipe = updatesToRecipe => {
     $.put("/api/recipe/" + updatesToRecipe.id, updatesToRecipe).then(
       window.location.assign(`/recipes/${updatesToRecipe.id}`)
@@ -130,22 +129,6 @@ $(document).ready(() => {
     });
     return result;
   };
-=======
-  const submitUpdatedRecipe = formData => {
-    $.put("/api/recipe/" + formData.id, formData).then(
-      window.location.assign(`/recipes/${formData.id}`)
-    );
-  };
-
-  // const checkForNullFieldsUpdating = mandatoryFields => {
-  //   if (formData.title) {
-  //     if (formData.title.trim().length) {
-  //       return true;
-  //     }
-  //     return false;
-  //   }
-  // };
->>>>>>> 05921de15c75939b2f0c6c4d125471492616d72f
 
   // display form to add a new recipe
   $("#addNewRecipeButton").on("click", event => {
