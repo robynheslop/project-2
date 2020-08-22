@@ -146,7 +146,6 @@ $(document).ready(() => {
   };
 
   const checkForNullFieldsUpdating = updatesToRecipe => {
-    console.log(updatesToRecipe);
     const result = Object.keys(updatesToRecipe).every(key => {
       switch (key) {
         case "notes":

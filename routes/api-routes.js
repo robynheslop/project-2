@@ -111,10 +111,13 @@ module.exports = function(app) {
       })
       .catch(error => console.log("Error", error));
   });
+<<<<<<< HEAD
 
   app.get("/recipe-of-the-day", async (request, response) => {
     const recipeDetails = await ru.getAllRecipeIds();
     const selectedID = Math.floor(Math.random() * recipeDetails.length);
     response.json(recipeDetails[selectedID]);
   });
+=======
+>>>>>>> 05921de... pushing branch up
 };

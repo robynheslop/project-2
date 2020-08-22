@@ -64,6 +64,11 @@ module.exports = function(app) {
 
   app.get("/edit-recipe/:id", isAuthenticated, async (request, response) => {
     const recipeDetails = await ru.getRecipeDetails(request);
+<<<<<<< HEAD
+=======
+    console.log(recipeDetails);
+    console.log(recipeDetails.userRecipe);
+>>>>>>> 05921de... pushing branch up
     response.render("newRecipeForm", { recipeDetails: recipeDetails });
   });
 };
