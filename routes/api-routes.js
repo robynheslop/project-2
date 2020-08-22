@@ -114,7 +114,6 @@ module.exports = function(app) {
 
   app.get("/recipe-of-the-day", async (request, response) => {
     const recipeDetails = await ru.getAllRecipeIds();
-    console.log(recipeDetails);
     const selectedID = Math.floor(Math.random() * recipeDetails.length);
     response.json(recipeDetails[selectedID]);
   });

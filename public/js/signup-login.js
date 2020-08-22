@@ -12,8 +12,6 @@ const getAndStoreFoodJoke = () => {
 
 const getAndStoreReicpeOfTheDay = () => {
   $.get("/recipe-of-the-day").then(response => {
-    console.log(response);
-    console.log(JSON.stringify(response));
     localStorage.setItem("recipe-of-the-day", JSON.stringify(response));
   });
 };

@@ -4,7 +4,6 @@ $(document).ready(() => {
   $(".member-name").text(localStorage.getItem("userName"));
   $(".food-fact").text(localStorage.getItem("trivia"));
   $(".food-joke").text(localStorage.getItem("joke"));
-  $(".food-joke").text(localStorage.getItem("joke"));
   const recipeOfTheDay = JSON.parse(localStorage.getItem("recipe-of-the-day"));
   $("#recipeOfTheDayPrepTime").text(`${recipeOfTheDay.preparationTime} mins`);
   $("#recipeOfTheDayTitle").text(recipeOfTheDay.title);
@@ -91,7 +90,6 @@ $(document).ready(() => {
 
   // delete recipe
   const removeRecipe = id => {
-    console.log(id);
     $.ajax({
       url: `/api/recipes/${id}`,
       type: "DELETE",
