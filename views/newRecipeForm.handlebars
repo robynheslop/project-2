@@ -1,6 +1,12 @@
 <div class="col-md-5" id="recipeForm">
-  <form {{#if recipeDetails.id}}id="#updateRecipeForm"{{else}}id="newRecipeForm"{{/if}} enctype="multipart/form-data">
-    <div class="form-group" >
+  {{#if recipeDetails}}
+  <h4>Edit recipe</h4>
+  {{else}}
+  <h4>Add a new recipe</h4>
+  {{/if}}
+  <p>Enter all your recipe details in the form below. All fields are mandatory except Notes & Images.</p>
+  <form {{#if recipeDetails.id}}id="#updateRecipeForm" {{else}}id="newRecipeForm" {{/if}} enctype="multipart/form-data">
+    <div class="form-group">
       <label>Recipe Title.</label>
       <input class="form-control" name="title" id="recipe-title" type="text" required pattern=".*\S+.*"
         title="atleast one character required." value="{{recipeDetails.title}}">
@@ -9,8 +15,7 @@
       <label>Ingredients. Please enter each ingredient on a new line.</label>
       <textarea class="form-control" id="recipe-ingredients" name="ingredients" type="text" rows="9"
         placeholder="250g Kobe Sirloin Steak&#13;&#10;3 tsp salt" required>{{#each recipeDetails.ingredients}}{{this.quantity}} {{this.unit}} {{this.title}}
-        {{/each}}
-        </textarea>
+        {{/each}}</textarea>
     </div>
     <div class="form-group">
       <label>Instructions. Please enter each instruction on a new line.</label>
@@ -30,7 +35,8 @@
     </div>
     <div class="form-group">
       <label>Notes - Optional.</label>
-      <textarea class="form-control" id="recipe-notes" name="notes" type="text" rows="5">{{{recipeDetails.notes}}}</textarea>
+      <textarea class="form-control" id="recipe-notes" name="notes" type="text"
+        rows="5">{{{recipeDetails.notes}}}</textarea>
     </div>
     <div class="form-group">
       <label>Upload A JPEG Or PNG Image - Optional.</label>
@@ -41,7 +47,8 @@
     </div>
     {{#if recipeDetails}}
     <div class="form-group">
-      <button class="btn btn-primary disabled" recipeId="{{recipeDetails.id}}" id="updateRecipeButton" type="submit">Save Changes</button>
+      <button class="btn btn-primary disabled" recipeId="{{recipeDetails.id}}" id="updateRecipeButton"
+        type="submit">Save Changes</button>
     </div>
     {{else}}
     <div class="form-group">
