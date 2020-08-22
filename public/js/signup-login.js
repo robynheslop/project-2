@@ -10,6 +10,14 @@ const getAndStoreFoodJoke = () => {
   });
 };
 
+const getAndStoreReicpeOfTheDay = () => {
+  $.get("/recipe-of-the-day").then(response => {
+    console.log(response);
+    console.log(JSON.stringify(response));
+    localStorage.setItem("recipe-of-the-day", JSON.stringify(response));
+  });
+};
+
 const getAndStoreUserDataThenLoadNewPage = () => {
   $.get("/api/user_data").then(data => {
     localStorage.setItem("userName", data.username);
@@ -27,6 +35,7 @@ $(document).ready(() => {
   const signUpPasswordInput = $("input#signup-password-input");
   getAndStoreFoodJoke();
   getAndStoreFoodTrivia();
+  getAndStoreReicpeOfTheDay();
   // When the signup button is clicked, we validate the email and password are not blank
   signUpForm.on("submit", event => {
     event.preventDefault();
