@@ -216,9 +216,7 @@ const getAllRecipesForCurrentUser = async request => {
  * @param {request sent by client} request
  */
 const getRecipeDetails = async request => {
-  console.log("INside Route Utils");
   const recipeId = request.params.id;
-  console.log(recipeId);
   try {
     const recipe = await db.Recipe.findOne({
       where: {
