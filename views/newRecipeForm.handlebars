@@ -1,4 +1,5 @@
 <div class="col-md-5" id="recipeForm">
+<<<<<<< HEAD
   {{#if recipeDetails}}
   <h4>Edit recipe</h4>
   {{else}}
@@ -7,6 +8,12 @@
   <p>Enter all your recipe details in the form below. All fields are mandatory except Notes & Images.</p>
   <form {{#if recipeDetails.id}}id="#updateRecipeForm" {{else}}id="newRecipeForm" {{/if}} enctype="multipart/form-data">
     <div class="form-group">
+=======
+
+  <form enctype="multipart/form-data">
+    <form {{#if recipeDetails.id}}id="#updateRecipeForm"{{else}}id="newRecipeForm"{{/if}} enctype="multipart/form-data">
+    <div class="form-group" >
+>>>>>>> 9809c9d8e3bfbab8318d7eca439afce98aa7a12b
       <label>Recipe Title.</label>
       <input class="form-control" name="title" id="recipe-title" type="text" required pattern=".*\S+.*"
         title="atleast one character required." value="{{recipeDetails.title}}">
