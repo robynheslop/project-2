@@ -99,9 +99,7 @@ $(document).ready(() => {
       password: password
     })
       .then(() => {
-        setTimeout(() => {
-          getAndStoreUserDataThenLoadNewPage();
-        }, 3000);
+        getAndStoreUserDataThenLoadNewPage();
       })
       .catch(handleLoginErr);
   }
