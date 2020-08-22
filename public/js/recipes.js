@@ -210,11 +210,6 @@ $(document).ready(() => {
     };
     if (mandatoryFieldsPopulated(formData)) {
       event.preventDefault();
-      $("#sendRecipeButton").prop("disabled", true);
-      $("#modal-header").text("Adding Your Recipe...");
-      $("#modal-body").html(`<img src="/images/e-logo.gif" alt="e-logo gif"
-          style="height: 52px; width: 216px; display: block; margin: auto;">`);
-      $("#recipeModal").modal("toggle");
       submitNewRecipe(formData);
     }
   });
@@ -226,10 +221,6 @@ $(document).ready(() => {
       // add ID
       updatesToRecipe.id = $(event.target).attr("recipeId");
       updating = true;
-      $("#modal-header").text("Updating Your Recipe...");
-      $("#modal-body").html(`<img src="/images/e-logo.gif" alt="e-logo gif"
-          style="height: 52px; width: 216px; display: block; margin: auto;">`);
-      $("#recipeModal").modal("toggle");
       submitUpdatedRecipe(updatesToRecipe);
     }
   });
