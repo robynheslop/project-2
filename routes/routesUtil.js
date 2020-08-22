@@ -68,12 +68,33 @@ const createRecipe = async request => {
     UserId: request.user.id
   };
   try {
-    const recipe = await db.Recipe.create(recipeObject);
-    return recipe;
+    const parsedIngredients = await parseIngredients({
+      ingredientList: request.body.ingredients,
+      servings: request.body.servings
+    });
+    if (parsedIngredients) {
+      const recipe = await db.Recipe.create(recipeObject);
+      const persistedIngredients = await persistAndFetchIngredients(
+        parsedIngredients
+      );
+      if (persistedIngredients) {
+        const status = await persistRecipeIngredients(
+          parsedIngredients,
+          persistedIngredients,
+          recipe.id
+        );
+        return status ? 201 : 500;
+      }
+    }
+    console.log(
+      "Failed to create recipe completely as failed to parse or persist ingredients"
+    );
+    return 500;
   } catch (error) {
     console.log(
       `Error ocurred while creating recipe. detailed error is following: ${error.stack}`
     );
+    return 500;
   }
 };
 
@@ -82,32 +103,7 @@ const createRecipe = async request => {
  * then only persist those ingredients in ingredients table
  * @param {request received from client} request
  */
-const persistAndFetchIngredients = async request => {
-  const spoonacularRequestData = {
-    ingredientList: request.body.ingredients,
-    servings: request.body.servings
-  };
-  const apiKeyParseIngredients = process.env.API_KEY_PARSE_INGREDIENTS;
-  await axios({
-    method: "post",
-    url: `https://api.spoonacular.com/recipes/parseIngredients?apiKey=${apiKeyParseIngredients}`,
-    params: spoonacularRequestData
-  })
-    .then(res => {
-      request.body.ingredients = res.data.map(item => {
-        return {
-          title: item.originalName,
-          quantity: item.amount,
-          units: item.unitShort
-        };
-      });
-    })
-    .catch(error => {
-      console.log(
-        `Failed to process ingredients data. Detailed error is : ${error}`
-      );
-      return;
-    });
+const persistAndFetchIngredients = async parsedIngredients => {
   let persistedIngredients;
   try {
     persistedIngredients = await db.Ingredient.findAll();
@@ -122,7 +118,7 @@ const persistAndFetchIngredients = async request => {
     const currentIngredients = persistedIngredients.map(element => {
       return element.title.toLowerCase();
     });
-    ingredientToSave = request.body.ingredients
+    ingredientToSave = parsedIngredients
       .filter(
         element => currentIngredients.indexOf(element.title.toLowerCase()) < 0
       )
@@ -132,7 +128,7 @@ const persistAndFetchIngredients = async request => {
         };
       });
   } else {
-    ingredientToSave = request.body.ingredients.map(element => {
+    ingredientToSave = parsedIngredients.map(element => {
       return {
         title: element.title.toLowerCase()
       };
@@ -155,21 +151,22 @@ const persistAndFetchIngredients = async request => {
 /**
  * it persists recipe and ingredient relations
  * in recipeIngredients table i.e. what quantity
- * of what ingredient is needed for which recipe.
- * @param {request as received from client} request
+ * of what ingredient is needed for which recipe,
+ * and returns true if it was done successfully otherwise false.
+ * @param {parsed ingredients for current recipe} parsedIngredients
  * @param {all ingredients currently saved} persistedIngredients
- * @param {recipe being saved currently} recipe
+ * @param {id of recipe being saved currently} recipeId
  */
 const persistRecipeIngredients = async (
-  request,
+  parsedIngredients,
   persistedIngredients,
-  recipe
+  recipeId
 ) => {
-  const recipeIngredientsToSave = request.body.ingredients.map(element => {
+  const recipeIngredientsToSave = parsedIngredients.map(element => {
     return {
       ingredientQuantity: element.quantity,
       ingredQuantUnit: element.units,
-      RecipeId: recipe.id,
+      RecipeId: recipeId,
       IngredientId: persistedIngredients
         .filter(ingredient => {
           return ingredient.title.toLowerCase() === element.title.toLowerCase();
@@ -389,25 +386,7 @@ const deleteRecipe = async request => {
           RecipeId: recipeId
         }
       });
-      const recipe = await db.Recipe.findOne({
-        where: {
-          id: recipeId
-        },
-        attributes: ["imageUrl", "title"]
-      });
-      const imageFileName = recipe.imageUrl;
-      if (imageFileName) {
-        const params = { Bucket: bucketName, Key: imageFileName };
-        s3.deleteObject(params, error => {
-          if (error) {
-            console.log(error, error.stack);
-          } else {
-            console.log(
-              `${imageFileName} removed successfully from ${bucketName}`
-            );
-          }
-        });
-      }
+      await deleteimage(recipeId);
       await db.Recipe.destroy({
         where: {
           id: recipeId
@@ -424,6 +403,157 @@ const deleteRecipe = async request => {
   }
 };
 
+/**
+ * updates Recipe details as per the data sent by client
+ * and return http status code accordingly.
+ * if ingredient was updated then we are removing old ingredients
+ * recipe relations and creating new ones, otherwise we are updating
+ * existing data.
+ * also if new image uploaded then old image will be deleted
+ * @param {request sent by client} request
+ */
+const updateRecipe = async request => {
+  const updateRecipe = {};
+  if (request.file) {
+    updateRecipe.imageUrl = await generateImageUrlToSave(request);
+    await deleteimage(request.params.id);
+  }
+  if (request.body) {
+    Object.keys(request.body).forEach(key => {
+      const value = request.body[key];
+      if (key && value && value !== "undefined") {
+        switch (key) {
+          case "notes":
+            updateRecipe.notes = value;
+            break;
+          case "title":
+            updateRecipe.title = value;
+            break;
+          case "instructions":
+            updateRecipe.instructions = value;
+            break;
+          case "preparationTime":
+            updateRecipe.preparationTime = value;
+            break;
+          case "servings":
+            updateRecipe.servings = value;
+        }
+      }
+    });
+  }
+  if (Object.keys(updateRecipe)) {
+    try {
+      await db.Recipe.update(updateRecipe, {
+        where: {
+          id: request.params.id
+        }
+      });
+    } catch (error) {
+      console.log(
+        `error ocurred while updating recipe table for recipe id ${request.params.id}. Detailed error is: ${error.stack}`
+      );
+      return 500;
+    }
+  }
+  if (request.body.ingredients && request.body.ingredients !== "undefined") {
+    const parsedIngredients = await parseIngredients({
+      ingredientList: request.body.ingredients,
+      servings: request.body.servings
+    });
+    if (parsedIngredients) {
+      const persistedIngredients = await persistAndFetchIngredients(
+        parsedIngredients
+      );
+      if (persistedIngredients) {
+        // first clean up existing relations
+        try {
+          await db.RecipeIngredient.destroy({
+            where: {
+              RecipeId: request.params.id
+            }
+          });
+        } catch (error) {
+          console.log(
+            `error ocurred while clearing data from recipeIngredients table for recipe id: ${request.params.id}. Detailed error : ${error.stack}`
+          );
+          return 500;
+        }
+        // create new relations
+        const status = await persistRecipeIngredients(
+          parsedIngredients,
+          persistedIngredients,
+          request.params.id
+        );
+        return status ? 204 : 500;
+      }
+    }
+    console.log("Failed To Parse Ingredients");
+    return 500;
+  }
+  return 204;
+};
+
+/**
+ * parses ingredients and returns parse ingredients as array using
+ * spoonacular API
+ * @param {request data relevant to call spoonacular API} spoonacularRequestData
+ */
+async function parseIngredients(spoonacularRequestData) {
+  const apiKeyParseIngredients = process.env.API_KEY_PARSE_INGREDIENTS;
+  try {
+    const response = await axios({
+      method: "post",
+      url: `https://api.spoonacular.com/recipes/parseIngredients?apiKey=${apiKeyParseIngredients}`,
+      params: spoonacularRequestData
+    });
+    const parsedIngredients = response.data.map(item => {
+      return {
+        title: item.originalName,
+        quantity: item.amount,
+        units: item.unitShort
+      };
+    });
+    return parsedIngredients;
+  } catch (error) {
+    console.log(
+      `Failed to process ingredients data. Detailed error is : ${error}`
+    );
+    return;
+  }
+}
+
+/**
+ * deleltesinput recipe id image from S3 storage.
+ * @param {recipe id whose current image need to be deleted} recipeId
+ */
+async function deleteimage(recipeId) {
+  try {
+    const recipe = await db.Recipe.findOne({
+      where: {
+        id: recipeId
+      },
+      attributes: ["imageUrl", "title"]
+    });
+    const imageFileName = recipe.imageUrl;
+    if (imageFileName) {
+      const params = { Bucket: bucketName, Key: imageFileName };
+      s3.deleteObject(params, error => {
+        if (error) {
+          console.log(error, error.stack);
+        } else {
+          console.log(
+            `${imageFileName} removed successfully from ${bucketName}`
+          );
+        }
+      });
+    }
+  } catch (error) {
+    console.log(
+      `error ocurred while deleting image. detailed error: ${error.stack}`
+    );
+  }
+}
+
 module.exports = {
   createRecipe,
   persistAndFetchIngredients,
@@ -432,5 +562,6 @@ module.exports = {
   getRecipeDetails,
   getRecipesByTextSearch,
   deleteRecipe,
-  getAllRecipeIds
+  getAllRecipeIds,
+  updateRecipe
 };

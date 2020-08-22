@@ -80,7 +80,7 @@ button {
 }
 
 #addNewRecipe,
-#newRecipeForm,
+#recipeForm,
 #appendSearchItemsHere,
 #detailedRecipeViewHere {
     margin: auto;
@@ -97,7 +97,7 @@ button {
     margin-bottom: 0px;
 }
 
-#newRecipeForm,
+#recipeForm,
 #appendSearchItemsHere,
 #detailedRecipeViewHere {
     overflow-y: scroll;

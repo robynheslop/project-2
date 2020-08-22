@@ -61,4 +61,9 @@ module.exports = function(app) {
       response.render("listRecipes", { recipe: recipeData });
     }
   });
+
+  app.get("/edit-recipe/:id", isAuthenticated, async (request, response) => {
+    const recipeDetails = await ru.getRecipeDetails(request);
+    response.render("newRecipeForm", { recipeDetails: recipeDetails });
+  });
 };

@@ -60,29 +60,28 @@ module.exports = function(app) {
     }
   });
 
+  // route to create new recipe
   app.post(
     "/api/recipe",
     isAuthenticated,
     upload.single("recipeImage"),
     async (request, response) => {
-      let recipeStatus = true;
-      const recipe = await ru.createRecipe(request);
-      recipeStatus = recipe ? true : false;
-      const persistedIngredients = recipeStatus
-        ? await ru.persistAndFetchIngredients(request)
-        : undefined;
-      recipeStatus = persistedIngredients ? true : false;
-      recipeStatus = recipeStatus
-        ? await ru.persistRecipeIngredients(
-            request,
-            persistedIngredients,
-            recipe
-          )
-        : false;
-      recipeStatus ? response.status(201).end() : response.status(500).end();
+      const statusCode = await ru.createRecipe(request);
+      response.status(statusCode).end();
     }
   );
-
+  // route to update existing recipe
+  app.put(
+    "/api/recipe/:id",
+    isAuthenticated,
+    upload.single("recipeImage"),
+    async (request, response) => {
+      console.log(request.body);
+      const statusCode = await ru.updateRecipe(request);
+      response.status(statusCode).end();
+    }
+  );
+  // delete route
   app.delete("/api/recipes/:id", isAuthenticated, async (request, response) => {
     const statusCode = await ru.deleteRecipe(request);
     response.status(statusCode).end();

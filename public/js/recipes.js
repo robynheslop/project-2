@@ -1,6 +1,6 @@
 $(document).ready(() => {
   let selectedFile;
-  // display user email in header
+  // display user name in header
   $(".member-name").text(localStorage.getItem("userName"));
   $(".food-fact").text(localStorage.getItem("trivia"));
   $(".food-joke").text(localStorage.getItem("joke"));
@@ -9,15 +9,16 @@ $(document).ready(() => {
   $("#recipeOfTheDayTitle").text(recipeOfTheDay.title);
   $("#recipeOfTheDayPicture").attr("src", recipeOfTheDay.imageUrl);
   $("#recipeOfTheDayViewButton").attr("viewId", recipeOfTheDay.id);
-  let updating = false;
   let recipeID;
   let deleting = false;
+  let updating = false;
+  const updatesToRecipe = {};
 
   const saveImageFileToVariable = event => {
     selectedFile = event.target.files[0];
   };
 
-  const submitNewRecipe = data => {
+  const prepareFormData = data => {
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("instructions", data.instructions);
@@ -28,6 +29,11 @@ $(document).ready(() => {
     if (selectedFile) {
       formData.append("recipeImage", selectedFile, selectedFile.name);
     }
+    return formData;
+  };
+
+  const submitNewRecipe = data => {
+    const formData = prepareFormData(data);
     $.post({
       url: "/api/recipe",
       data: formData,
@@ -81,10 +87,12 @@ $(document).ready(() => {
     );
   };
 
-  const ifDeletingReloadPage = () => {
+  const ifChangeDoneReloadPage = () => {
     if (deleting) {
       deleting = false;
       location.reload();
+    } else if (updating) {
+      location.assign(`/recipes/${updatesToRecipe.id}`);
     }
   };
 
@@ -108,21 +116,47 @@ $(document).ready(() => {
 
   // get detalils to update recipe
   const getRecipeDetailsToUpdate = id => {
-    $.get(`/api/recipes/${id}`).then(response => {
-      $("#recipe-title").val(response.title);
-      $("#recipe-ingredients").val(response.ingredients);
-      $("#recipe-instructions").val(response.instructions);
-      $("#recipe-servings").val(response.servings);
-      $("#recipe-preparation-time").val(response.preparationTime);
-      $("#recipe-notes").val(response.notes);
-    });
+    location.assign(`/edit-recipe/${id}`);
   };
 
   // update recipe
-  const submitUpdatedRecipe = formData => {
-    $.put("/api/recipe/" + formData.id, formData).then(
-      resetFormAfterSubmission()
-    );
+  const submitUpdatedRecipe = updatesToRecipe => {
+    const formData = prepareFormData(updatesToRecipe);
+    $.ajax({
+      url: `/api/recipe/${updatesToRecipe.id}`,
+      type: "PUT",
+      data: formData,
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function() {
+        $("#updateRecipeButton").prop("disabled", false);
+        $("#modal-header").text("Success!");
+        $("#modal-body").text("You have successfully updated your recipe");
+        $("#recipeModal").modal("toggle");
+      },
+      error: function(errorThrown) {
+        $("#updateRecipeButton").prop("disabled", false);
+        $("#modal-header").text("Update Failed");
+        $("#modal-body").text(errorThrown.statusText);
+        $("#recipeModal").modal("toggle");
+      }
+    });
+  };
+
+  const checkForNullFieldsUpdating = updatesToRecipe => {
+    const result = Object.keys(updatesToRecipe).every(key => {
+      switch (key) {
+        case "notes":
+          return true;
+        default:
+          if (updatesToRecipe[key] === "") {
+            return false;
+          }
+          return true;
+      }
+    });
+    return result;
   };
 
   // display form to add a new recipe
@@ -155,7 +189,7 @@ $(document).ready(() => {
     return false;
   };
 
-  $("#sendRecipeButton").on("click", async event => {
+  $("#sendRecipeButton").on("click", event => {
     const formData = {
       title: $("#recipe-title").val(),
       instructions: $("#recipe-instructions").val(),
@@ -167,12 +201,26 @@ $(document).ready(() => {
     if (mandatoryFieldsPopulated(formData)) {
       event.preventDefault();
       $("#sendRecipeButton").prop("disabled", true);
-      if (updating) {
-        formData.id = recipeID;
-        submitUpdatedRecipe(formData);
-      } else {
-        submitNewRecipe(formData);
-      }
+      $("#modal-header").text("Adding Your Recipe...");
+      $("#modal-body").text(`<img src="/images/e-logo.gif" alt="e-logo gif"
+          style="height: 52px; width: 216px; display: block; margin: auto;">`);
+      $("#recipeModal").modal("toggle");
+      submitNewRecipe(formData);
+    }
+  });
+
+  $("#updateRecipeButton").on("click", async event => {
+    if (checkForNullFieldsUpdating(updatesToRecipe)) {
+      event.preventDefault();
+      $("#updateRecipeButton").prop("disabled", true);
+      // add ID
+      updatesToRecipe.id = $(event.target).attr("recipeId");
+      updating = true;
+      $("#modal-header").text("Updating Your Recipe...");
+      $("#modal-body").text(`<img src="/images/e-logo.gif" alt="e-logo gif"
+          style="height: 52px; width: 216px; display: block; margin: auto;">`);
+      $("#recipeModal").modal("toggle");
+      submitUpdatedRecipe(updatesToRecipe);
     }
   });
 
@@ -203,7 +251,6 @@ $(document).ready(() => {
   // get details of recipe ready to render on form for editing
   $(".editRecipeButton").click(event => {
     event.preventDefault();
-    updating = true;
     recipeID = $(event.target).attr("editId");
     getRecipeDetailsToUpdate(recipeID);
   });
@@ -216,5 +263,13 @@ $(document).ready(() => {
   });
 
   $("#recipe-image-upload").on("change", saveImageFileToVariable);
-  $("#recipeModal").on("hide.bs.modal", ifDeletingReloadPage);
+  $("#recipeModal").on("hide.bs.modal", ifChangeDoneReloadPage);
+  $("form :input").change(() => {
+    updatesToRecipe[event.target.name] = event.target.value
+      ? event.target.value
+      : "";
+    if (event.target.name === "ingredients") {
+      updatesToRecipe.servings = $("#recipe-servings").val();
+    }
+  });
 });
