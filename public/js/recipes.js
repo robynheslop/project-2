@@ -177,12 +177,11 @@ $(document).ready(() => {
     if (mandatoryFieldsPopulated(formData)) {
       event.preventDefault();
       $("#sendRecipeButton").prop("disabled", true);
-      if (updating) {
-        formData.id = recipeID;
-        submitUpdatedRecipe(formData);
-      } else {
-        submitNewRecipe(formData);
-      }
+      $("#modal-header").text("Adding Your Recipe...");
+      $("#modal-body").text(`<img src="/images/e-logo.gif" alt="e-logo gif"
+          style="height: 52px; width: 216px; display: block; margin: auto;">`);
+      $("#recipeModal").modal("toggle");
+      submitNewRecipe(formData);
     }
   });
 
@@ -195,7 +194,7 @@ $(document).ready(() => {
       if (selectedFile) {
         updatesToRecipe.image = selectedFile;
       }
-      submitNewRecipe(formData);
+      submitUpdatedRecipe(updatesToRecipe);
     }
   });
 
@@ -226,7 +225,6 @@ $(document).ready(() => {
   // get details of recipe ready to render on form for editing
   $(".editRecipeButton").click(event => {
     event.preventDefault();
-    updating = true;
     recipeID = $(event.target).attr("editId");
     getRecipeDetailsToUpdate(recipeID);
   });
