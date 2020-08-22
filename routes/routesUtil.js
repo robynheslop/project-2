@@ -563,8 +563,12 @@ module.exports = {
   getRecipesByTextSearch,
   deleteRecipe,
 <<<<<<< HEAD
+<<<<<<< HEAD
   getAllRecipeIds
 =======
   updateRecipe
 >>>>>>> 526ab30... Updated Logic For Edit
+=======
+  updateRecipe
+>>>>>>> 526ab30a9fffe02c70dce55d015407e8c1e98033
 };
