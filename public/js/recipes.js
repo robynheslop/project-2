@@ -98,7 +98,6 @@ $(document).ready(() => {
 
   // delete recipe
   const removeRecipe = id => {
-    console.log(id);
     $.ajax({
       url: `/api/recipes/${id}`,
       type: "DELETE",
