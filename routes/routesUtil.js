@@ -393,7 +393,7 @@ const deleteRecipe = async request => {
     return 400;
   } catch (error) {
     console.log(
-      `Error ocurred while deleting recipeId: ${recipeId}. Detailed error is following: ${error.message}`
+      `Error ocurred while deleting recipeId: ${recipeId}. Detailed error is following: ${error.stack}`
     );
     return 500;
   }
