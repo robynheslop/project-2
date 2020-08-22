@@ -113,20 +113,27 @@ $(document).ready(() => {
   };
 
   // update recipe
-  const submitUpdatedRecipe = formData => {
-    $.put("/api/recipe/" + formData.id, formData).then(
-      window.location.assign(`/recipes/${formData.id}`)
+  const submitUpdatedRecipe = updatesToRecipe => {
+    $.put("/api/recipe/" + updatesToRecipe.id, updatesToRecipe).then(
+      window.location.assign(`/recipes/${updatesToRecipe.id}`)
     );
   };
 
-  // const checkForNullFieldsUpdating = mandatoryFields => {
-  //   if (formData.title) {
-  //     if (formData.title.trim().length) {
-  //       return true;
-  //     }
-  //     return false;
-  //   }
-  // };
+  const checkForNullFieldsUpdating = updatesToRecipe => {
+    console.log(updatesToRecipe);
+    const result = Object.keys(updatesToRecipe).every(key => {
+      switch (key) {
+        case "notes":
+          return true;
+        default:
+          if (updatesToRecipe[key] === "") {
+            return false;
+          }
+          return true;
+      }
+    });
+    return result;
+  };
 
   // display form to add a new recipe
   $("#addNewRecipeButton").on("click", event => {
@@ -181,13 +188,15 @@ $(document).ready(() => {
 
   $("#updateRecipeButton").on("click", async event => {
     event.preventDefault();
-    console.log(updatesToRecipe);
-    console.log(checkForNullFieldsUpdating());
-    if (selectedFile) {
-      updatesToRecipe.image = selectedFile;
+    if (checkForNullFieldsUpdating(updatesToRecipe)) {
+      // add ID
+      updatesToRecipe.id = $(event.target).attr("recipeId");
+      // add new image if one was uploaded
+      if (selectedFile) {
+        updatesToRecipe.image = selectedFile;
+      }
+      submitNewRecipe(formData);
     }
-    updatesToRecipe.id = $(event.target).attr("recipeId");
-    // submitNewRecipe(formData);
   });
 
   $("#searchForRecipeButton").on("click", event => {
