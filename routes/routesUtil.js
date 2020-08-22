@@ -564,5 +564,4 @@ module.exports = {
   deleteRecipe,
   getAllRecipeIds,
   updateRecipe
-
 };
