@@ -1,8 +1,7 @@
 <div class="col-md-5" id="recipeForm">
 
   <form enctype="multipart/form-data">
-  <form {{#if recipeDetails.id}}id="#updateRecipeForm"{{else}}id="newRecipeForm"{{/if}} enctype="multipart/form-data">
-  <form {{#if recipeDetails.id}}id="#updateRecipeForm"{{else}}id="newRecipeForm"{{/if}} enctype="multipart/form-data">
+    <form {{#if recipeDetails.id}}id="#updateRecipeForm"{{else}}id="newRecipeForm"{{/if}} enctype="multipart/form-data">
     <div class="form-group" >
       <label>Recipe Title.</label>
       <input class="form-control" name="title" id="recipe-title" type="text" required pattern=".*\S+.*"
