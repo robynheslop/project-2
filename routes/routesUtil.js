@@ -351,6 +351,31 @@ function mapRecipeHighLevelDetails(recipes, userId) {
   });
 }
 
+const getAllRecipeIds = async () => {
+  try {
+    const findRecipesWithPictures = await db.Recipe.findAll({
+      where: {
+        imageUrl: {
+          [Op.not]: null
+        }
+      },
+      attributes: ["id", "title", "preparationTime", "imageUrl"],
+      limit: 20
+    });
+    const recipeDetails = findRecipesWithPictures.map(recipe => {
+      return {
+        id: recipe.dataValues.id,
+        title: recipe.dataValues.title,
+        preparationTime: recipe.dataValues.preparationTime,
+        imageUrl: generateImageUrlForClient(recipe.dataValues.imageUrl)
+      };
+    });
+    return recipeDetails;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /**
  * deletes input recipe id from database
  * @param {request sent by client} request
@@ -406,5 +431,6 @@ module.exports = {
   getAllRecipesForCurrentUser,
   getRecipeDetails,
   getRecipesByTextSearch,
-  deleteRecipe
+  deleteRecipe,
+  getAllRecipeIds
 };
