@@ -7,6 +7,7 @@ $(document).ready(() => {
   let updating = false;
   let recipeID;
   let deleting = false;
+  const updatesToRecipe = {};
 
   const saveImageFileToVariable = event => {
     selectedFile = event.target.files[0];
@@ -91,22 +92,24 @@ $(document).ready(() => {
 
   // get detalils to update recipe
   const getRecipeDetailsToUpdate = id => {
-    $.get(`/api/recipes/${id}`).then(response => {
-      $("#recipe-title").val(response.title);
-      $("#recipe-ingredients").val(response.ingredients);
-      $("#recipe-instructions").val(response.instructions);
-      $("#recipe-servings").val(response.servings);
-      $("#recipe-preparation-time").val(response.preparationTime);
-      $("#recipe-notes").val(response.notes);
-    });
+    location.assign(`/edit-recipe/${id}`);
   };
 
   // update recipe
   const submitUpdatedRecipe = formData => {
     $.put("/api/recipe/" + formData.id, formData).then(
-      resetFormAfterSubmission()
+      window.location.assign(`/recipes/${formData.id}`)
     );
   };
+
+  // const checkForNullFieldsUpdating = mandatoryFields => {
+  //   if (formData.title) {
+  //     if (formData.title.trim().length) {
+  //       return true;
+  //     }
+  //     return false;
+  //   }
+  // };
 
   // display form to add a new recipe
   $("#addNewRecipeButton").on("click", event => {
@@ -138,7 +141,7 @@ $(document).ready(() => {
     return false;
   };
 
-  $("#sendRecipeButton").on("click", async event => {
+  $("#sendRecipeButton").on("click", event => {
     const formData = {
       title: $("#recipe-title").val(),
       instructions: $("#recipe-instructions").val(),
@@ -160,6 +163,17 @@ $(document).ready(() => {
         submitNewRecipe(formData);
       }
     }
+  });
+
+  $("#updateRecipeButton").on("click", async event => {
+    event.preventDefault();
+    console.log(updatesToRecipe);
+    console.log(checkForNullFieldsUpdating());
+    if (selectedFile) {
+      updatesToRecipe.image = selectedFile;
+    }
+    updatesToRecipe.id = $(event.target).attr("recipeId");
+    // submitNewRecipe(formData);
   });
 
   $("#searchForRecipeButton").on("click", event => {
@@ -203,4 +217,7 @@ $(document).ready(() => {
 
   $("#recipe-image-upload").on("change", saveImageFileToVariable);
   $("#recipeModal").on("hide.bs.modal", ifDeletingReloadPage);
+  $("form :input").change(() => {
+    updatesToRecipe[event.target.name] = event.target.value;
+  });
 });

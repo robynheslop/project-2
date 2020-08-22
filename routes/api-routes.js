@@ -126,8 +126,4 @@ module.exports = function(app) {
       })
       .catch(error => console.log("Error", error));
   });
-
-  app.post("/parse-ingredients", async (request, response) => {
-    
-  });
 };
