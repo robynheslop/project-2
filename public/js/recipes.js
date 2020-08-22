@@ -80,6 +80,7 @@ $(document).ready(() => {
       deleting = false;
       location.reload();
     } else if (updating) {
+      updating = false;
       location.assign(`/recipes/${updatesToRecipe.id}`);
     }
   };
