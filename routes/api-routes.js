@@ -66,21 +66,8 @@ module.exports = function(app) {
     isAuthenticated,
     upload.single("recipeImage"),
     async (request, response) => {
-      let recipeStatus = true;
-      const recipe = await ru.createRecipe(request);
-      recipeStatus = recipe ? true : false;
-      const persistedIngredients = recipeStatus
-        ? await ru.persistAndFetchIngredients(request)
-        : undefined;
-      recipeStatus = persistedIngredients ? true : false;
-      recipeStatus = recipeStatus
-        ? await ru.persistRecipeIngredients(
-            request,
-            persistedIngredients,
-            recipe
-          )
-        : false;
-      recipeStatus ? response.status(201).end() : response.status(500).end();
+      const statusCode = await ru.createRecipe(request);
+      response.status(statusCode).end();
     }
   );
   // route to update existing recipe
@@ -90,11 +77,11 @@ module.exports = function(app) {
     upload.single("recipeImage"),
     async (request, response) => {
       console.log(request.body);
-      console.log(request.params);
-      response.status(201).end();
+      const statusCode = await ru.updateRecipe(request);
+      response.status(statusCode).end();
     }
   );
-
+  // delete route
   app.delete("/api/recipes/:id", isAuthenticated, async (request, response) => {
     const statusCode = await ru.deleteRecipe(request);
     response.status(statusCode).end();
