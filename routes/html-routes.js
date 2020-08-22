@@ -44,7 +44,6 @@ module.exports = function(app) {
 
   // get recipe details by id
   app.get("/recipes/:id", isAuthenticated, async (request, response) => {
-    console.log(request);
     const recipeDetails = await ru.getRecipeDetails(request);
     if (recipeDetails) {
       response.render("recipeDetails", { recipeDetails: recipeDetails });
