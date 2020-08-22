@@ -1,17 +1,19 @@
 const db = require("../models");
-const { Storage } = require("@google-cloud/storage");
+// Load the SDK for JavaScript
+const AWS = require("aws-sdk");
 const { Op } = require("sequelize");
 const fs = require("fs");
 const axios = require("axios");
 
 require("dotenv").config();
-const storage = new Storage({
-  keyFilename: "./config/timelessRecipeGoogleKey.json"
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 const bucketName = "timeless-recipes.appspot.com";
 
 const imageUrlFixed =
-  "https://storage.googleapis.com/timeless-recipes.appspot.com/";
+  "https://s3-ap-southeast-2.amazonaws.com/timeless-recipes.appspot.com/";
 const defaultUrl = "/images/e-logo-placeholder.png";
 
 const generateImageUrlForClient = savedUrl =>
@@ -19,26 +21,32 @@ const generateImageUrlForClient = savedUrl =>
 
 const generateImageUrlToSave = async request => {
   if (request.file) {
-    await storage
-      .bucket(bucketName)
-      .upload(`./temp/uploads/${request.file.filename}`, {
-        // Support for HTTP requests made with `Accept-Encoding: gzip`
-        gzip: true,
-        metadata: {
-          // Enable long-lived HTTP caching headers
-          cacheControl: "public, max-age=31536000",
-          contentType:
-            request.file.mimetype === "image/jpeg" ? "image/jp2" : "image/png"
-        }
-      });
-    console.log(`${request.file.filename} uploaded to ${bucketName}.`);
-    fs.unlink(`./temp/uploads/${request.file.filename}`, error =>
-      error
-        ? console.log(
-            `error ocurred while deleting recipe image from temp folder. detailed error is following: ${error}`
-          )
-        : console.log(`${request.file.filename} is deleted from temp`)
+    const uploadParams = { Bucket: bucketName, Key: "", Body: "" };
+    const fileStream = fs.createReadStream(
+      `./temp/uploads/${request.file.filename}`
     );
+    fileStream.on("error", error => {
+      console.log("File Error", error);
+      return;
+    });
+    uploadParams.Body = fileStream;
+    uploadParams.Key = request.file.filename;
+    // call S3 to retrieve upload file to specified bucket
+    s3.upload(uploadParams, (error, data) => {
+      if (error) {
+        console.log("Error", error);
+      }
+      if (data) {
+        console.log("Upload Success", data.Location);
+        fs.unlink(`./temp/uploads/${request.file.filename}`, error =>
+          error
+            ? console.log(
+                `error ocurred while deleting recipe image from temp folder. detailed error is following: ${error}`
+              )
+            : console.log(`${request.file.filename} is deleted from temp`)
+        );
+      }
+    });
     return request.file.filename;
   }
   return null;
@@ -364,10 +372,16 @@ const deleteRecipe = async request => {
       });
       const imageFileName = recipe.imageUrl;
       if (imageFileName) {
-        await storage
-          .bucket(bucketName)
-          .file(imageFileName)
-          .delete();
+        const params = { Bucket: bucketName, Key: imageFileName };
+        s3.deleteObject(params, error => {
+          if (error) {
+            console.log(error, error.stack);
+          } else {
+            console.log(
+              `${imageFileName} removed successfully from ${bucketName}`
+            );
+          }
+        });
       }
       await db.Recipe.destroy({
         where: {
