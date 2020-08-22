@@ -1,18 +1,19 @@
 $(document).ready(() => {
   let selectedFile;
-  // display user email in header
+  // display user name in header
   $(".member-name").text(localStorage.getItem("userName"));
   $(".food-fact").text(localStorage.getItem("trivia"));
   $(".food-joke").text(localStorage.getItem("joke"));
   let recipeID;
   let deleting = false;
+  let updating = false;
   const updatesToRecipe = {};
 
   const saveImageFileToVariable = event => {
     selectedFile = event.target.files[0];
   };
 
-  const submitNewRecipe = data => {
+  const prepareFormData = data => {
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("instructions", data.instructions);
@@ -23,6 +24,11 @@ $(document).ready(() => {
     if (selectedFile) {
       formData.append("recipeImage", selectedFile, selectedFile.name);
     }
+    return formData;
+  };
+
+  const submitNewRecipe = data => {
+    const formData = prepareFormData(data);
     $.post({
       url: "/api/recipe",
       data: formData,
@@ -76,10 +82,12 @@ $(document).ready(() => {
     );
   };
 
-  const ifDeletingReloadPage = () => {
+  const ifChangeDoneReloadPage = () => {
     if (deleting) {
       deleting = false;
       location.reload();
+    } else if (updating) {
+      location.assign(`/recipes/${updatesToRecipe.id}`);
     }
   };
 
@@ -109,9 +117,27 @@ $(document).ready(() => {
 
   // update recipe
   const submitUpdatedRecipe = updatesToRecipe => {
-    $.put("/api/recipe/" + updatesToRecipe.id, updatesToRecipe).then(
-      window.location.assign(`/recipes/${updatesToRecipe.id}`)
-    );
+    const formData = prepareFormData(updatesToRecipe);
+    $.ajax({
+      url: `/api/recipe/${updatesToRecipe.id}`,
+      type: "PUT",
+      data: formData,
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function() {
+        $("#updateRecipeButton").prop("disabled", false);
+        $("#modal-header").text("Success!");
+        $("#modal-body").text("You have successfully updated your recipe");
+        $("#recipeModal").modal("toggle");
+      },
+      error: function(errorThrown) {
+        $("#updateRecipeButton").prop("disabled", false);
+        $("#modal-header").text("Update Failed");
+        $("#modal-body").text(errorThrown.statusText);
+        $("#recipeModal").modal("toggle");
+      }
+    });
   };
 
   const checkForNullFieldsUpdating = updatesToRecipe => {
@@ -181,27 +207,18 @@ $(document).ready(() => {
   });
 
   $("#updateRecipeButton").on("click", async event => {
-    event.preventDefault();
     if (checkForNullFieldsUpdating(updatesToRecipe)) {
+      event.preventDefault();
+      $("#updateRecipeButton").prop("disabled", true);
       // add ID
       updatesToRecipe.id = $(event.target).attr("recipeId");
-      // add new image if one was uploaded
-      if (selectedFile) {
-        updatesToRecipe.image = selectedFile;
-      }
+      updating = true;
+      $("#modal-header").text("Updating Your Recipe...");
+      $("#modal-body").text(`<img src="/images/e-logo.gif" alt="e-logo gif"
+          style="height: 52px; width: 216px; display: block; margin: auto;">`);
+      $("#recipeModal").modal("toggle");
       submitUpdatedRecipe(updatesToRecipe);
     }
-  });
-
-  $("#updateRecipeButton").on("click", async event => {
-    event.preventDefault();
-    console.log(updatesToRecipe);
-    console.log(checkForNullFieldsUpdating());
-    if (selectedFile) {
-      updatesToRecipe.image = selectedFile;
-    }
-    updatesToRecipe.id = $(event.target).attr("recipeId");
-    // submitNewRecipe(formData);
   });
 
   $("#searchForRecipeButton").on("click", event => {
@@ -243,8 +260,10 @@ $(document).ready(() => {
   });
 
   $("#recipe-image-upload").on("change", saveImageFileToVariable);
-  $("#recipeModal").on("hide.bs.modal", ifDeletingReloadPage);
+  $("#recipeModal").on("hide.bs.modal", ifChangeDoneReloadPage);
   $("form :input").change(() => {
-    updatesToRecipe[event.target.name] = event.target.value;
+    updatesToRecipe[event.target.name] = event.target.value
+      ? event.target.value
+      : "";
   });
 });
