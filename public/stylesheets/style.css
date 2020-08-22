@@ -71,6 +71,10 @@ button {
     margin-top: 10px;
 }
 
+#recipe-of-the-day-preparation-time-column {
+    padding-top: 20px;
+}
+
 #detailed-recipe-instructions {
     white-space: pre-wrap
 }
