@@ -159,15 +159,25 @@ $(document).ready(() => {
     return result;
   };
 
+  // Generic loading modal: no header
+  const loadingModal = () => {
+    $("#modal-body").html(
+      "<img src='/images/e-logo.gif' alt='e-logo gif' style='height: 52px; width: 216px; display: block; margin: auto;'>"
+    );
+    $("#recipeModal").modal("toggle");
+  };
+
   // display form to add a new recipe
   $("#addNewRecipeButton").on("click", event => {
     event.preventDefault();
+    loadingModal();
     updating = false;
     loadNewRecipeForm();
   });
 
   $("#viewAllRecipesButton").on("click", event => {
     event.preventDefault();
+    loadingModal();
     getAllMyRecipes();
   });
 
@@ -202,7 +212,7 @@ $(document).ready(() => {
       event.preventDefault();
       $("#sendRecipeButton").prop("disabled", true);
       $("#modal-header").text("Adding Your Recipe...");
-      $("#modal-body").text(`<img src="/images/e-logo.gif" alt="e-logo gif"
+      $("#modal-body").html(`<img src="/images/e-logo.gif" alt="e-logo gif"
           style="height: 52px; width: 216px; display: block; margin: auto;">`);
       $("#recipeModal").modal("toggle");
       submitNewRecipe(formData);
@@ -217,7 +227,7 @@ $(document).ready(() => {
       updatesToRecipe.id = $(event.target).attr("recipeId");
       updating = true;
       $("#modal-header").text("Updating Your Recipe...");
-      $("#modal-body").text(`<img src="/images/e-logo.gif" alt="e-logo gif"
+      $("#modal-body").html(`<img src="/images/e-logo.gif" alt="e-logo gif"
           style="height: 52px; width: 216px; display: block; margin: auto;">`);
       $("#recipeModal").modal("toggle");
       submitUpdatedRecipe(updatesToRecipe);
@@ -238,6 +248,10 @@ $(document).ready(() => {
       $("#modal-body").text("You must enter a title or ingredient to search");
       $("#recipeModal").modal("toggle");
     } else {
+      $("#modal-header").text("Searching. Please Wait...");
+      $("#modal-body").html(`<img src="/images/e-logo.gif" alt="e-logo gif"
+          style="height: 52px; width: 216px; display: block; margin: auto;">`);
+      $("#recipeModal").modal("toggle");
       findRecipesUsingCriteria(formData);
     }
   });
@@ -245,12 +259,14 @@ $(document).ready(() => {
   // request details of particular recipe from database
   $(".viewRecipeButton").click(event => {
     event.preventDefault();
+    loadingModal();
     viewRecipeInDetail($(event.target).attr("viewid"));
   });
 
   // get details of recipe ready to render on form for editing
   $(".editRecipeButton").click(event => {
     event.preventDefault();
+    loadingModal();
     recipeID = $(event.target).attr("editId");
     getRecipeDetailsToUpdate(recipeID);
   });
@@ -258,6 +274,7 @@ $(document).ready(() => {
   // sending a delete request for a recipe id
   $(".deleteRecipeButton").click(event => {
     event.preventDefault();
+    loadingModal();
     deleting = true;
     removeRecipe($(event.target).attr("deleteId"));
   });
