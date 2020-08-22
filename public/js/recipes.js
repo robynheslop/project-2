@@ -265,5 +265,8 @@ $(document).ready(() => {
     updatesToRecipe[event.target.name] = event.target.value
       ? event.target.value
       : "";
+    if (event.target.name === "ingredients") {
+      updatesToRecipe.servings = $("#recipe-servings").val();
+    }
   });
 });
