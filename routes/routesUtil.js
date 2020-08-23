@@ -11,7 +11,7 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: process.env.AWS_DEFAULT_REGION
 });
-const bucketName = "timeless-recipes.appspot.com";
+const bucketName = process.env.AWS_IMAGE_BUCKET_NAME;
 const signedUrlExpireSeconds = 24 * 60 * 60;
 const defaultUrl = "/images/e-logo-placeholder.png";
 
