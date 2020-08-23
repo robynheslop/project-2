@@ -76,7 +76,6 @@ module.exports = function(app) {
     isAuthenticated,
     upload.single("recipeImage"),
     async (request, response) => {
-      console.log(request.body);
       const statusCode = await ru.updateRecipe(request);
       response.status(statusCode).end();
     }
@@ -86,7 +85,7 @@ module.exports = function(app) {
     const statusCode = await ru.deleteRecipe(request);
     response.status(statusCode).end();
   });
-
+  // wrapper get route around spoonacular API to get food fact
   app.get("/food-fact", async (request, response) => {
     const apiKeyFoodFact = process.env.API_KEY_TRIVA_JOKE;
     axios
@@ -99,6 +98,7 @@ module.exports = function(app) {
       .catch(error => console.log("Error", error));
   });
 
+  // wrapper get route around spoonacular API to get food joke
   app.get("/food-joke", async (request, response) => {
     const apiKeyFoodJoke = process.env.API_KEY_TRIVA_JOKE;
     axios
@@ -111,9 +111,9 @@ module.exports = function(app) {
       .catch(error => console.log("Error", error));
   });
 
+  // get route to randomly pick one of the recipe with image as recipe of the day
   app.get("/recipe-of-the-day", async (request, response) => {
-    const recipeDetails = await ru.getAllRecipeIds();
-    const selectedID = Math.floor(Math.random() * recipeDetails.length);
-    response.json(recipeDetails[selectedID]);
+    const recipeDetail = await ru.getRecipeOfTheDay();
+    recipeDetail ? response.json(recipeDetail) : response.status(500).end();
   });
 };
