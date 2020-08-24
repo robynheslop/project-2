@@ -54,6 +54,6 @@ Contributions are welcome. Feel free to fork the project and create a pull reque
 ## License
 This project is licensed under the terms of the ISC license. Read more about this license [here](https://opensource.org/licenses/ISC).
 ## Questions
-This project was created by [robynheslop](https://github.com/robynheslop), [nitinmuk](https://github.com/https://github.com/nitinmuk) and [arjae.sj](https://github.com/arjaesj). If you have further questions about this project, please contact us at [timeless.recipes2@gmail.com](timeless.recipes2@gmail.com).
+This project was created by [robynheslop](https://github.com/robynheslop), [nitinmukesh](https://github.com/nitinmuk) and [arjae.sj](https://github.com/arjaesj). If you have further questions about this project, please contact us at [timeless.recipes2@gmail.com](timeless.recipes2@gmail.com).
 
 ![user-dashboard](public/images/user-dashboard.png)
